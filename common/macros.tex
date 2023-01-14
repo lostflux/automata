@@ -119,7 +119,7 @@
 
 % Answer BOX
 \usepackage{microtype}
-\usepackage{mdframed}
+\usepackage{mdframed}[usetwoside=false]
 \newmdenv[%
   skipabove=6pt,
   skipbelow=6pt,
@@ -414,8 +414,8 @@
 
 \DeclareRobustCommand{\set}[1]{\left\{#1\right\}}
 
-\usepackage{mathtools}
-\usepackage{unicode-math}
+% \usepackage{mathtools}
+% \usepackage{unicode-math}
 
 % finite state machines
 \usepackage{tikz}
