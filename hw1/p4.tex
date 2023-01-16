@@ -13,6 +13,7 @@ Explain, in one or two sentences, the idea behind your DFA construction
 \begin{Answer}
 
   % DFA to accept strings of length at least 3
+  First, let's build a DFA to accept all strings of length at least $3$.
 
   \begin{figure}[H]
     \centering
@@ -30,7 +31,9 @@ Explain, in one or two sentences, the idea behind your DFA construction
     \label{fig:at-least-3}
   \end{figure}
 
+  \step
   % DFA to accept strings with at least one 0 in each block of 3
+  Next, let's build a DFA to accept all strings with at least one $0$ in each block of $3$ letters.
 
   \begin{figure}[H]
     \centering
@@ -51,24 +54,67 @@ Explain, in one or two sentences, the idea behind your DFA construction
     \label{fig:at-least-0ne-0-in-each-block-of-3}
   \end{figure}
 
-    % Combine the two DFAs
+  \newpage
+  \noindent
+  % Combine the two DFAs
+  Next, let's combine the two into a single SFA that
+  accepts all strings that are of length at least $3$ \emph{and}
+  have at least one $0$ in each block of $3$.
+  \begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+      \node[state, initial] (q00) at (0, 0) {$q_{(0,0)}$};
+      \node[state, below of=q00] (q10) {$q_{(1,0)}$};
+      \node[state, right of=q10] (q11) {$q_{(1,1)}$};
+      \node[state, below of=q10] (q20) {$q_{(2,0)}$};
+      \node[state, right of=q20] (q21) {$q_{(2,1)}$};
+      \node[state, right of=q21] (q22) {$q_{(2,2)}$};
+      \node[state, accepting, below of=q20] (q30) {$q_{(3,0)}$};
+      \node[state, accepting, right of=q30] (q31) {$q_{(3,1)}$};
+      \node[state, accepting, right of=q31] (q32) {$q_{(3,2)}$};
+      \node[state, right of=q32] (q33) {$q_{(3,3)}$};
+      
+      \draw (q00) edge[left] node {$0$} (q10)
+            (q10) edge[left] node {$0$} (q20)
+            (q20) edge[left] node {$0$} (q30);
 
-    \begin{figure}[H]
-      \centering
-      \begin{tikzpicture}
-        \node[state, accepting, initial] (q0) at (0, 0) {$q_0$};
-        \node[state, accepting, right of=q0] (q1) {$q_1$};
-        \node[state, accepting, right of=q1] (q2) {$q_2$};
-        \node[state, right of=q2] (q3) {$q_3$};
-        \draw (q0) edge[loop above, above] node {$0$} (q0)
-              (q0) edge[above] node {$1$} (q1)
-              (q1) edge[bend left, below] node {$0$} (q0)
-              (q1) edge[above] node {$1$} (q2)
-              (q2) edge[bend right, above] node {$0$} (q0)
-              (q2) edge[above] node {$1$} (q3)
-              (q3) edge[loop right, right] node {$0, 1$} (q3);
-      \end{tikzpicture}
-      \caption{Accept all strings with length at least $3$ and at least one $0$ in each block of $3$.}
-      \label{fig:at-least-3-and-at-least-one-zero}
-    \end{figure}
+      \draw (q11) edge[left, pos=0.25] node {$0$} (q20)
+            (q21) edge[left, pos=0.25] node {$0$} (q30)
+            (q22) edge[left, pos=0.05] node {$0$} (q30);
+
+      \draw (q00) edge[above, pos=0.25] node {$1$} (q11)
+            (q10) edge[above, pos=0.25] node {$1$} (q21)
+            (q20) edge[above, pos=0.25] node {$1$} (q31);
+
+      \draw (q11) edge[above, pos=0.25] node {$1$} (q22)
+            (q21) edge[above, pos=0.75] node {$1$} (q32)
+            (q22) edge[above, pos=0.25] node {$1$} (q33);
+
+      \draw (q30) edge[loop left, left] node {$0$} (q30)
+          (q30) edge[above, pos=0.75] node {$1$} (q31)
+          (q31) edge[bend left, pos=0.25] node {$0$} (q30)
+          (q31) edge[above, pos=0.75] node {$1$} (q32)
+          (q32) edge[bend left, below, pos=0.25] node {$0$} (q30)
+          (q32) edge[above, pos=0.75] node {$1$} (q33)
+          (q33) edge[loop right, right] node {$0, 1$} (q33);
+    \end{tikzpicture}
+    \caption{Accept all strings with length at least $3$ and at least one $0$ in each block of $3$.}
+    \label{fig:at-least-3-and-at-least-one-zero}
+  \end{figure}
+
+  \step
+  \textbf{DFA Specification}
+  \begin{align*}
+    M &= \left( Q,\ \Sigma,\ \delta,\ q_0,\ F \right) \text{ where: }\\
+    Q &= \set{ q_{(i, j)} : 0 \leq i \le 3, 0 \leq j \leq i} \\
+    \Sigma &= \set{0, 1} \\
+    \delta(q_{(i, j)}, x) &= \begin{cases}
+      q_{(i+1,\ 0)} &\text{ if } i < 3 \text{ and } x = 0 \\
+      q_{(i+1,\ j+1)} &\text{ if } i < 3 \text{ and } x = 1 \\
+      q_{(i,\ 0)} &\text{ if } i = 3 \text{ and } j = 0 \\
+      q_{(i, j+1)} &\text{ otherwise }
+    \end{cases} \\
+    q_0 &= q_{(0, 0)} \\
+    F &= \set{ q_{(i,\ j)} : i = 3,\ 0 \leq j < 3 }
+  \end{align*}
 \end{Answer}
