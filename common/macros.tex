@@ -173,10 +173,14 @@
 {%
 \stepcounter{problem}
 \setcounter{section}{\value{problem}}
+\setcounter{figure}{0}
 \vspace{.2cm} \noindent {\center  \textbf{\\ Problem \arabic{problem}.\\}} {\noindent}~%
 }{%
 % \vspace{.2cm}%
 }
+
+% Number figures with section.figure
+\renewcommand\thefigure{\thesection.\arabic{figure}}    
 % Package Imports
 \usepackage{amssymb,amsthm,amsmath,amstext}
 \usepackage{mathdots} % for \dots
@@ -409,3 +413,10 @@
 \DeclareRobustCommand{\step}{\vspace{0.5em}\noindent}
 
 \DeclareRobustCommand{\set}[1]{\left\{#1\right\}}
+
+\usepackage{mathtools}
+\usepackage{unicode-math}
+
+% finite state machines
+\usepackage{tikz}
+\usetikzlibrary{automata, positioning, arrows}

@@ -3,17 +3,21 @@
 % Include the macros file from `../common'
 \input{../common/macros.tex}
 
-\pagestyle{fancy}                       % fancy (allow headers, footers)
-\fancyhf{}                              % clear all header/footer settings.
-\cfoot{\thepage}                        % set page-numbers in footer.
-\lhead{\textit{\textbf{ Amittai, S}}}   % set name in header, left.
-\rhead{\textsc{CXX 01:\@Title}}         % set class name in header, right.
-
 \renewcommand{\theenumi}{\alph{enumi}}
 
 \begin{document}
 \setlength{\headheight}{13.0pt}
 \setlength{\footskip}{13.0pt}
+
+\tikzset{
+  ->, % makes the edges directed
+  >=stealth', % makes the arrow heads bold
+  node distance=3cm, % specifies the minimum distance between two nodes. Change if necessary.
+  every state/.style={thick, fill=gray!10}, % sets the properties for each ’state’ node
+  initial text=$ $, % sets the text that appears on the start arrow
+}
+
+
 \input{cover.tex}
 \bigskip
 
@@ -30,15 +34,20 @@
 % PROBLEM 3
 \input{p3.tex}
 
-% \newpage
+\newpage
 
 % PROBLEM 4
-% \input{problem4.tex}
+\input{p4.tex}
 
-% \newpage
+\newpage
 
 % PROBLEM 5
-% \input{problem5.tex}
+\input{p5.tex}
+
+\newpage
+
+% PROBLEM 6
+\input{p6.tex}
 
 \vfill
 

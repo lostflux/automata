@@ -1,0 +1,13 @@
+\begin{problem}
+  For a string $x \in {0, 1}^*$, let $\beta(x)$ denote the integer obtained
+  by interpreting $x$ as a binary number.
+  Thus, for example, $\beta(11001) = 25$ and $\beta(0011) = 3$.
+  We also define $\beta(\epsilon) = 0$ for convenience.
+  
+  \noindent
+  Design a DFA for the language $L = \set{ x \in \set{0, 1}^* : \beta(x) \text{ is divisible by } 5}$.
+  \emph{Draw the state diagram and also specify the DFA formally}.
+
+  \step
+  \crim{Hint: For integers $m, n, p$, we have $(mn + p) \mod 5 = ((m \mod 5) \cdot n + p) \mod 5$}
+\end{problem}

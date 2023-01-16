@@ -1,0 +1,74 @@
+\begin{problem}
+Draw a state diagram of a DFA that recognizes the language consisting of all strings
+in $\set{0, 1}^*$ such that each string is of length at least three
+and every block of three consecutive symbols has at least one $0$.
+
+\noindent
+\emph{(Thus, for example, $0011001$ is in the language, but $0011100$ is not.)}
+
+\step
+Explain, in one or two sentences, the idea behind your DFA construction
+\end{problem}
+
+\begin{Answer}
+
+  % DFA to accept strings of length at least 3
+
+  \begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+      \node[state, initial] (q0) at (0, 0) {$q_0$};
+      \node[state, right of=q0] (q1) {$q_1$};
+      \node[state, right of=q1] (q2) {$q_2$};
+      \node[state, accepting, right of=q2] (q3) {$q_3$};
+      \draw (q0) edge[above] node {$0, 1$} (q1)
+            (q1) edge[above] node {$0, 1$} (q2)
+            (q2) edge[above] node {$0$} (q3)
+            (q3) edge[loop right, right] node {$0, 1$} (q3);
+    \end{tikzpicture}
+    \caption{Accept all strings of length at least $3$.}
+    \label{fig:at-least-3}
+  \end{figure}
+
+  % DFA to accept strings with at least one 0 in each block of 3
+
+  \begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+      \node[state, accepting, initial] (q0) at (0, 0) {$q_0$};
+      \node[state, accepting, right of=q0] (q1) {$q_1$};
+      \node[state, accepting, right of=q1] (q2) {$q_2$};
+      \node[state, right of=q2] (q3) {$q_3$};
+      \draw (q0) edge[loop above, above] node {$0$} (q0)
+            (q0) edge[above] node {$1$} (q1)
+            (q1) edge[bend left, below] node {$0$} (q0)
+            (q1) edge[above] node {$1$} (q2)
+            (q2) edge[bend right, above] node {$0$} (q0)
+            (q2) edge[above] node {$1$} (q3)
+            (q3) edge[loop right, right] node {$0, 1$} (q3);
+    \end{tikzpicture}
+    \caption{Accept all strings with at least one $0$ in each block of $3$.}
+    \label{fig:at-least-3}
+  \end{figure}
+
+    % Combine the two DFAs
+
+    \begin{figure}[H]
+      \centering
+      \begin{tikzpicture}
+        \node[state, accepting, initial] (q0) at (0, 0) {$q_0$};
+        \node[state, accepting, right of=q0] (q1) {$q_1$};
+        \node[state, accepting, right of=q1] (q2) {$q_2$};
+        \node[state, right of=q2] (q3) {$q_3$};
+        \draw (q0) edge[loop above, above] node {$0$} (q0)
+              (q0) edge[above] node {$1$} (q1)
+              (q1) edge[bend left, below] node {$0$} (q0)
+              (q1) edge[above] node {$1$} (q2)
+              (q2) edge[bend right, above] node {$0$} (q0)
+              (q2) edge[above] node {$1$} (q3)
+              (q3) edge[loop right, right] node {$0, 1$} (q3);
+      \end{tikzpicture}
+      \caption{Accept all strings with length at least $3$ and at least one $0$ in each block of $3$.}
+      \label{fig:at-least-3-and-at-least-one-zero}
+    \end{figure}
+\end{Answer}
