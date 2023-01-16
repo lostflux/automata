@@ -36,13 +36,21 @@
     \label{fig:divisible-by-5}
   \end{figure}
 
+  \newpage
   \step
   \textbf{DFA Specification}
+
+  \step
+  For convenience, we define the function
+  \[ \beta(x) = n \text{ where $n$ is the value of $x$ interpreted as a binary number.}\]
+  
+  \step
+  We specify the DFA as follows:
   \begin{align*}
     M &= \left( Q,\ \Sigma,\ \delta,\ q_0,\ F \right) \text{ where: }\\
     Q &= \set{q_i : 0 \le i < 5}\\
     \Sigma &= \set{0, 1}\\
-    \delta(q_i, x) &= q_j \text{ where } j = (2i + x) \mod 5\\
+    \delta(q_i, x) &= q_j \text{ where } j = (2i + \beta(x)) \mod 5\\
     q_0 &= q_0\\
     F &= \set{q_0}
   \end{align*}

@@ -6,5 +6,31 @@
 \end{problem}
 
 \begin{Answer}
-
+  \step
+  \textbf{DFA Specification}
+  \step
+  For simplicity of expression, we define the following functions:
+  \begin{align*}
+    \shift{s} &= \begin{cases}
+      \eps &\text{ if } s = \eps\\
+      x &\text{ otherwise, where } s \text{ is parsed as } \crim{\set{0, 1}^1x} \\
+    \end{cases} \\
+    \beta(s) &= n \text{ where $n$ is the integer obtained by interpreting $s$ as a binary number.} \\
+    \#(s) &= n \text{ where $n$ is the length of $s$.} \\
+    \#_a(s) &= n \text{ where $n$ is the number of occurrences of $a$ in $s$.}
+  \end{align*}
+  \step
+  We specify the DFA as:
+  \begin{align*}
+    M &= \left( Q,\ \Sigma,\ \delta,\ q_0,\ F \right) \text{ where: }\\
+    Q &= \set{ q_{(i,\ s)} : 0 \leq i \le 2000,\; s \in \set{0, 1}^* \text{ and } \#(s) = i} \\
+    \Sigma &= \set{0, 1} \\
+    \delta(q_{(i,\ s)}, x) &= \begin{cases}
+      q_{(i+1,\ sx)} &\text{ if } i < 2000 \quad \quad \quad \quad \quad \quad \quad \quad \zaff{\text{// Still too short.}}\\
+      q_{(i, \shift{s}x)} &\text{ if $i = 2000$ and } \#_0(s) \ge 10 \quad \zaff{\text{ // Valid length and condition.}} \\
+      q_{(i,\ s)} &\text{ otherwise.} \quad \quad \quad \quad \quad \quad \quad \quad \zaff{\text{// Invalid condition, trap in the state.}}
+    \end{cases} \\
+    q_0 &= q_{(0,\ \eps)} \\
+    F &= \set{ q_{(2000,\ s)} : \#_0(s) \ge 10}
+  \end{align*}
 \end{Answer}

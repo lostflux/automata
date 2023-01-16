@@ -11,9 +11,16 @@ Explain, in one or two sentences, the idea behind your DFA construction
 \end{problem}
 
 \begin{Answer}
+  To make this problem easier to reason about,
+  I split it into three incremental steps:
+  \begin{enumroman}
+    \item Construct a DFA that accepts all strings of length at least $3$.
+    \item Construct a DFA that accepts all strings with at least one $0$ in each block of $3$ letters.
+    \item Combine the two DFAs to get the final DFA.
+  \end{enumroman}
 
-  % DFA to accept strings of length at least 3
-  First, let's build a DFA to accept all strings of length at least $3$.
+  \step
+  \textbf{Part 1}: DFA to accept all strings of length at least $3$.
 
   \begin{figure}[H]
     \centering
@@ -24,16 +31,22 @@ Explain, in one or two sentences, the idea behind your DFA construction
       \node[state, accepting, right of=q2] (q3) {$q_3$};
       \draw (q0) edge[above] node {$0, 1$} (q1)
             (q1) edge[above] node {$0, 1$} (q2)
-            (q2) edge[above] node {$0$} (q3)
+            (q2) edge[above] node {$0, 1$} (q3)
             (q3) edge[loop right, right] node {$0, 1$} (q3);
     \end{tikzpicture}
     \caption{Accept all strings of length at least $3$.}
     \label{fig:at-least-3}
   \end{figure}
 
+  \newpage
   \step
-  % DFA to accept strings with at least one 0 in each block of 3
-  Next, let's build a DFA to accept all strings with at least one $0$ in each block of $3$ letters.
+  \textbf{Part 2}
+
+  \step DFA to accept all strings with at least one $0$ in each block of $3$ letters.
+
+  \step
+  The simplest idea I had was to trap and reject once we encounter
+   $111$ since that is the only non-accepting $3$-sequence block.
 
   \begin{figure}[H]
     \centering
@@ -51,70 +64,148 @@ Explain, in one or two sentences, the idea behind your DFA construction
             (q3) edge[loop right, right] node {$0, 1$} (q3);
     \end{tikzpicture}
     \caption{Accept all strings with at least one $0$ in each block of $3$.}
-    \label{fig:at-least-0ne-0-in-each-block-of-3}
+    \label{fig:at-least-one-0-in-each-block-of-3}
   \end{figure}
 
-  \newpage
-  \noindent
-  % Combine the two DFAs
-  Next, let's combine the two into a single SFA that
-  accepts all strings that are of length at least $3$ \emph{and}
-  have at least one $0$ in each block of $3$.
+  % \newpage
+  \step
+  While working on $Q_6$, I realized that the
+  multiple-zeros scenario necessitates tracking the full state
+  since we will not necessarily have a single reject state.
+  So I redesigned this part of the DFA to track the full state.
+  
+  \begin{blockcolor}
   \begin{figure}[H]
     \centering
     \begin{tikzpicture}
-      \node[state, initial] (q00) at (0, 0) {$q_{(0,0)}$};
-      \node[state, below of=q00] (q10) {$q_{(1,0)}$};
-      \node[state, right of=q10] (q11) {$q_{(1,1)}$};
-      \node[state, below of=q10] (q20) {$q_{(2,0)}$};
-      \node[state, right of=q20] (q21) {$q_{(2,1)}$};
-      \node[state, right of=q21] (q22) {$q_{(2,2)}$};
-      \node[state, accepting, below of=q20] (q30) {$q_{(3,0)}$};
-      \node[state, accepting, right of=q30] (q31) {$q_{(3,1)}$};
-      \node[state, accepting, right of=q31] (q32) {$q_{(3,2)}$};
-      \node[state, right of=q32] (q33) {$q_{(3,3)}$};
-      
-      \draw (q00) edge[left] node {$0$} (q10)
-            (q10) edge[left] node {$0$} (q20)
-            (q20) edge[left] node {$0$} (q30);
-
-      \draw (q11) edge[left, pos=0.25] node {$0$} (q20)
-            (q21) edge[left, pos=0.25] node {$0$} (q30)
-            (q22) edge[left, pos=0.05] node {$0$} (q30);
-
-      \draw (q00) edge[above, pos=0.25] node {$1$} (q11)
-            (q10) edge[above, pos=0.25] node {$1$} (q21)
-            (q20) edge[above, pos=0.25] node {$1$} (q31);
-
-      \draw (q11) edge[above, pos=0.25] node {$1$} (q22)
-            (q21) edge[above, pos=0.75] node {$1$} (q32)
-            (q22) edge[above, pos=0.25] node {$1$} (q33);
-
-      \draw (q30) edge[loop left, left] node {$0$} (q30)
-          (q30) edge[above, pos=0.75] node {$1$} (q31)
-          (q31) edge[bend left, pos=0.25] node {$0$} (q30)
-          (q31) edge[above, pos=0.75] node {$1$} (q32)
-          (q32) edge[bend left, below, pos=0.25] node {$0$} (q30)
-          (q32) edge[above, pos=0.75] node {$1$} (q33)
-          (q33) edge[loop right, right] node {$0, 1$} (q33);
+      \node[state, accepting, initial] (q000) at (0, 0) {$q_{000}$};
+      \node[state, accepting, right of=q000] (q001) {$q_{001}$};
+      \node[state, accepting, right of=q001] (q010) {$q_{010}$};
+      \node[state, accepting, right of=q010] (q011) {$q_{011}$};
+      \node[state, accepting, below of=q001] (q100) {$q_{100}$};
+      \node[state, accepting, below of=q010] (q101) {$q_{101}$};
+      \node[state, accepting, below of=q011] (q110) {$q_{110}$};
+      \node[state, right of=q110] (q111) {$q_{111}$};
+      \draw (q000) edge[loop above, above] node {$0$} (q000)
+            (q000) edge[above] node {$1$} (q001)
+            (q001) edge[above] node {$0$} (q010)
+            (q001) edge[bend left, above] node {$1$} (q011)
+            (q010) edge[above] node {$0$} (q100)
+            (q010) edge[bend left, right, pos=0.25] node {$1$} (q101)
+            (q011) edge[right] node {$0$} (q110)
+            (q011) edge[above] node {$1$} (q111)
+            (q100) edge[left] node {$0$} (q000)
+            (q100) edge[left] node {$1$} (q001)
+            (q101) edge[bend left, left, pos=0.25] node {$0$} (q010)
+            (q101) edge[above] node {$1$} (q011)
+            (q110) edge[bend left, below] node {$0$} (q100)
+            (q110) edge[above] node {$1$} (q101)
+            (q111) edge[loop right, right] node {$0, 1$} (q111);
     \end{tikzpicture}
+    \caption{Accept all strings with at least one $0$ in each block of $3$.}
+    \label{fig:at-least-one-0-in-each-block-of-3-full}
+  \end{figure}
+  \end{blockcolor}
+
+  % \newpage
+  \step
+  \textbf{Part 3}: Combine DFA ~\ref{fig:at-least-3}
+  and DFA ~\ref{fig:at-least-one-0-in-each-block-of-3-full}.
+
+  \step
+  I debated whether to use the simplified DFA (figure \ref{fig:at-least-one-0-in-each-block-of-3})
+  or the full-state DFA (figure \ref{fig:at-least-one-0-in-each-block-of-3-full}),
+  eventually going with the full-state DFA as that would help
+  when working on $Q_6$.
+
+  \begin{figure}[H]
+    \centering
+    \resizebox{450pt}{!}{%
+      \begin{tikzpicture}
+        \node[state, initial] (q0-000) at (0, 0) {$q_{(0,\ \eps)}$};
+        \node[state, below of=q0-000] (q1-000) {$q_{(1,\ 0)}$};
+        \node[state, below of=q1-000] (q2-000) {$q_{(2,\ 00)}$};
+        \crim{\node[state, accepting, below of=q2-000] (q3-000) {$q_{(3,\ 000)}$};}
+
+        \crim{\node[state, accepting, right of=q3-000] (q3-001) {$q_{(3,\ 001)}$};}
+        \crim{\node[state, accepting, right of=q3-001] (q3-010) {$q_{(3,\ 010)}$};}
+        \crim{\node[state, accepting, right of=q3-010] (q3-011) {$q_{(3,\ 011)}$};}
+        \crim{\node[state, accepting, right of=q3-011] (q3-100) {$q_{(3,\ 100)}$};}
+        \crim{\node[state, accepting, right of=q3-100] (q3-101) {$q_{(3,\ 101)}$};}
+        \crim{\node[state, accepting, right of=q3-101] (q3-110) {$q_{(3,\ 110)}$};}
+        \crim{\node[state,            right of=q3-110] (q3-111) {$q_{(3,\ 111)}$};}
+        
+        \node[state, above of=q3-010] (q2-001) {$q_{(2,\ 01)}$};
+        \node[state, above of=q3-100] (q2-010) {$q_{(2,\ 10)}$};
+        \node[state, above of=q2-010] (q1-001) {$q_{(1,\ 1)}$};
+        \node[state, above of=q3-110] (q2-011) {$q_{(2,\ 11)}$};
+        
+        \draw (q0-000) edge[left] node {$0$} (q1-000)
+              (q0-000) edge[above] node {$1$} (q1-001)
+
+              (q1-000) edge[left] node {$0$} (q2-000)
+              (q1-000) edge[above] node {$1$} (q2-001)
+
+              (q2-000) edge[left] node {$0$} (q3-000)
+              (q2-000) edge[above] node {$1$} (q3-001)
+
+              (q2-001) edge[left] node {$0$} (q3-010)
+              (q2-001) edge[above] node {$1$} (q3-011);
+
+        \draw (q1-001) edge[left] node {$0$} (q2-010)
+              (q1-001) edge[above] node {$1$} (q2-011)
+
+              (q2-010) edge[left] node {$0$} (q3-100)
+              (q2-010) edge[above] node {$1$} (q3-101)
+
+              (q2-011) edge[left] node {$0$} (q3-110)
+              (q2-011) edge[above] node {$1$} (q3-111);
+        \crim{
+        \draw (q3-000) edge[loop left, left] node {$0$} (q3-000)
+              (q3-000) edge[above] node {$1$} (q3-001)
+              (q3-001) edge[below] node {$0$} (q3-010)
+              (q3-001) edge[bend left, above, pos=0.25] node {$1$} (q3-011)
+              (q3-010) edge[bend left, below, pos=0.90] node {$0$} (q3-100)
+              (q3-010) edge[bend left, above, pos=0.85] node {$1$} (q3-101)
+              (q3-011) edge[bend left, above, pos=0.95] node {$0$} (q3-110)
+              (q3-011) edge[bend left, below, pos=0.95] node {$1$} (q3-111)
+              (q3-100) edge[bend left, below, pos=0.85] node {$0$} (q3-000)
+              (q3-100) edge[bend left, below, pos=0.85] node {$1$} (q3-001)
+              (q3-101) edge[bend left, below, pos=0.95] node {$0$} (q3-010)
+              (q3-101) edge[bend left, below, pos=0.75] node {$1$} (q3-011)
+              (q3-110) edge[bend left, below] node {$0$} (q3-100)
+              (q3-110) edge[above] node {$1$} (q3-101)
+              (q3-111) edge[loop right, right] node {$0, 1$} (q3-111);
+        }
+      \end{tikzpicture}
+    }
     \caption{Accept all strings with length at least $3$ and at least one $0$ in each block of $3$.}
     \label{fig:at-least-3-and-at-least-one-zero}
   \end{figure}
 
   \step
   \textbf{DFA Specification}
+  \step
+  For simplicity of expression, we define the following functions:
+  \begin{align*}
+    \shift{s} &= \begin{cases}
+      \eps &\text{ if } s = \eps\\
+      x &\text{ otherwise, where } s \text{ is parsed as } \crim{\set{0, 1}^1x} \\
+    \end{cases} \\
+    \beta(s) &= n \text{ where $n$ is the integer obtained by interpreting $s$ as a binary number.} \\
+    \#(s) &= n \text{ where $n$ is the length of $s$.} \\
+    \#_a(s) &= n \text{ where $n$ is the number of occurrences of $a$ in $s$.}
+  \end{align*}
   \begin{align*}
     M &= \left( Q,\ \Sigma,\ \delta,\ q_0,\ F \right) \text{ where: }\\
-    Q &= \set{ q_{(i, j)} : 0 \leq i \le 3, 0 \leq j \leq i} \\
+    Q &= \set{ q_{(i,\ s)} : 0 \leq i \le 3,\; s \in \set{0, 1}^* \text{ and } \#(s) = i} \\
     \Sigma &= \set{0, 1} \\
-    \delta(q_{(i, j)}, x) &= \begin{cases}
-      q_{(i+1,\ 0)} &\text{ if } i < 3 \text{ and } x = 0 \\
-      q_{(i+1,\ j+1)} &\text{ if } i < 3 \text{ and } x = 1 \\
-      q_{(i,\ 0)} &\text{ if } i = 3 \text{ and } j = 0 \\
-      q_{(i, j+1)} &\text{ otherwise }
+    \delta(q_{(i,\ s)}, x) &= \begin{cases}
+      q_{(i+1,\ sx)} &\text{ if } i < 3 \quad \quad \quad \quad \quad \quad \quad \zaff{\text{ // Still too short.}}\\
+      q_{(i, \shift{s}x)} &\text{ if $i = 3$ and } \#_0(s) \ge 1 \quad \zaff{\text{ // Valid length and condition.}}\\
+      q_{(i,\ s)} &\text{ otherwise.} \quad \quad \quad \quad \quad \quad \zaff{\text{// Invalid condition, trap in the state.}}
     \end{cases} \\
-    q_0 &= q_{(0, 0)} \\
-    F &= \set{ q_{(i,\ j)} : i = 3,\ 0 \leq j < 3 }
+    q_0 &= q_{(0,\ \eps)} \\
+    F &= \set{ q_{(3,\ s)} : \#_0(s) \ge 1}
   \end{align*}
 \end{Answer}
