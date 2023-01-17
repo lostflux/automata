@@ -8,8 +8,9 @@
 \begin{Answer}
   \step
   \textbf{DFA Specification}
+
   \step
-  For simplicity of expression, we define the following functions:
+  To simplify the expressions, we define the following functions:
   \begin{align*}
     \shift{s} &= \begin{cases}
       \eps &\text{ if } s = \eps\\
@@ -33,4 +34,25 @@
     q_0 &= q_{(0,\ \eps)} \\
     F &= \set{ q_{(2000,\ s)} : \#_0(s) \ge 10}
   \end{align*}
+
+  \newpage
+  \step
+  \textbf{Main Idea}:
+
+  \step
+  We track states as a tuple of the length of the string processed so far (say, $n$)
+  and the most recent $n$ characters processed from the string.
+  While $n$ is less than $2000$, each transition appends the current character
+  to the right of the string we are tracking and increments $n$.
+  Once $n$ reaches $2000$, we no longer
+  need to keep incrementing it since the length requirement is satisfied.
+  We also start watching for and trapping at invalid states.
+  While transitioning in valid states, we drop the left-most character
+  of the string we are tracking and append the new character to the right.
+
+  \step
+  Finally, we accept if we have processed at least $2000$ characters
+  (i.e. we are at a state $q_{(\crim{2000},\ s)})$
+  and the latest $2000$ characters have at least ten $0$
+  (i.e. $\#_0(s) \ge 10$).
 \end{Answer}

@@ -190,7 +190,7 @@ Explain, in one or two sentences, the idea behind your DFA construction
   We track states as a tuple of the length of the string processed so far (say, $n$)
   and the most recent $n$ characters processed from the string.
   While $n$ is less than $3$, each transition appends the current character
-  to the right of the string we are tracking and increments $n$
+  to the right of the string we are tracking and increments $n$.
   Once $n$ reaches $3$, we no longer
   need to keep incrementing it since the length requirement is satisfied.
   We also start watching for and trapping at invalid states.
