@@ -11,12 +11,12 @@ Explain, in one or two sentences, the idea behind your DFA construction
 \end{problem}
 
 \begin{Answer}
-  To make this problem easier to reason about,
+  To make this problem easier to tackle,
   I split it into three incremental steps:
   \begin{enumroman}
-    \item Construct a DFA that accepts all strings of length at least $3$.
-    \item Construct a DFA that accepts all strings with at least one $0$ in each block of $3$ letters.
-    \item Combine the two DFAs to get the final DFA.
+    \item Construct a DFA that accepts all strings of length at least $3$ (figure ~\ref{fig:at-least-3}).
+    \item Construct a DFA that accepts all strings with at least one $0$ in each block of $3$ letters (~\ref{fig:at-least-one-0-in-each-block-of-3}, \ref{fig:at-least-one-0-in-each-block-of-3-full}).
+    \item Combine the two DFAs (figure ~\ref{fig:at-least-3-and-at-least-one-zero}).
   \end{enumroman}
 
   \step
@@ -38,7 +38,7 @@ Explain, in one or two sentences, the idea behind your DFA construction
     \label{fig:at-least-3}
   \end{figure}
 
-  \newpage
+  % \newpage
   \step
   \textbf{Part 2}
 
@@ -67,7 +67,7 @@ Explain, in one or two sentences, the idea behind your DFA construction
     \label{fig:at-least-one-0-in-each-block-of-3}
   \end{figure}
 
-  % \newpage
+  \newpage
   \step
   While working on $Q_6$, I realized that the
   multiple-zeros scenario necessitates tracking the full state
@@ -184,9 +184,30 @@ Explain, in one or two sentences, the idea behind your DFA construction
   \end{figure}
 
   \step
-  \textbf{DFA Specification}
+  \textbf{Main Idea}:
+
   \step
-  For simplicity of expression, we define the following functions:
+  We track states as a tuple of the length of the string processed so far (say, $n$)
+  and the most recent $n$ characters processed from the string.
+  While $n$ is less than $3$, each transition appends the current character
+  to the right of the string we are tracking and increments $n$
+  Once $n$ reaches $3$, we no longer
+  need to keep incrementing it since the length requirement is satisfied.
+  We also start watching for and trapping at invalid states.
+  While transitioning in valid states, we drop the left-most character
+  of the string we are tracking and append the new character to the right.
+
+  \step
+  Finally, we accept if we have processed at least $3$ characters
+  (i.e. we are at a state $q_{(\crim{3},\ s)})$
+  and the latest $3$ characters have at least one $0$
+  (i.e. $\#_0(s) \ge 1$).
+
+  \step
+  \textbf{DFA Specification}:
+
+  \step
+  To simplify the expressions, we define the following functions:
   \begin{align*}
     \shift{s} &= \begin{cases}
       \eps &\text{ if } s = \eps\\
@@ -196,6 +217,9 @@ Explain, in one or two sentences, the idea behind your DFA construction
     \#(s) &= n \text{ where $n$ is the length of $s$.} \\
     \#_a(s) &= n \text{ where $n$ is the number of occurrences of $a$ in $s$.}
   \end{align*}
+
+  \step
+  We define the DFA as follows:
   \begin{align*}
     M &= \left( Q,\ \Sigma,\ \delta,\ q_0,\ F \right) \text{ where: }\\
     Q &= \set{ q_{(i,\ s)} : 0 \leq i \le 3,\; s \in \set{0, 1}^* \text{ and } \#(s) = i} \\

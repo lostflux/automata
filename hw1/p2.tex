@@ -9,16 +9,29 @@
   \begin{enumalph}
     \item Let $A = \set{0^m1^n : m, n \ge 0}$. What is $\textsc{Min}(A)$ and $\textsc{Max}(A)$?
       \begin{Answer}
+        Since $\eps \in A$ and $\eps$ is a proper prefix of every string except itself,
+        $\textsc{Min}(A) = \set{\eps}$.
+
+        \step
+        On the other hand, every string in $A$ is a proper prefix
+        of some string in $A$ (just take the string and append a $1$, for instance).
+        Therefore, $\textsc{Max}(A) = \varnothing$.
         
       \end{Answer}
     \item Let $B = 0^m1^n, m, n > 0$. Read carefully; $B \neq A$. What is $\textsc{Min}(B)$ and $\textsc{Max}(B)$?
       \begin{Answer}
-        
+        \begin{align*}
+          \textsc{Min}(B) &= \set{0^m1 : m > 0} \\
+          \textsc{Max}(B) &= \varnothing
+        \end{align*}
       \end{Answer}
 
     \item Specify an infinite language $L$ such that $\textsc{Min}(L) = \textsc{Max}(L)$.
       \begin{Answer}
-        
+        \begin{align*}
+          L &= \set{0^n1^n : n > 0 }\\
+          \textsc{Min}(L) &= \textsc{Max}(L) = L
+        \end{align*}
       \end{Answer}
   \end{enumalph}
 \end{problem}

@@ -7,12 +7,9 @@
   \noindent
   Design a DFA for the language $L = \set{ x \in \set{0, 1}^* : \beta(x) \text{ is divisible by } 5}$.
   \emph{Draw the state diagram and also specify the DFA formally}.
-
-  \step
   \crim{Hint: For integers $m, n, p$, we have $(mn + p) \mod 5 = ((m \mod 5) \cdot n + p) \mod 5$}
 \end{problem}
 \begin{Answer}
-  \textbf{State Diagram}
   \begin{figure}[H]
     \centering
     \begin{tikzpicture}
@@ -21,7 +18,7 @@
       \node[state, below of=q1] (q2) {$q_2$};
       \node[state, right of=q2] (q3) {$q_3$};
       \node[state, below of=q3] (q4) {$q_4$};
-      \draw (q0) edge[loop above, above] node {$0$} (q0)
+      \draw (q0) edge[loop below, below] node {$0$} (q0)
             (q0) edge[above] node {$1$} (q1)
             (q1) edge[left] node {$0$} (q2)
             (q1) edge[bend left, above, pos=0.15] node {$1$} (q3)
@@ -30,22 +27,18 @@
             (q3) edge[bend left, above, pos=0.65] node {$0$} (q1)
             (q3) edge[below] node {$1$} (q2)
             (q4) edge[left] node {$0$} (q3)
-            (q4) edge[loop below, below] node {$1$} (q4);
+            (q4) edge[loop left, left] node {$1$} (q4);
     \end{tikzpicture}
     \caption{Accept all strings $x$ where $\beta(x) \equiv 0 \pmod 5$.}
     \label{fig:divisible-by-5}
   \end{figure}
-
-  \newpage
-  \step
-  \textbf{DFA Specification}
-
-  \step
+  \textbf{DFA Specification}\\
   For convenience, we define the function
   \[ \beta(x) = n \text{ where $n$ is the value of $x$ interpreted as a binary number.}\]
   
   \step
   We specify the DFA as follows:
+
   \begin{align*}
     M &= \left( Q,\ \Sigma,\ \delta,\ q_0,\ F \right) \text{ where: }\\
     Q &= \set{q_i : 0 \le i < 5}\\

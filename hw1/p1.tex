@@ -10,14 +10,19 @@
       What is \textsc{Cycle}(A) and \textsc{Cycle}(B)?
       \begin{Answer}
         \begin{align*}
-          \textsc{Cycle}(A) &= \set{(01)^m : m \ge 0} \cup \set{(10)^n : n \ge 0}\\
-          \textsc{Cycle}(B) &= \set{0^m1^m : m \ge 0} \cup \set{1^n0^n : n \ge 0}
+          \textsc{Cycle}(A) &= A \cup \set{(10)^n : n \ge 0}\\
+          \textsc{Cycle}(B) &= \set{0^{\max{(0,\ n-a)}}\ 1^{\min{(n,\ 2n - a)}}\ 0^{\min{(n,\ a)}}\ 1^{\max{(0,\ a-n)}} \text{ where $a \ge 0$}}
         \end{align*}
       \end{Answer}
 
-    \item Let $C = \set{0^p16q0^r : p, q, r \ge 0 \text{ and } q = p + r}$.
+    \item Let $C = \set{0^p1^q0^r : p, q, r \ge 0 \text{ and } q = p + r}$.
       What is \textsc{Half}(C) and \textsc{HalfPalindrome}(C)?
       \begin{Answer}
+        \begin{align*}
+          \textsc{Half}(C) &= \set{0^m1^n : m \ge 0, n \ge 0} \\
+          \\
+          \textsc{HalfPalindrome}(C) &= \set{0^m1^n : m \ge 0, n = m} \\
+        \end{align*}
         
       \end{Answer}
   \end{enumalph}
