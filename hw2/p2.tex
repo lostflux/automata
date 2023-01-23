@@ -1,0 +1,20 @@
+\begin{problem}
+  Give regular expressions for the following languages.
+  \begin{enumalph}
+    \item $\set{x \in \set{0, 1}^*\; : \;
+      \text{ $x$ contains ``$000$'' or ``$111$'' (or both) as a substring }}$.
+    \begin{Answer}
+      \[ (0 \cup 1)^* (000 \cup 111) (0 \cup 1)^* \]
+    \end{Answer}
+    \item $\set{x \in \set{0, 1}^*\; : \;
+      \text{ $x$ contains both ``$000$'' and ``$111$'' as a substrings }}$.
+    \begin{Answer}
+      \[ (0 \cup 1)^* ((000 (0 \cup 1)^* 111) \cup (111 (0 \cup 1)^* 000)) (0 \cup 1)^* \]
+    \end{Answer}
+    \item $\set{x \in \set{0, 1}^*\; : \;
+      \text{ $x$ does not contain ``$111$'' as a substring }}$.
+    \begin{Answer}  
+      \[ (0^* \cup 0^*1 \cup 0^*11)(0^* \cup 00^*1 \cup 00^*11)^* \]
+    \end{Answer}
+  \end{enumalph}
+\end{problem}

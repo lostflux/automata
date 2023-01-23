@@ -200,12 +200,14 @@
 \definecolor{teal}{rgb}{0.0, 0.5, 0.5}
 \definecolor{zaffre}{rgb}{0.0, 0.08, 0.66}
 \definecolor{DarkOliveGreen}{rgb}{0.33, 0.42, 0.18}
+\definecolor{grey}{rgb}{0.5, 0.5, 0.5}
 \newcommand{\crim}{\textcolor{crimson}}
 \newcommand{\teal}{\textcolor{teal}}
 \newcommand{\zaff}{\textcolor{zaffre}}
 \newcommand{\black}{\textcolor{black}}
 \newcommand{\darkgreen}{\textcolor{DarkOliveGreen}}
 \newcommand{\green}{\textcolor{OliveGreen}}
+\newcommand{\grey}{\textcolor{grey}}
 
 % Block coloring
 \newenvironment{blockcolor}{\par \color{crimson} {\par}}
@@ -421,4 +423,14 @@
 
 % finite state machines
 \usepackage{tikz}
+\tikzset{
+  between/.style args={#1 and #2}{
+        at = ($(#1)!0.5!(#2)$)
+  }
+}
 \usetikzlibrary{automata, positioning, arrows, calc}
+\tikzset{
+  between base/.style args={#1 and #2}{
+      between=#1.base and #2.base
+  }
+}

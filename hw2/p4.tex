@@ -1,0 +1,57 @@
+\begin{problem}
+  \begin{enumalph}
+    \item Let $L$ be a nonempty language recognized by an NFA $N$.
+      Prove that there exists an NFA $N_1$ that has exactly one accept state
+      and recognizes the same language $L$.
+      \begin{Answer}
+        Let $N = (Q, \Sigma, \delta, q_0, F)$ be an NFA that recognizes $L$.
+        
+        \step
+        We define $N_1 = (Q \cup F_2, \Sigma, \delta_1, q_0, F_2)$,
+        where $a$ is a new state that is not in $Q$, and:
+        \begin{align*}
+          F_2 &= \set{a} \\
+          \delta_1(q, x) &= \begin{cases}
+            \delta(q, x) \cup \set{a} &\text{ if $q \in F$ and $x = \eps$ }\\
+            \set{a} &\text{ if $q = a$ }\\
+            \delta(q, x) & \text{ otherwise. }
+          \end{cases}
+        \end{align*}
+        \begin{lemma}
+          $N_1$ is an NFA that recognizes $L$.
+          \begin{proof}
+            Recall that the original NFA $N$ recognizes $L$.
+
+            \step
+            We aim to show that $\calL(N_1) = L$;
+            essentially, that $\calL(N_1) \supseteq L$ (completeness)
+            and $\calL(N_1) \subseteq L$ (soundness).
+
+            \begin{enumroman}
+              \item $\calL(N_1) \supseteq L$ (completeness)
+                Let \crim{$w = w_1w_2\ldots w_k$ : $w_i \in \Sigma$ for all $0 < i \le k$}
+                be a string in $L$. Since $N$ recognizes $L$,
+                there exists a computation path $p = q_0q_1\ldots q_n$
+                of $N$ on $w$ such that $q_n \in F$.
+                Note that $q_i \ne a$ for all $0 < i \le n$, since $a \notin Q$.
+                Consider the computation path of $N_1$ on $w$,
+              \item $\calL(N_1) \subseteq L$ (soundness)
+            \end{enumroman}
+
+
+
+          \end{proof}
+        \end{lemma}
+        
+      \end{Answer}
+
+    \item Prove, by giving a concrete counterexample,
+      that the analogous result does not hold for DFAs,
+      i.e., that for a nonempty language $L$ recognized by a DFA $M$,
+      there might not exist any $1$-accept-state DFA that recognizes $L$.
+      Explain clearly why your chosen language $L$ has this property.
+      \begin{Answer}
+
+      \end{Answer}
+  \end{enumalph}
+\end{problem}

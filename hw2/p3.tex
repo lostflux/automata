@@ -1,0 +1,166 @@
+\begin{problem}
+  Let $L$ be the language over $\Sigma = \set{a, b}^*$ given by the regular expression
+  $(ab \; \cup \; aab \; \cup \; aba)^*$.
+  \begin{enumalph}
+    \item Design an NFA for $L$ that has exactly $4$ states,
+      no $\eps$-transitions, and exactly one $a$-transition out of its start state.
+    \begin{Answer}
+      % Draw the NFA
+      \begin{figure}[H]
+        \centering
+        \begin{tikzpicture}
+          \node[state, initial, accepting] (q) at (0, 0) {$q$};
+          \node[state, right of=q] (r) {$r$};
+          \node[state, above of=r] (s) {$s$};
+          \node[state, below of=r] (t) {$t$};
+          \draw (q) edge [bend left, above] node {$a$} (r)
+                (r) edge [bend left, below] node {$b$} (q)
+                (r) edge [right] node {$a$} (s)
+                (r) edge [right] node {$b$} (t)
+                (s) edge [bend right, above] node {$b$} (q)
+                (t) edge [bend left, below] node {$a$} (q);
+        \end{tikzpicture}
+        \caption{NFA to recognize $L \equiv (ab \; \cup \; aab \; \cup \; aba)^*$}
+        \label{fig:3a}
+      \end{figure}
+    \end{Answer}
+    
+    \newpage
+    \item Convert the above NFA into a DFA for $L$
+      by mechanically using the power set construction.
+      For the sake of legibility, may avoid drawing transitions
+      out of states that are unreachable from the start state of the resulting DFA.
+      However, do draw every state of the power set construction.
+      \emph{I strongly recommend using state names like $rt$, $qst$, etc. in your
+      drawing and not the more formal $\set{r, t}, \set{q, s, t}$, etc.}
+    \begin{Answer}
+      % Draw the NFA
+      \begin{figure}[H]
+        \centering
+        \begin{tikzpicture}
+          \node[state, initial, accepting] at (0, 0) (q) {$q$};
+          \node[state, below of=q] (r) {$r$};
+          \node[state, left of=r] (null) {$\emptyset$};
+          \node[state, below of=r] (s) {$s$};
+          \node[state, below of=s] (t) {$t$};
+          \node[state, right of=q, accepting] (qr) {$qr$};
+          \node[state, below of=qr, accepting] (qt) {$qt$};
+          \node[state, below of=qt] (rs) {$rs$};
+          \node[state, below of=rs, accepting] (qs) {$qs$};
+          \node[state, below of=qs] (rt) {$rt$};
+          \node[state, below of=rt] (st) {$st$};
+          \node[state, right of=qr, accepting] (qrs) {$qrs$};
+          \node[state, below of=qrs, accepting] (qrt) {$qrt$};
+          \node[state, below of=qrt, accepting] (qst) {$qst$};
+          \node[state, below of=qst] (rst) {$rst$};
+          \node[state, right of=qrs, accepting] (qrst) {$qrst$};
+
+          \draw (q) edge[left] node {$a$} (r)
+                (q) edge[left] node {$b$} (null)
+
+                (r) edge[left] node {$a$} (s)
+                (r) edge[above] node {$b$} (qt)
+
+                (s) edge[left, bend left] node {$b$} (q)
+                (s) edge[left] node {$a$} (null)
+
+                (qt) edge[left, bend left] node {$a$} (qr)
+                (qt) edge[below, bend left, pos=0.2] node {$b$} (null)
+
+                (qr) edge[right, bend left, pos=0.85] node {$a$} (rs)
+                (qr) edge[left, bend left, pos=0.75] node {$b$} (qt)
+                
+                (rs) edge[below] node {$a$} (s)
+                (rs) edge[left] node {$b$} (qt);
+        \end{tikzpicture}
+        \caption{Seven-state DFA to recognize $L \equiv (ab \; \cup \; aab \; \cup \; aba)^*$}
+        \label{fig:3b}
+      \end{figure}
+    \end{Answer}
+
+
+    \item Observe that exactly $7$ states are reachable,
+      so if you were to delete the unreachable ones,
+      you would obtain a $7$-state DFA for $L$.
+      \emph{Carefully observe this DFA and argue that two of its states
+      can be replaced by a single state.}
+      Do this and draw the resulting $6$-state DFA for $L$.
+    \begin{Answer}
+      The two states $r$ and $rs$ can be merged because the y
+      are both non-accepting states and the
+      transitions out of the two states are identical,
+      i.e. $\delta(r, x) = \delta(rs, x)$ for all $x \in \Sigma$.
+
+      \step
+      Resulting DFA:
+      % Draw the DFA
+      \begin{figure}[H]
+        \centering
+        \begin{tikzpicture}
+          \node[state, initial, accepting] at (0, 0) (q) {$q$};
+          \node[state, below of=q] (rs) {$rs$};
+          \node[state, left of=r] (null) {$\emptyset$};
+          \node[state, below of=r] (s) {$s$};
+          \node[state, right of=q, accepting] (qr) {$qr$};
+          \node[state, below of=qr, accepting] (qt) {$qt$};
+
+          \draw (q) edge[left] node {$a$} (rs)
+                (q) edge[left] node {$b$} (null)
+
+                (s) edge[left, bend left] node {$b$} (q)
+                (s) edge[left] node {$a$} (null)
+
+                (qt) edge[left, bend left] node {$a$} (qr)
+                (qt) edge[below, bend left, pos=0.2] node {$b$} (null)
+
+                (qr) edge[right, pos=0.85] node {$a$} (rs)
+                (qr) edge[left, bend left, pos=0.75] node {$b$} (qt)
+                
+                (rs) edge[right] node {$a$} (s)
+                (rs) edge[above, pos=0.8] node {$b$} (qt);
+        \end{tikzpicture}
+        \caption{Six-state DFA to recognize $L \equiv (ab \; \cup \; aab \; \cup \; aba)^*$}
+        \label{fig:3c}
+      \end{figure}
+    \end{Answer}
+
+    \newpage
+    \item Give clear reasons why $L$ cannot be recognized by a DFA with 5 or fewer states.
+    For extra credit, write your reasoning as a formal proof.
+
+    \step
+    \grey{
+      \emph{
+        Hint: Argue that any hypothetical DFA for $L$ must treat the strings
+        $aa$ and $ab$ differently in the sense that the state it reaches upon reading $aa$
+        must be different from the state it reaches upon reading $ab$.
+        Now extend this observation by identifying $6$ specific strings
+        (which may not all belong to $L$) that must all be treated differently.
+      }
+    }
+    \begin{Answer}
+      Any DFA that recognizes $L$ must differentiate between $6$
+      unique strings, each of which may or may not belong to $L$
+      but has a unique set of $\delta$-transitions.
+      These strings are:
+      \begin{enumroman}
+        \item $aa$ and $ab$:
+          The string $aa$ does not belong to $L$, but the string $ab$ does.
+          Any DFA that recognizes $L$ must therefore treat these two strings differently.
+        \item $aab$ and $aba$:
+          While both $aab$ and $aba$ belong in $L$,
+          note that upon reading a $aab$ followed by $b$,
+          any DFA that recognizes $L$ must transition to a reject state
+          (since $aabb \notin L$)
+          while the same DFA must transition to an accept state
+          upon reading $aba$ followed by $b$
+          (since $abab \in L$). Therefore, the DFA may not transition to
+          the same state upon reading $aab$ vs. $aba$, since
+          its transitions from that state must be distinct from each other.
+        \item $aaab$ and $abab$:
+          The string $aaab$ does not belong to $L$, but the string $abab$ does.
+          Any DFA that recognizes $L$ must therefore treat these two strings differently.
+      \end{enumroman}
+    \end{Answer}
+  \end{enumalph}
+\end{problem}

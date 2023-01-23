@@ -1,0 +1,54 @@
+\documentclass[11pt]{amsart}
+
+% Include the macros file from `../common'
+\input{../common/macros.tex}
+
+\renewcommand{\theenumi}{\alph{enumi}}
+
+\begin{document}
+\setlength{\headheight}{13.0pt}
+\setlength{\footskip}{13.0pt}
+
+\tikzset{
+  ->, % makes the edges directed
+  >=stealth', % makes the arrow heads bold
+  node distance=3cm, % specifies the minimum distance between two nodes. Change if necessary.
+  every state/.style={thick, fill=gray!10}, % sets the properties for each ’state’ node
+  initial text=$ $, % sets the text that appears on the start arrow
+}
+
+
+\input{cover.tex}
+\bigskip
+
+% PROBLEM 1
+\input{p1.tex}
+
+\newpage
+
+% PROBLEM 2
+\input{p2.tex}
+
+\newpage
+
+% PROBLEM 3
+\input{p3.tex}
+
+\newpage
+
+% PROBLEM 4
+\input{p4.tex}
+
+\newpage
+
+% PROBLEM 5
+\input{p5.tex}
+
+\newpage
+
+% PROBLEM 6
+\input{p6.tex}
+
+\vfill
+
+\end{document}

@@ -1,0 +1,66 @@
+\begin{problem}
+  Recall the definitions of $\textsc{Max}(L)$ and $\textsc{Min}(L)$ from Homework $1$.
+  Prove that, for every regular language $L$, the languages
+  $\textsc{Max}(L)$ and $\textsc{Min}(L)$ are both regular.
+
+  \step
+  \begin{align*}
+    \textsc{Min}(L) &= \set{x \in \Sigma^* : x \in L \text{ and no proper prefix of } x \in L},\\
+    \textsc{Max}(L) &= \set{x \in \Sigma^* : x \in L \text{ and $x$ is not a proper prefix of any string in $L$}}.
+  \end{align*}
+  \begin{Answer}
+    Since $L$ is regular, there exists a DFA M that recognizes $L$.
+    Let $M = (Q, \Sigma, \delta, q_0, F)$ be such a DFA.
+    \begin{enumalph}
+      \item $\textsc{Min}(L)$
+        
+        \step
+        Note that $\textsc{Min}(L) \subseteq L$.
+        Let \zaff{$s = s_1\ldots s_n, n \ge 1, s_i \in \Sigma$} be a string in $L$
+        such that $s \notin \textsc{Min}(L)$,
+        then $\exists\; \zaff{t = s_1 \ldots s_k, k < n}$, such that $t \in L$.
+        Let $p_s = p_0,\ldots, p_n$ be the computation path of M on $s$
+        such that $p_0 = q_0$ and $p_i = \delta(p_{i-1}, s_i)$ for all $i$, and $p_n \in F$.
+        Then $p_t$, the computation path of M on $t$,
+        is equivalent to $p_0, \ldots, p_k$ for some $k < n$
+        since the first $k$ letters in $s$ are identical to the first $k$ letters in $t$
+        and both computation paths start at $q_0$ yet DFAs may only transition
+        to a single state given an input letter and a state.
+        Therefore, the computation path of M on a string $s \notin \textsc{Min}(L)$
+        always enters and leaves
+        at least one accepting state before reaching the final state.
+        To prune $s$, redirect all transitions \emph{out of} accepting states
+        to a new trap-state $r$ that does not accept any strings.
+        \begin{align*}
+          M_2 &= (Q \cup \set{r}, \Sigma, \delta_2, q_0, F) \text{ where }\\
+          r &\notin Q \\
+          \delta_2(q, a) &= \begin{cases}
+            r & \text{if $q \in F \cup \set{r}$ } \\
+            \delta(q, a) & \text{otherwise } \\
+          \end{cases}
+        \end{align*}
+        \begin{enumroman}
+          \item $\calL(M_2) \supseteq \textsc{Min}(L)$ (Completeness).
+            
+            Suppose a string $s$ is in $\textsc[Min]{L}$,
+            then $s$ must not have a proper prefix that happens to be in $L$.
+            Therefore, the computation path of $M_2$ on $s$ never enters \emph{and leaves} an accepting state,
+            and $M_2$ does identical transitions to those on $M$ on $s$
+            since $\delta_2(q, x) = \delta(q, x)$ for all $q \in Q \setminus F$ and $x \in \Sigma$.
+            Since $s \in L$, M accepts $s$, so $M_2$ also accepts $s$.
+          \item $\calL(M_2) \subseteq \textsc{Min}(L)$ (Soundness).
+          
+            Suppose a string $s$ is accepted by $M_2$,
+            then the computation path of $M_2$ on $s$ never enters \emph{and leaves} an accepting state,
+            since $\delta_2(q, x) = r$ for all $q \in F$ and $x \in \Sigma$.
+            Therefore, $s$ must not have a proper prefix that happens to be in $L$.
+        \end{enumroman}
+      \item $\textsc{Max}(L)$
+      
+      \step
+      Note that $\textsc{Max}(L) \subseteq L$. Let $s = s_1\ldots s_k, k \ge 1, s_i \in \Sigma$ be a string in $L$ such that $s \notin \textsc{Max}(L)$,
+      then $\exists\; t = s_1 \ldots s_k s_{k+1} \ldots s_n, k < n$, such that $t \in L$.
+      We wish to prune all such $s$ where the set $T = \ t \in \Sigma^* : st \in L$ is non-empty.
+    \end{enumalph}
+  \end{Answer}
+\end{problem}
