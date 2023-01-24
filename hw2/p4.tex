@@ -20,42 +20,55 @@
         \begin{claim}
           $N_1$ is an NFA that recognizes $L$.
           \begin{proof}
-            Recall that the original NFA $N$ recognizes $L$.
-
+            
             \step
-            We aim to show that $\calL(N_1) = L$;
-            essentially, that $\calL(N_1) \supseteq L$ (completeness)
-            and $\calL(N_1) \subseteq L$ (soundness).
-
             \begin{enumroman}
               \item \textbf{Completeness} ($\calL(N_1) \supseteq L$)
 
                 \step
-                Let \crim{$w = w_1w_2\ldots w_k$ : $w_i \in \Sigma$ for all $0 < i \le k$}
-                be a string in $L$. Since $N$ recognizes $L$,
-                there exists a computation path $p = q_0q_1\ldots q_n$
-                of $N$ on $w$ such that $q_n \in F$ and $q_i \neq a$ for all $0 \le i \le n$.
-                Since $\delta_1(q, x) = \delta(q, x)$ when $q \notin F$
-                or $x \neq \eps$, $N_1$ will have the same computation path $p$ on
-                the sequence $w_1,\ldots, w_n$.
-                After processing $w_n$, $N_1$ will be in state $q_n \in F$,
-                so $\delta_1(q_n, \eps) = \delta(q_n, \eps) \cup \set{a}$.
-                $a$ is in $F_1$, so $N_1$ will accept $w$.
+                Let $w = w_1\ldots w_k$ be a string in $L$
+                such that $w_i \in \Sigma$ for all $0 < i \le k$.
+                Since $N$ recognizes $L$,
+                there exists a computation path $p_w = p_0,\ldots,p_n$
+                of $N$ on $w$ such that $p_n \in F$.
+                Note that the state $a$ does not exist in $N$, the original NFA,
+                so $p_i \neq a$ for all $0 \le i \le n$.
+                Consider the computation path of $N_1$ on $w$.
+                Since $\delta_1(q, x) \supseteq \delta(q, x)$
+                for all states $q \in Q \setminus \set{a}$,
+                the computation path of $N$ on $w$ is always one of the possible
+                computation paths of $N_1$ on $w$.
+                Suppose $N_1$ chooses that computation path, then it will eventually
+                transition to the state $p_n$, and $p_n \in F$.
+                There, $N_1$ will have the option of taking an epsilon-transition
+                to $a$, the single accepting state in $N_1$.
+                $N_1$ can therefore transition to $a$ and accept $w$
+                whenever $w$ is in $L$.
                 
               \item \textbf{Soundness} ($\calL(N_1) \subseteq L$)
-              Suppose $N_1$ accepts a string $w = w_1\ldots w_n$, $n \ge 1$, $q_n \in \Sigma \cup \set{\eps}$.
-              Let the computation path of $N_1$ on $w$ be $p = q_0q_1\ldots q_n$,
-              then $q_n = a$.
-              The only transition into $a$ is an epsilon-transition from a state $q \in F$.
-              Therefore, the sequence $w_1\ldots w_{n}$ is in $L$,
-              since the corresponding computation path ends at a state in $F$.
+              Suppose $N_1$ accepts a string $w = w_1\ldots w_n$, $n \ge 1$, $w_i \in \Sigma \cup \set{\eps}$
+              for all $1 \le i \le n$.
+              Let the computation path of $N_1$ on $w$ be $p = p_0,\ldots, p_n$
+              such that $p_0 = q_0$ and $p_i = \delta_1(p_{i-1}, w_i)$ for all $1 \le i \le n$.
+              Since $N_1$ has exactly one accept state, $p_n = a$.
+              However, there is only one epsilon-transition into $a$,
+              which happens from a state $q \in F$.
+              We can also observe that there are no transitions from $a$,
+              so any path that ends at $a$ must have transitioned into $a$
+              at the last step. Therefore, $p_{n-1} \in F$.
+              Since no transitions into $a$ were taken before the last step,
+              all transitions were identical to those that would be taken by $N$
+              on $w$, meaning the computational path of $N$ on $w$ would also terminate
+              at $p_{n-1}$, so $N$ accepts $w$.
+              Therefore, any sequence $w = w_1\ldots w_{n}$ accepted by $N_2$
+              is also accepted by $N$, implying that $w \in L$.
             \end{enumroman}
           \end{proof}
         \end{claim}
         
       \end{Answer}
 
-    \newpage
+    % \newpage
     \item Prove, by giving a concrete counterexample,
       that the analogous result does not hold for DFAs,
       i.e., that for a nonempty language $L$ recognized by a DFA $M$,

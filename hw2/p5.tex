@@ -10,51 +10,66 @@
   \end{align*}
   \begin{Answer}
     Since $L$ is regular, there exists a DFA M that recognizes $L$.
-    Let $M = (Q, \Sigma, \delta, q_0, F)$ be such a DFA.
     \begin{enumalph}
+      \newpage
       \item $\textsc{Min}(L)$
-        
-        \step
-        Note that $\textsc{Min}(L) \subseteq L$.
-        Let \zaff{$s = s_1\ldots s_n, n \ge 1, s_i \in \Sigma$} be a string in $L$
-        such that $s \notin \textsc{Min}(L)$,
-        then $\exists\; \zaff{t = s_1 \ldots s_k, k < n}$, such that $t \in L$.
-        Let $p_s = p_0,\ldots, p_n$ be the computation path of M on $s$
-        such that $p_0 = q_0$ and $p_i = \delta(p_{i-1}, s_i)$ for all $i$, and $p_n \in F$.
+      
+      \step
+        Let $M = (Q, \Sigma, \delta, q_0, F)$ be a DFA recognizing $L$.
+        Let $s = s_1\ldots s_n, n \ge 1, s_i \in \Sigma$ be a string in $L$
+        such that \crim{$s \notin \textsc{Min}(L)$},
+        then there exists some string $t \in L$ that is a proper substring of $s$.
+        That is, $t = s_1 \ldots s_k, k < n$.
+        Consider the computational path of $M$ on $s$,
+        $p_s = p_0,\ldots, p_n$ such that $p_0 = q_0$,
+        $p_i = \delta(p_{i-1}, s_i)$ for all $i$, and $p_n \in F$.
         Then $p_t$, the computation path of M on $t$,
-        is equivalent to $p_0, \ldots, p_k$ for some $k < n$
-        since the first $k$ letters in $s$ are identical to the first $k$ letters in $t$
-        and both computation paths start at $q_0$ yet DFAs may only transition
+        is equivalent to $p_0, \ldots, p_k$
+        since the first $k$ letters in $s$ are identical to the first $k$ letters of $t$
+        and both computation paths start at the same state, $q_0$, yet DFAs may only transition
         to a single state given an input letter and a state.
-        Therefore, the computation path of M on a string $s \notin \textsc{Min}(L)$
-        always enters and leaves
-        at least one accepting state before reaching the final state.
-        To prune $s$, redirect all transitions \emph{out of} accepting states
-        to a new trap-state $r$ that does not accept any strings.
+        Since $t \in L$, $p_t$ must end in an accepting state,
+        so the computation path of $M$ on $s \notin \textsc{Min}(L)$
+        \emph{must} enter and leave an accepting state.
+        To recognize members of $L$ that are in $\textsc{Min}(L)$,
+        we can prune those that are not in $\textsc{Min}(L)$ by redirecting
+        all transitions out of accepting states to a new trap-state $r$
+        that rejects.
         \begin{align*}
-          M_2 &= (Q \cup \set{r}, \Sigma, \delta_2, q_0, F) \text{ where }\\
-          r &\notin Q \\
-          \delta_2(q, a) &= \begin{cases}
+          M_2 &= (Q \cup \set{r}, \Sigma, \delta_2, q_0, F) \text{ where $r \notin Q$ and }\\
+          \delta_2(q, x) &= \begin{cases}
             r & \text{if $q \in F \cup \set{r}$ } \\
-            \delta(q, a) & \text{otherwise } \\
+            \delta(q, x) & \text{otherwise } \\
           \end{cases}
         \end{align*}
         \begin{enumroman}
-          \item $\calL(M_2) \supseteq \textsc{Min}(L)$ (Completeness).
+          \item \textbf{Completeness} ($\calL(M_2) \supseteq \textsc{Min}(L)$)
             
-            Suppose a string $s$ is in $\textsc[Min]{L}$,
-            then $s$ must not have a proper prefix that happens to be in $L$.
-            Therefore, the computation path of $M_2$ on $s$ never enters \emph{and leaves} an accepting state,
-            and $M_2$ does identical transitions to those on $M$ on $s$
-            since $\delta_2(q, x) = \delta(q, x)$ for all $q \in Q \setminus F$ and $x \in \Sigma$.
-            Since $s \in L$, M accepts $s$, so $M_2$ also accepts $s$.
-          \item $\calL(M_2) \subseteq \textsc{Min}(L)$ (Soundness).
+            Let $s$ be a string such that $s \in \textsc{Min}{L}$,
+            then $s$ does not have a proper prefix that happens to be in $L$.
+            Let $p_s = p_0, \ldots, p_n$ be the computation path of $M$ on $s$,
+            such that $p_0 = q_0$ and $p_i = \delta(p_{i-1}, s_i)$ for all $i$.
+            Then $p_i \notin F$ for all $i<n$, so $\delta_2(p_i, x) = \delta(p_i, x)$.
+            Particularly, $M_2$ never transitions to $r$, since the state $r$ 
+            does not exist in the original DFA, $M$, yet $M_2$ is using the same transition
+            function as $M$ when $p-i \notin F$.
+            Therefore, $M_2$ never enters \emph{and leaves} an accepting state,
+            but eventually transitions into an accepting state $p_n$, thereby accepting $s$.
+            \item \textbf{Soundness} ($\calL(M_2) \subseteq \textsc{Min}(L)$)
           
-            Suppose a string $s$ is accepted by $M_2$,
-            then the computation path of $M_2$ on $s$ never enters \emph{and leaves} an accepting state,
-            since $\delta_2(q, x) = r$ for all $q \in F$ and $x \in \Sigma$.
-            Therefore, $s$ must not have a proper prefix that happens to be in $L$.
+            Let $s$ be a string accepted by $s$.
+            Let $p_s = p_0, \ldots, p_n$ be the computation path of $M_2$ on $s$,
+            then $p_i \ne r$ for all $i$ since $r$ is a rejecting trap-state.
+            Notice that the transition function, $\delta_2$, always transitions
+            to $r$ when leaving a state in $F$, so none of the states that
+            $M_2$ transitions out of may be in $F$.
+            But $F$ is the same set of states that $M$, the original DFA, accepts!
+            Therefore, none of the states substrings in $s$ are accepted by $M$,
+            implying that they are not in $L$.
+            Consequently, $s$ is a member of $L$, and no proper substring
+            of $s$ is in $L$, so $s$ must be in $\textsc{Min}(L)$.
         \end{enumroman}
+      \newpage
       \item $\textsc{Max}(L)$
       
       \step
@@ -71,7 +86,7 @@
       \end{align*}
       \begin{observation}
         $R$ is the set of all \emph{accepting states} in $M$
-        and have some non-empty transition sequence to some accepting state
+        that have some non-empty transition sequence to some other accepting state
         (which could be the same state).
       \end{observation}
 
@@ -85,6 +100,8 @@
           \step
           \begin{enumroman}
             \item \textbf{Completeness} ($\calL(M_2) \supseteq \textsc{Max}(L)$)
+            
+            \step
             Suppose a string $s$ is in $\textsc{Max}(L)$,
             then $s \in L$, since $\textsc{Max}(L) \subseteq L$.
             Let $s = s_1 \ldots s_n, n \ge 1, s_i \in \Sigma$,
@@ -100,23 +117,26 @@
             the computation path of $M_2$ on $s$ is equivalent to $p_0, \ldots, p_n$
             and $p_n$ is an accepting state in $M_2$ so $M_2$ accepts $s$.
             \item \textbf{Soundness} ($\calL(M_2) \subseteq \textsc{Max}(L)$)
-              Let $s$ be a string accepted by $M_2$.
-              Let $s = s_1 \ldots s_n, n \ge 1, s_i \in \Sigma$,
-              and $p = p_0, \ldots, p_n$ be the computation path of $M_2$ on $s$
-              where $p_0 = q_0$ and $p_i = \delta(p_{i-1}, s_i)$ for all $i$.
-              Then $p_n \in F \setminus R$ since $M_2$ accepts $s$.
-              This implies two things:
-              \begin{itemize}
-                \item $p_n \in F$, meaning $M$, the original DFA, accepts $s$.
-                  Therefore, $s$ is a member of the language $L$.
-                \item $p_n \notin R$, meaning $p_n$ does not have a non-empty transition sequence to some accepting state.
-                  Therefore, there does not exist any non-empty string $y \in \Sigma^*$
-                  such that $\delta^*(p_n, y) \in F$.
-                  This implies that there is no string in $\Sigma^8$ that, when appended to $s$,
-                  results in a string that is accepted by $M$ (that is, a string in $L$).
-                  This is the same as saying that $s$ is not a proper substring of any string in $L$,
-                  so $s \in \textsc{Max}(L)$.
-              \end{itemize}
+              
+            
+            \step
+            Let $s$ be a string accepted by $M_2$.
+            Let $s = s_1 \ldots s_n, n \ge 1, s_i \in \Sigma$,
+            and $p = p_0, \ldots, p_n$ be the computation path of $M_2$ on $s$
+            where $p_0 = q_0$ and $p_i = \delta(p_{i-1}, s_i)$ for all $i$.
+            Then $p_n \in F \setminus R$ since $M_2$ accepts $s$.
+            This implies two things:
+            \begin{itemize}
+              \item $p_n \in F$, meaning $M$, the original DFA, accepts $s$.
+                Therefore, $s$ is a member of the language $L$.
+              \item $p_n \notin R$, meaning $p_n$ does not have a non-empty transition sequence to some accepting state.
+                Therefore, there does not exist any non-empty string $y \in \Sigma^*$
+                such that $\delta^*(p_n, y) \in F$.
+                This implies that there is no string in $\Sigma^8$ that, when appended to $s$,
+                results in a string that is accepted by $M$ (that is, a string in $L$).
+                This is the same as saying that $s$ is not a proper substring of any string in $L$,
+                so $s \in \textsc{Max}(L)$.
+            \end{itemize}
           \end{enumroman}
         \end{proof}
       \end{claim}
