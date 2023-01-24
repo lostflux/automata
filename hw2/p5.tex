@@ -58,9 +58,68 @@
       \item $\textsc{Max}(L)$
       
       \step
-      Note that $\textsc{Max}(L) \subseteq L$. Let $s = s_1\ldots s_k, k \ge 1, s_i \in \Sigma$ be a string in $L$ such that $s \notin \textsc{Max}(L)$,
-      then $\exists\; t = s_1 \ldots s_k s_{k+1} \ldots s_n, k < n$, such that $t \in L$.
-      We wish to prune all such $s$ where the set $T = \ t \in \Sigma^* : st \in L$ is non-empty.
+      Let $M$ be a DFA that recognizes $L$.
+
+      We define:
+      \begin{align*}
+        \delta^* : Q \times \Sigma^* &\to Q \\
+        \delta^*(q, x) &= \begin{cases}
+          q &\text{ if $x = \eps$. }\\
+          \delta^*(\delta(q, s), t) &\text{ otherwise, where $q = st, s \in \Sigma, t \in \Sigma^*$. } \\
+        \end{cases}\\
+        R &= \set{q \in F : \delta^*(q, s) \in F \text{ for some } s \in \Sigma^* \setminus \set{\eps}}.
+      \end{align*}
+      \begin{observation}
+        $R$ is the set of all \emph{accepting states} in $M$
+        and have some non-empty transition sequence to some accepting state
+        (which could be the same state).
+      \end{observation}
+
+      \step
+      Let $M_2$ be defined as follows:
+      \[ M_2 = (Q, \Sigma, \delta, q_0, F \setminus R)\]
+      \begin{claim}~\label{claim:Max}
+        $\calL(M_2) = \textsc{Max}(L)$
+        \begin{proof}
+
+          \step
+          \begin{enumroman}
+            \item \textbf{Completeness} ($\calL(M_2) \supseteq \textsc{Max}(L)$)
+            Suppose a string $s$ is in $\textsc{Max}(L)$,
+            then $s \in L$, since $\textsc{Max}(L) \subseteq L$.
+            Let $s = s_1 \ldots s_n, n \ge 1, s_i \in \Sigma$,
+            and let $p = p_0, \ldots, p_n$ be the computation path of $M$ on $s$
+            where $p_0 = q_0$ and $p_i = \delta(p_{i-1}, s_i)$ for all $i$.
+            Then $p_n \in F$ since $s \in L$.
+            
+            \step
+            However, $s$ is not a proper substring of any string in $L$
+            (since $s \in \textsc{Max}(L)$), therefore $p_n \notin R$.
+            This implies that $p_n \in F \setminus R$.
+            Since $M_2$ uses the same transition function as $M$,
+            the computation path of $M_2$ on $s$ is equivalent to $p_0, \ldots, p_n$
+            and $p_n$ is an accepting state in $M_2$ so $M_2$ accepts $s$.
+            \item \textbf{Soundness} ($\calL(M_2) \subseteq \textsc{Max}(L)$)
+              Let $s$ be a string accepted by $M_2$.
+              Let $s = s_1 \ldots s_n, n \ge 1, s_i \in \Sigma$,
+              and $p = p_0, \ldots, p_n$ be the computation path of $M_2$ on $s$
+              where $p_0 = q_0$ and $p_i = \delta(p_{i-1}, s_i)$ for all $i$.
+              Then $p_n \in F \setminus R$ since $M_2$ accepts $s$.
+              This implies two things:
+              \begin{itemize}
+                \item $p_n \in F$, meaning $M$, the original DFA, accepts $s$.
+                  Therefore, $s$ is a member of the language $L$.
+                \item $p_n \notin R$, meaning $p_n$ does not have a non-empty transition sequence to some accepting state.
+                  Therefore, there does not exist any non-empty string $y \in \Sigma^*$
+                  such that $\delta^*(p_n, y) \in F$.
+                  This implies that there is no string in $\Sigma^8$ that, when appended to $s$,
+                  results in a string that is accepted by $M$ (that is, a string in $L$).
+                  This is the same as saying that $s$ is not a proper substring of any string in $L$,
+                  so $s \in \textsc{Max}(L)$.
+              \end{itemize}
+          \end{enumroman}
+        \end{proof}
+      \end{claim}
     \end{enumalph}
   \end{Answer}
 \end{problem}

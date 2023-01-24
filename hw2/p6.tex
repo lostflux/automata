@@ -1,7 +1,109 @@
 \begin{problem}
   Recall the definition of $\textsc{Half}(L)$ from Homework $1$.
   Prove that if $L$ is regular, so is $\textsc{Half}(L)$.
-  \begin{Answer}
 
+  \[
+    \textsc{Half}(L) = \set{x \in \Sigma^* : \exists y \in \Sigma^* \text{ such that } x y \in L}
+  \]
+  \begin{Answer}
+    \step
+    \textbf{High Level Idea}\\
+    Since $L$ is regular, let $M = (Q, \Sigma, \delta, q_0, F)$
+    be a DFA that recognizes $L$.
+    We can track whether a string $s$ is a subsequence of another
+    string $t$ in $L$ by tracking the set of states reachable from $q$
+    that eventually reach an accepting state.
+    We can start this tracking with the start state, $q_0$,
+    and the set of accepting states, $F$,
+    Each time we take a step in our DFA, we replace the set $S$ of tracked states
+    by those states that have a transition into \emph{at least} one member of $S$.
+    Consequently, every time we transition in our DFA,
+    we also backtrack one step.
+    If we reach a state after processing a string $s \in \textsc{Half}(L)$,
+    then the state $q_s$ must be in the set of tracked states.
+
+    \step
+    \textbf{Formal Definition}\\
+    Let $\psi : \calP(Q) \to \calP(Q)$ be a function as follows:
+    \[ \psi(S) = \bigcup_{s \in S} \set{q \in Q : \exists y \in \Sigma, \delta(q, y) = s}.\]
+    We may also define function exponentiation as repeated function application,
+    i.e.
+    \[
+      \psi^n(S) = \begin{cases}
+        S & \text{ if } n = 0 \\
+        \psi^{n-1}(\psi(S)) &\text{ if } n \ge 0
+      \end{cases}
+    \]
+  
+    \step
+    Define a new DFA $M_2$ as follows:
+    \begin{align*}
+      M_2 &= (Q \times \calP(Q), \Sigma, \delta_2, q_{0_2}, F_2) \text{ where }\\
+      q_{0_2} &= (q_0, F) \\
+      \delta_2 \left((q, S), x \right) &= \left(\delta(q, x), \psi(S) \right) \\
+      F_2 &= \set{(q, S) \in Q \times \calP(Q) : q \in S }.
+    \end{align*}
+
+    \begin{claim}~\label{claim:half}
+      $\calL(M_2) = \textsc{Half}(L)$.
+      \begin{proof}
+
+        \step
+        \begin{enumroman}
+          \item \textbf{Completeness} ($\calL(M_2) \supseteq \textsc{Half}(L)$)
+          
+          \step
+          Suppose a string $u$ is a member of $\textsc{Half}(L)$, then
+          there exists a string $t \in L$ and a string $v \in \Sigma^*$
+          such that $\abs{u} = \abs{v}$ and $t = uv$.
+          Let $t = t_1, \ldots, t_n, \ldots, t_{2n}$ where $t_i \in \Sigma$ for all $0 < i \le 2n$, and
+          let $p = p_0, \ldots, p_n, \ldots p_{2n}$ be the computational path of $M$ on $t$
+          such that $p_0 = q_0$ and $p_i = \delta(p_{i-1}, t_i)$.
+          Since $t \in L$, $M$ recognizes $t$, $p_n \in F$.
+          Furthermore, $t = uv$ and $\abs{u} = \abs{v}$, so we can write
+          $u = t_1, \ldots, t_n$ and $v = t_{n+1}, \ldots, t_{2n}$.
+          
+          \step
+          Consider the computational path of $M_2$ on $u$.
+          $M_2$ starts in state $(q_0, F)$ and processes each of the characters
+          $t_1$ up to $t_n$ in sequence, transitioning from the states
+          $(q_0, F)$ to $(q_1, \psi(F))$, to $(q_2, \psi^2(F))$, all the way to $(q_n, \psi^n(F))$ and so on.
+
+          \step
+          Recall that $t \in L$ and $p = p_1 \ldots p_n, \ldots p_{2n}$ is the computational
+          path of $M$ on $t$.
+          Therefore, $p_{2n} \in F$.
+          Since $\delta(p_{2n-1}, t_n) = p_{2n}$, we have that
+          $p_{2n-1} \in \psi(F)$. Similarly, $\delta(p_{2n-2}, t_{2n-1}) = p_{2n-1}$,
+          so $p_{2n-2} \in \psi^2(F)$,
+          and $p_{2n-i} \in \psi^i(F)$ for all $0 < i \le n$.
+          Therefore, $p_n \in \psi^n(F)$, and $(q_n, \psi^n(F))$ is an accepting state of $M_2$.
+
+          \item \textbf{Soundness} ($\calL(M_2) \subseteq \textsc{Half}(L)$)
+            
+          \step
+          Suppose a string $s$ is accepted by $M_2$.
+          Let $s = s_1, \ldots, s_n$ where $s_i \in \Sigma$ for all $0 < i \le n$.
+          Let $p = p_0, \ldots, p_n$ be the computational path of $M_2$ on $s$,
+          then $p_n \in \psi^n(F)$ (by definition of the accepting states of $M_2$).
+          That implies that there exists a state $p_{n+1} \in Q$ such that
+          $\delta(p_n, x) = p_{n+1}$ for some $x \in \Sigma$.
+          Therefore, $p_{n+1} \in \psi^{n-1}(F)$.
+          Similarly, there must exist a state $p_{n+2} \in Q$ such that
+          $\delta(p_{n+1}, x_1) = p_{n+2}$ for some $x_1 \in \Sigma$.
+          This implies again that $p_{n+2} \in \psi^{n-2}(F)$,
+          so there must exist a state $p_{n+3} \in Q$, such that
+          $\delta(q_{n+2}, x_3) = p_{n+3}$ for some $x_3 \in \Sigma$.
+          More generally, for each $0 < i \le n$, there must exist a state $p_{n+i} \in Q$ such that
+          $\delta(p_{n+i-1}, x) = p_{n+i}$ for some $x \in \Sigma$.
+          Since it took $n$ transitions to reach the accepting state $(p_n, \psi^n(F))$,
+          there must be $n$ states $p_{n+1}, \ldots, p_{2n}$ such that
+          $\delta(p_{n+i-1}, x) = p_{n+i}$ for all $0 < i \le n$,
+          and $p_{2n} \in F$, meaning
+          the corresponding string $s' = s_1 \ldots s_{2n}$ is a member of $L$.
+          Therefore, $s \in \calL(M_2)$.
+        \end{enumroman}
+      \end{proof}
+    \end{claim}
   \end{Answer}
 \end{problem}

@@ -69,6 +69,8 @@
 
                 (qr) edge[right, bend left, pos=0.85] node {$a$} (rs)
                 (qr) edge[left, bend left, pos=0.75] node {$b$} (qt)
+
+                (null) edge[loop left, left] node {$a, b$} (null)
                 
                 (rs) edge[below] node {$a$} (s)
                 (rs) edge[left] node {$b$} (qt);
@@ -113,6 +115,8 @@
                 (qt) edge[left, bend left] node {$a$} (qr)
                 (qt) edge[below, bend left, pos=0.2] node {$b$} (null)
 
+                (null) edge[loop left, left] node {$a, b$} (null)
+                
                 (qr) edge[right, pos=0.85] node {$a$} (rs)
                 (qr) edge[left, bend left, pos=0.75] node {$b$} (qt)
                 
@@ -139,28 +143,43 @@
       }
     }
     \begin{Answer}
-      Any DFA that recognizes $L$ must differentiate between $6$
-      unique strings, each of which may or may not belong to $L$
-      but has a unique set of $\delta$-transitions.
-      These strings are:
-      \begin{enumroman}
-        \item $aa$ and $ab$:
-          The string $aa$ does not belong to $L$, but the string $ab$ does.
-          Any DFA that recognizes $L$ must therefore treat these two strings differently.
-        \item $aab$ and $aba$:
-          While both $aab$ and $aba$ belong in $L$,
-          note that upon reading a $aab$ followed by $b$,
-          any DFA that recognizes $L$ must transition to a reject state
-          (since $aabb \notin L$)
-          while the same DFA must transition to an accept state
-          upon reading $aba$ followed by $b$
-          (since $abab \in L$). Therefore, the DFA may not transition to
-          the same state upon reading $aab$ vs. $aba$, since
-          its transitions from that state must be distinct from each other.
-        \item $aaab$ and $abab$:
-          The string $aaab$ does not belong to $L$, but the string $abab$ does.
-          Any DFA that recognizes $L$ must therefore treat these two strings differently.
-      \end{enumroman}
+      Let $M$ be a DFA that recognizes $L$.
+      Let us define the function $\delta^*$ as follows:
+      \begin{align*}
+        \delta^* : Q \times \Sigma^* &\to Q \\
+        \delta^*(q, x) &= \begin{cases}
+          q &\text{ if $x = \eps$. }\\
+          \delta^*(\delta(q, s), t) &\text{ otherwise, where $q = st, s \in \Sigma, t \in \Sigma^*$. } \\
+        \end{cases}
+      \end{align*}
+      Then $M$ must differentiate between six distinct strings as follows:
+    \end{Answer}
+      \begin{table}[h!]
+        \begin{tabular}{l c c c c}
+          \bottomrule
+          $s$ & $\delta^*(q_0, s)$ & $\delta^*(q0, sa)$ & $\delta(q_0, sb)$ & $\delta^*(q_0, sab)$ \\
+          \midrule
+          $a$ & \crim{rejecting} & \crim{rejecting} & \green{accepting} & \green{accepting} \\
+          \midrule
+          $b$ & \crim{rejecting} & \crim{rejecting} & \crim{rejecting} & \\
+          \midrule
+          $aa$ & \crim{rejecting} & \crim{rejecting} & \green{accepting} & \crim{rejecting}\\
+          \midrule
+          $ab$ & \green{accepting} & \green{accepting} & \crim{rejecting} & \\
+          \midrule
+          $aab$ & \green{accepting} & \crim{rejecting} & \crim{rejecting} & \\
+          \midrule
+          $aba$ & \green{accepting} & \crim{rejecting} & \green{accepting} & \\
+          \toprule
+        \end{tabular}
+        \caption{Summary of the $\delta$-transitions for $M$}
+      \end{table}
+
+    \begin{Answer}
+      As we can see, the state that $M$ transitions to upon reading any
+      of the six strings must be different from the state it transitions
+      to upon reading any of the other strings because of a combination
+      of different accepting/rejecting status and different outgoing transitions.
     \end{Answer}
   \end{enumalph}
 \end{problem}

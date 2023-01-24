@@ -7,17 +7,17 @@
         Let $N = (Q, \Sigma, \delta, q_0, F)$ be an NFA that recognizes $L$.
         
         \step
-        We define $N_1 = (Q \cup F_2, \Sigma, \delta_1, q_0, F_2)$,
+        We define $N_1 = (Q \cup \set{a}, \Sigma, \delta_1, q_0, F_1)$,
         where $a$ is a new state that is not in $Q$, and:
         \begin{align*}
-          F_2 &= \set{a} \\
+          F_1 &= \set{a} \\
           \delta_1(q, x) &= \begin{cases}
             \delta(q, x) \cup \set{a} &\text{ if $q \in F$ and $x = \eps$ }\\
-            \set{a} &\text{ if $q = a$ }\\
+            % \set{a} &\text{ if $q = a$ }\\
             \delta(q, x) & \text{ otherwise. }
           \end{cases}
         \end{align*}
-        \begin{lemma}
+        \begin{claim}
           $N_1$ is an NFA that recognizes $L$.
           \begin{proof}
             Recall that the original NFA $N$ recognizes $L$.
@@ -28,30 +28,64 @@
             and $\calL(N_1) \subseteq L$ (soundness).
 
             \begin{enumroman}
-              \item $\calL(N_1) \supseteq L$ (completeness)
+              \item \textbf{Completeness} ($\calL(N_1) \supseteq L$)
+
+                \step
                 Let \crim{$w = w_1w_2\ldots w_k$ : $w_i \in \Sigma$ for all $0 < i \le k$}
                 be a string in $L$. Since $N$ recognizes $L$,
                 there exists a computation path $p = q_0q_1\ldots q_n$
-                of $N$ on $w$ such that $q_n \in F$.
-                Note that $q_i \ne a$ for all $0 < i \le n$, since $a \notin Q$.
-                Consider the computation path of $N_1$ on $w$,
-              \item $\calL(N_1) \subseteq L$ (soundness)
+                of $N$ on $w$ such that $q_n \in F$ and $q_i \neq a$ for all $0 \le i \le n$.
+                Since $\delta_1(q, x) = \delta(q, x)$ when $q \notin F$
+                or $x \neq \eps$, $N_1$ will have the same computation path $p$ on
+                the sequence $w_1,\ldots, w_n$.
+                After processing $w_n$, $N_1$ will be in state $q_n \in F$,
+                so $\delta_1(q_n, \eps) = \delta(q_n, \eps) \cup \set{a}$.
+                $a$ is in $F_1$, so $N_1$ will accept $w$.
+                
+              \item \textbf{Soundness} ($\calL(N_1) \subseteq L$)
+              Suppose $N_1$ accepts a string $w = w_1\ldots w_n$, $n \ge 1$, $q_n \in \Sigma \cup \set{\eps}$.
+              Let the computation path of $N_1$ on $w$ be $p = q_0q_1\ldots q_n$,
+              then $q_n = a$.
+              The only transition into $a$ is an epsilon-transition from a state $q \in F$.
+              Therefore, the sequence $w_1\ldots w_{n}$ is in $L$,
+              since the corresponding computation path ends at a state in $F$.
             \end{enumroman}
-
-
-
           \end{proof}
-        \end{lemma}
+        \end{claim}
         
       \end{Answer}
 
+    \newpage
     \item Prove, by giving a concrete counterexample,
       that the analogous result does not hold for DFAs,
       i.e., that for a nonempty language $L$ recognized by a DFA $M$,
       there might not exist any $1$-accept-state DFA that recognizes $L$.
       Explain clearly why your chosen language $L$ has this property.
       \begin{Answer}
+        For the alphabet $\Sigma = \set{0, 1}$,
+        let $L = \set{x \in \Sigma^* : \abs{x} \in \set{2, 3}}$
+        Consider the DFA that recognizes $L$:
+        \begin{align*}
+          M &= (Q, \Sigma, \delta, q_0, F) \quad \text{ where } \quad \\
+          Q &= \set{q_i : 0 \le i \le 4} \\
+          \delta(q_i, x) &= q_{i + 1}\\
+          q_0 &= q_0 \\
+          F &= \set{q_2, q_3}
+        \end{align*}
 
+        \step
+        Note that the DFA has two accepting states, $q_2$ and $q_3$.
+        However, we have that $\delta(q_2, x) = q_3$ but $\delta(q_3, x) = q_4$,
+        i.e. $M$ transitions from $q_2$ to an accepting state ($q_3$),
+        but $M$ transitions from $q_3$ to a non-accepting state ($q_4$).
+        Therefore, we cannot merge $q_2$ and $q_3$ into a single state.
+        Furthermore, a DFA cannot move to another state without getting any
+        valid input symbol $x \in \Sigma$, so we cannot add epsilon-transitions
+        from $q_2$ and $q_3$ into a new accepting state.
+
+        \step
+        We therefore \emph{have to} retain $q_2$ and $q_3$ as separate states
+        in order to recognize $L$.
       \end{Answer}
   \end{enumalph}
 \end{problem}
