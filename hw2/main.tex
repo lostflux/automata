@@ -1,21 +1,13 @@
 \documentclass[11pt]{amsart}
 
 % Include the macros file from `../common'
-\input{../common/macros.tex}
+\input{~/latex-common/macros.tex}
 
 \renewcommand{\theenumi}{\alph{enumi}}
 
 \begin{document}
 \setlength{\headheight}{13.0pt}
 \setlength{\footskip}{13.0pt}
-
-\tikzset{
-  ->, % makes the edges directed
-  >=stealth', % makes the arrow heads bold
-  node distance=3cm, % specifies the minimum distance between two nodes. Change if necessary.
-  every state/.style={thick, fill=gray!10}, % sets the properties for each ’state’ node
-  initial text=$ $, % sets the text that appears on the start arrow
-}
 
 
 \input{cover.tex}
