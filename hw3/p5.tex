@@ -1,0 +1,39 @@
+\begin{problem}
+  Now, apply the notion of left equivalence to the theory
+  of regular languages.
+
+  \begin{enumalph}
+    \item For a language $A$ over alphabet $\Sigma$ and a string $x \in \Sigma$,
+      let $[x]_A$ denote the equivalence class (of $A$) to which $x$ belongs.
+      For instance, consider the set $X_1 = (01)^*, X_2 = (01)^*0$,
+      and $X_3 = \set{0, 1}^* - (X_1 \cup X_2)$, then:
+      \begin{enumroman}
+        \item $[010]_{B}$ denotes the set $X_2$,
+        \item $[01010]_{B}$ also denotes the same set $X_2$, and
+        \item $[\eps]_B$ and $[0101]_B$ both denote the set $X_1$.
+      \end{enumroman}
+
+      \step
+      There are rarely one unique way way to write an equivalence class
+      $[x]_A$ --- there are usually multiple choices for $x$.
+      These choices are called \emph{representatives}
+      of the equivalence class.
+
+      \step
+      Prove that for any $x \in \Sigma^*$ and $a \in \Sigma$,
+      the class $[xa]_A$ is completely determined by the class $[x]_A$
+      and the alphabet symbol $A$ ---
+      that is, prove that the particular $x$ we pick as a representative
+      for the class $[x]_A$ is inconsequential.
+      \begin{Answer}
+        
+      \end{Answer}
+
+    \item Suppose a language $A$ over alphabet $\Sigma$ has finitely many
+      equivalence classes; $[x_1]_A, [x_2]_A, \ldots, [x_n]_A$ for some
+      $n \ge 1$. Prove that $A$ is regular.
+      \begin{Answer}
+
+      \end{Answer}
+  \end{enumalph}
+\end{problem}

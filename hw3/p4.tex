@@ -1,0 +1,61 @@
+\begin{problem}
+  \begin{enumalph}
+    \item
+    For a language $A$ over alphabet $\Sigma$, define
+    the relation $\equiv_A$ on strings in $\Sigma^*$ as follows:
+    ``$x \equiv_A y$'' means:
+    \[ \forall w \in \Sigma^* (xw \in A \Iff yw \in A). \]
+    \step
+    Formally (and concisely) prove that $\equiv_A$ is an equivalence relation.
+    \begin{Answer}
+      If $\equiv_A$ is an equivalence relation,
+      then it must be reflexive, symmetric, and transitive.
+      \begin{enumroman}
+        \item \textbf{Reflexivity:}
+        \item \textbf{Symmetry:}
+        \item \textbf{Transitivity:}
+      \end{enumroman}
+    \end{Answer}
+    
+    \newpage
+    \item The equivalence $\equiv_A$ is called the
+      \emph{left equivalence relation} of the language $A$.
+      An equivalence relation on a set partitions the set into
+      disjoint subsets called equivalence classes
+      in the following way: two elements belong to the same
+      class iff they are related by the equivalence relation.
+      Thus, $\equiv_A$, which is a relation on $\Sigma^*$,
+      partitions $\Sigma^*$ into equivalence classes:
+      these are called the left equivalence classes of the language $A$.
+
+      \step
+      For example, consider the language
+      $C = \set{x \in {0,1}^* : \abs{x} \text{is even}}$ 
+      over the alphabet $\set{0,1}$.
+      Convince yourself that any two even-length strings
+      are related by $\equiv_C$, as are any two odd-length strings.
+      Also, no odd-length string is related by $\equiv_C$ 
+      to an even-length string.
+      Thus, $C$ has exactly two left equivalence classes:
+      (1) odd-length strings, i.e., $\set{0, 1}^* - C$,
+      and (2) even-length strings, i.e., $C$.
+
+      \step
+      Similarly, convince yourself that the language $B = (01)^*$
+      over the alphabet $\set{0, 1}$ has three equivalence classes,
+      which are:
+      (1) $B$,
+      (2) $(01)^*0$, and
+      (3) $\set{0, 1}^* - (B \cup (01)^*0)$.
+
+      \step
+      Describe the left equivalence classes of each of the following
+      languages (no proofs required):
+      \begin{enumroman}
+        \item $L_1 = \set{a, aa, aaa, b, ba, baa}$ over the alphabet $\set{a, b}$.
+        \item $L_2 = a*b*c*$ over the alphabet $\set{a, b, c}$.
+        \item $L_3 = (ab \cup ba)^*$ over the alphabet $\set{a, b}$.
+        \item $L_4 = \set{0^n1^n : n \geq 0}$ over the alphabet $\set{0, 1}$.
+      \end{enumroman}
+  \end{enumalph}
+\end{problem}
