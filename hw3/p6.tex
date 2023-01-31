@@ -6,19 +6,110 @@
       distinct left equivalence classes.
       The function $\delta^*$ we defined in class might be useful.
       \begin{Answer}
-        
+        Let $A$ be a regular language over an alphabet $\Sigma$.
+        \begin{claim}
+          $A$ has finitely many distinct left equivalence classes.
+
+          \begin{proof}
+            Since $A$ is regular, there exists a DFA
+            \[ M = (Q, \Sigma, \delta, q_0, F), \]
+            where $Q$ is a finite set, that recognizes $A$.
+
+            \step
+            Define the function $\delta^*: Q \times \Sigma^* \to Q$ as follows:
+            \[ \delta^*(q, x) =
+              \begin{cases}
+                q & \text{if } x = \eps \\
+                \delta^*(\delta(q, x_1), x_2 \cdots x_n) & \text{if $x = x_1 x_2 \cdots x_n$ with each $x_i \in \Sigma$}
+              \end{cases}
+            \]
+
+            \step
+            First, we show that each distinct equivalence class can be fully captured by a single state.
+            Take any equivalence class $[x]_A \in A$.
+            Then if any string $w \in A$ extends a member of $[x]_A$ to a member of $A$,
+            then $w$ extends \emph{all members} of $[x]_A$ to a member of $A$.
+            Therefore, we can fully capture $[x]_A$ by a single state $q$ in $M$,
+            since all members of $[x]_A$ have matching sequences of transitions out of $q$
+            to accepting / rejecting states.
+
+            \step
+            Next, we show that no two distinct equivalence classes can be captured by the same state.
+            Take $[x]_A$ and $[y]_A$ as two distinct equivalence classes in $A$,
+            such that $x_w \in A$ and $y_w \notin A$ for some $w \in \Sigma^*$.
+            Suppose the two classes, $[x]_A$ and $[y]_A$, are captured by the same state $q$ in $M$.
+            Since $M$ is a DFA, it always makes the same sequence of transitions out of $q$
+            so it would be impossible for it to accept the string $xw$ and reject the string $yw$.
+            Therefore, $[x]_A$ and $[y]_A$ cannot be captured by the same state $q$ in $M$.
+
+            \step
+            Finally, we tie up the above conditions to prove that $A$ has a finite number of
+            distinct equivalence classes. Recall that $A$ is regular, and $M$ recognizes $M$.
+            As shown above, each state $q \in Q$ may fully capture a distinct equivalence class,
+            but it may not capture \emph{more than one} distinct equivalence class.
+            This means that:
+            
+            \begin{corollary}~\label{cor:equiv-states}
+              If $L$ is a regular language and $M_L = (Q_L, \Sigma_L, \delta_L, q_0, F_L)$
+              is a DFA that recognizes $L$, then number of states in $M_L$
+              is greater than or equal to the number of equivalence classes in $L$, i.e,
+              if $\set{\#[x]_L : x \in L}$ is the set of \textbf{distinct} equivalence classes in $L$,
+              \[ \abs{Q_L} \ge \abs{\set{\#[x]_L : x \in L}} \]
+            \end{corollary}
+            
+            \step
+            By the corollary, the number of equivalence classes of a language $A$ may not be more than
+            the number of states in a DFA that recognizes $A$.
+            However, $M$, our original DFA recognizing  has a finite number of states, so $A$ must have a finite number of
+            distinct left equivalence classes.
+          \end{proof}
+        \end{claim}
       \end{Answer}
     
     \item Using one or more of the results proved above, give alternate
       proofs that the following languages are not regular:
       \begin{enumroman}
-        \item $\set{0^n1^n : n \ge 0}$.
+        \item $L_4 = \set{0^n1^n : n \ge 0}$.
           \begin{Answer}
-
-          \end{Answer}
-        \item $\set{x \in \set{0, 1}^8 : x = x^R}$.
-          \begin{Answer}
+            \step
+            Suppose $L_4$ is regular, and $M_4$ is a DFA that recognizes $L_4$,
+            By corollary~\ref{cor:equiv-states}, $M_4$ must have
+            at least as many states as $L_4$ has equivalence classes.
+            But, as shown in problem 4.2, part~\ref{problem:4b4}
+            $L_4$ has infinite equivalence classes,
+            meaning $M_4$ must have infinite states,
+            and DFAs must have a \emph{finite} number of states.
             
+            \step
+            Therefore, no DFA can recognize $L_4$,
+            so $L_4$ is not regular.
+          \end{Answer}
+        \item $L = \set{x \in \set{0, 1}^* : x = x^R}$.
+          \begin{Answer}
+            \step
+            We start by noting that $L$ has infinite equivalence classes.
+            After reading a string $x$, we only accept if:
+            \begin{enumroman}
+              \item $x \in L$
+              \item we read a string $w = x^R$
+              \item We read some string $w$ such that $xw = yyR$ for some $y \in \set{0, 1}^*$.
+            \end{enumroman}
+
+            \step
+            Since $\set{0, 1}^*$ is infinite, there are infinite such strings $x$,
+            therefore infinite equivalence classes.
+
+            \step
+            Now, suppose $L$ is regular, and $M$ is a DFA that recognizes $L$.
+            By corollary~\ref{cor:equiv-states}, $M$ must have
+            at least as many states as $L$ has equivalence classes.
+            But, as shown above, $L$ has infinite equivalence classes,
+            meaning $M$ must have infinite states,
+            and DFAs must have a \emph{finite} number of states.
+
+            \step
+            Therefore, no DFA can recognize $L$,
+            so $L$ is not regular.
           \end{Answer}
       \end{enumroman}
   \end{enumalph}

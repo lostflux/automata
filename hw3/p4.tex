@@ -12,8 +12,30 @@
       then it must be reflexive, symmetric, and transitive.
       \begin{enumroman}
         \item \textbf{Reflexivity:}
+
+        \step
+          It is trivial to show that $\equiv_A$ is reflexive:
+          For any string $x$, if extending $x$ with an arbitrary string $w$ makes
+          it a member of $A$, then the same extension will always make $x$ a member
+          of $A$.  Thus, $x \equiv_A x$.
         \item \textbf{Symmetry:}
+        
+        \step
+          Suppose $x \equiv_A y$.
+          Then, for \emph{all} strings $w \in \Sigma^*$, extending $x$ with $w$ makes it a member of $A$
+          \emph{if and only if} extending $y$ with $w$ makes it a member of $A$.
+          The reverse must also hold: extending $y$ with a string $w \in \Sigma^*$
+          makes it a member of $A$ \emph{if and only if} extending $x$ with $w$ also makes it a member of $A$.
+          Therefore, $\equiv_A x$ whenever $x \equiv_A y$.
         \item \textbf{Transitivity:}
+          Let $a, b, c \in \Sigma^*$ be such that $a \equiv_A b$ and $b \equiv_A c$.
+          By definition of $\equiv_A$, $aw \in A \Iff bw \in A$, and $bx \in A \Iff cx \in A$.
+
+          \step
+          Take $w$ to be an arbitrary extension of $a$ such that $aw \in A$,
+          then we also have that $bw \in A$. However, since $b \equiv_A c$,
+          this also means that $cw \in A$.
+          Therefore, $aw \in A \Iff cw \in A$, so $a \equiv_A c$.
       \end{enumroman}
     \end{Answer}
     
@@ -53,9 +75,40 @@
       languages (no proofs required):
       \begin{enumroman}
         \item $L_1 = \set{a, aa, aaa, b, ba, baa}$ over the alphabet $\set{a, b}$.
-        \item $L_2 = a*b*c*$ over the alphabet $\set{a, b, c}$.
+          \begin{Answer}
+            $L_1$ has four equivalence classes:\\
+            (1) $\set{a, b}$,\\
+            (2) $\set{aa, ba}$,\\
+            (3) $\set{aaa, baa}$, and\\
+            (4) $\set{a, b}^* - L_1$ 
+          \end{Answer}
+        \item $L_2 = a^*b^*c^*$ over the alphabet $\set{a, b, c}$.
+          \begin{Answer}
+            $L_2$ has four equivalence classes:\\
+            (1) $a^*$,\\
+            (2) $a^*b^+$,\\
+            (3) $a^*b^*c^+$, and\\
+            (4) $\set{a, b}^* - L_2$ 
+          \end{Answer}
         \item $L_3 = (ab \cup ba)^*$ over the alphabet $\set{a, b}$.
-        \item $L_4 = \set{0^n1^n : n \geq 0}$ over the alphabet $\set{0, 1}$.
+          \begin{Answer}
+            $L_3$ has three equivalence classes:\\
+            (1) $(ab \cup ba)^* = L_3$,\\
+            (2) $(ab \cup ba)^*a$,\\
+            (3) $(ab \cup ba)^*b$,\\
+            (4) $\set{a, b}^* - ((ab \cup ba)^* \cup ((ab \cup ba)^*(a \cup b)))$
+          \end{Answer}
+        \newpage
+        \item $L_4 = \set{0^n1^n : n \geq 0}$ over the alphabet $\set{0, 1}$~\label{problem:4b4}.
+          \begin{Answer}
+            $L_4$ has infinite equivalence classes:
+            \begin{align*}
+              &(1) 0^n \text{ for any $n \geq 0$} &\text{(each $n$ generates an equivalence class)},\\
+              &(2) 0^n 1^k \text{ for any $n > 0$ and $0 < k < n$} &\text{(each $(n - k)$ generates an equivalence class)}\\
+              &(3) L_4 &\text{(A single equivalence class)}\\
+              &(4) \set{0, 1}^* - (L_4 \cup 0^n \cup 0^n 1^k) &\text{(A single equivalence class)}
+            \end{align*}
+          \end{Answer}
       \end{enumroman}
   \end{enumalph}
 \end{problem}

@@ -22,18 +22,33 @@
       \step
       Prove that for any $x \in \Sigma^*$ and $a \in \Sigma$,
       the class $[xa]_A$ is completely determined by the class $[x]_A$
-      and the alphabet symbol $A$ ---
+      and the alphabet symbol $a$ ---
       that is, prove that the particular $x$ we pick as a representative
       for the class $[x]_A$ is inconsequential.
       \begin{Answer}
-        
+        Recall the definition of equivalence classes:
+        two strings $x, y$ are in the same equivalence class iff
+        $x \equiv_A y$, i.e. $xw \in A \iff yw \in A$ for all $w \in \Sigma^*$.
+        Consequently, we have that if $xw \in A$ for any string $x$ in $A$,
+        then $yw \in A$ for every other element $y$ in the equivalence class.
+        Therefore, the choice of a member of the equivalence class as a
+        representative does not uniquely determine the set of transitions
+        since every other member of the equivalence class would make the
+        same set of accepting and rejecting transitions.
       \end{Answer}
 
     \item Suppose a language $A$ over alphabet $\Sigma$ has finitely many
       equivalence classes; $[x_1]_A, [x_2]_A, \ldots, [x_n]_A$ for some
       $n \ge 1$. Prove that $A$ is regular.
       \begin{Answer}
-
+        Let $A$ be a language with finitely many equivalence classes.
+        As shown in part (a) above, for any equivalence class
+        $[x]_A$, the equivalence class $[xa]_A$ is not dependent on the
+        choice of $x$ as a representative.
+        Therefore, we can capture each unique equivalence class
+        $[x]_A$ with a single state in an automaton and,
+        since $A$ has finitely many equivalence classes,
+        we can construct an automaton with finite states that accepts $A$.
       \end{Answer}
   \end{enumalph}
 \end{problem}

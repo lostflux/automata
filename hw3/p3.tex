@@ -3,11 +3,87 @@
   or not. If it is regular, give a finite automaton or a regular expression for it.
   If is is not regular, use any combination of
   the pumping lemma, closure properties, or results \emph{proved} in class.
+  
+  \step
+  The pumping lemma stipulates that:
+  \begin{lemma}
+    Pumping lemma for regular languages.
+
+    \step
+    \emph{Let $L \subseteq \Sigma^*$ be a regular language over an alphabet $\Sigma$.
+    Then, there exists a positive integer $p$, called the
+    pumping length, such that for all $s \in L, \abs{s} > p$,
+    there exists $u, v, w \in \Sigma^*$ such that:
+    \begin{enumroman}
+      \item $s = uvw$
+      \item $\abs{uv} \le p$
+      \item $\abs{v} > 0$
+      \item $uv^iw \in L$ for all $i \geq 0$
+    \end{enumroman}
+    }
+  \end{lemma}
 
   \begin{enumalph}
     \item $L_1 = \set{0^m 1^n 0^{m + n} : m, n \geq 0}$.
+      \begin{Answer}
+        The language is not regular.
+
+        \step
+        Assuming $L_1$ was regular and $p$ was the pumping length for $L_1$,
+        take $s = 0^p1^k0^{p+k}$ for some $k \geq 0$.
+        Better yet, set $k = 0$, so that $s = 0^p0^{p}$.
+        Following the pumping lemma, take $u = 0^a, v = 0^b, w = 0^{p-a-b}0^{p}$.
+        The pumping lemma stipulates that:
+        \begin{enumroman}
+          \item $\abs{uv} \le p$.
+          \item $\abs{v} = b > 0$.
+        \end{enumroman}
+        
+        \step
+        If we pump down the string, we see then $uw \in L_1$,
+        so $0^a0^{p-a-b}0^{p} = 0^{p-b}0^{p} \in L_1$.
+        Therefore, $p - b = p$ (by definition of $L_1$), implying that $b = 0$.
+        However, the pumping stipulated that $b > 0$, so we have a contradiction,
+        meaning $L_1$ may not be regular.
+      \end{Answer}
     \item $L_2 = \set{xwx^R : x, w \in \set{0, 1}^*, \abs{x} > 0 \text{ and } \abs{y} > 0}$.
+      \begin{Answer}
+        The language is not regular.
+
+        \step
+        Assuming $L_2$ was regular and $p$ was the pumping length for $L_2$,
+        Take $s = 0^p10^p$.
+        Following the pumping lemma, take $u = 0^a, v = 0^b, w = 0^{p-a-b}10^p$.
+        The pumping lemma stipulates that:
+        \begin{enumroman}
+          \item $\abs{uv} \le p$.
+          \item $\abs{v} = b > 0$.
+        \end{enumroman}
+        If we pump down the string, we see then $uw \in L_2$,
+        so $0^a0^{p-a-b}10^p = 0^{p-b}10^p \in L_2$.
+        This implies that $p - b = p$, so $b = 0$,
+        contradicting the pumping lemma.
+        Therefore, $L_2$ may not be regular.
+      \end{Answer}
     \item $L_3 = \set{0^m 1^n : m \text{ divides } n}$.
+      \begin{Answer}
+        The language is not regular.
+
+        \step
+        Assuming $L_3$ was regular and $p$ was the pumping length for $L_3$,
+        Take $s = 0^p1^p$ so that $s \in L_3$.
+        Following the pumping lemma, take $u = 0^a, v = 0^b, w = 0^{p-a-b}1^p$.
+        The pumping lemma stipulates that:
+        \begin{enumroman}
+          \item $\abs{uv} \le p$.
+          \item $\abs{v} = b > 0$.
+        \end{enumroman}
+        If we pump up the string, we see then $uv^2w \in L_2$,
+        so $0^a0^{2b}0^{p-a-b}1^p = 0^{p+b}1^p \in L_2$.
+        This implies that $p + b$ divides $p$, so $b = 0$,
+        contradicting the pumping lemma.
+        Therefore, $L_3$ may not be regular.
+      \end{Answer}
     \item $L_4 = \set{0^n 1^p : n \le 4 \text{ or $p$ is prime (or both)}}$.
     \item The infinite union $\bigcup_{n \geq 1}^\infty A_i$, where each $A_i$
       is a regular language.
@@ -16,6 +92,12 @@
         whether the union is \textbf{guaranteed} to be regular
         no matter how the sets $A_i$ are chosen.
       }
+      \begin{Answer}
+        No, the union is not guaranteed to be regular.
+        For a counter-example, set $A_i = 0^i1^i$ for all $i \geq 1$.
+        Then, $\bigcup_{n \geq 1}^\infty A_i = \set{0^n1^n : n \ge 1}$,
+        which is not a regular language.
+      \end{Answer}
     \item The infinite intersection $\bigcap_{n \geq 1}^\infty A_i$, where each $A_i$
       is a regular language.
       \emph{
@@ -23,6 +105,9 @@
         whether the intersection is \textbf{guaranteed} to be regular
         no matter how the sets $A_i$ are chosen.
       }
+      \begin{Answer}
+        
+      \end{Answer}
   \end{enumalph}
 
 \end{problem}

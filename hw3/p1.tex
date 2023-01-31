@@ -4,7 +4,33 @@
   
   \step
   Prove that if $L$ is regular, then so is $\textsc{Cycle}(L)$.
+  \begin{Answer}
+    Let $M = (Q, \Sigma, \delta, q_0, F)$ be an DFA for $L$.
+    
+    \step
+    We design a new NFA $N$ as follows:
+
+    \begin{align}
+      N &= (Q \times Q \times \set{0, 1}, \Sigma, \delta_N, s, F_N) \text{ such that $s \notin \Sigma$, and: }\nonumber \\
+      F_N &= \set{(q, q, 1) : q \in Q}\\
+      \delta_N(s, \eps) &= \set{(q, q, 0) : q \in Q} & \text{if } a \notin \Sigma\\
+      \delta_N((q, a, n), x) &=
+        \begin{cases}
+          \set{(q, b, n) : b \in \delta(a, x)} & \text{if } q \in Q \text{ and } a \in \Sigma\\
+          \set{(q, q_0, 1)} & \text{if } a \in F \text{ and } a = \eps
+        \end{cases}
+    \end{align}
+    \begin{claim}
+      $N$ accepts $\textsc{Cycle}(L)$.
+
+      \begin{proof}
+        We need to prove that $N$ accepts all strings in $\textsc{Cycle}(L)$,
+        and that any string $N$ accepts is in $\textsc{Cycle}(L)$.
+        \begin{enumroman}
+          \item \textbf{Completeness:} $\calL(N) \supseteq \textsc{Cycle}(L)$
+          \item \textbf{Soundness:}  $\calL(N) \subseteq \textsc{Cycle}(L)$
+        \end{enumroman}
+      \end{proof}
+    \end{claim}
+  \end{Answer}
 \end{problem}
-\begin{Answer}
-  
-\end{Answer}
