@@ -13,22 +13,89 @@
     \begin{align}
       N &= (Q \times Q \times \set{0, 1}, \Sigma, \delta_N, s, F_N) \text{ such that $s \notin \Sigma$, and: }\nonumber \\
       F_N &= \set{(q, q, 1) : q \in Q}\\
-      \delta_N(s, \eps) &= \set{(q, q, 0) : q \in Q} & \text{if } a \notin \Sigma\\
+      \delta_N(s, \eps) &= \set{(q, q, 0) : q \in Q}\\
       \delta_N((q, a, n), x) &=
         \begin{cases}
-          \set{(q, b, n) : b \in \delta(a, x)} & \text{if } q \in Q \text{ and } a \in \Sigma\\
+          \set{(q, \delta(a, x), n)} &\text{if } q \in Q \text{ and } a \in \Sigma\\
           \set{(q, q_0, 1)} & \text{if } a \in F \text{ and } a = \eps
         \end{cases}
     \end{align}
+
+    \newpage
     \begin{claim}
       $N$ accepts $\textsc{Cycle}(L)$.
 
       \begin{proof}
         We need to prove that $N$ accepts all strings in $\textsc{Cycle}(L)$,
         and that any string $N$ accepts is in $\textsc{Cycle}(L)$.
+
+        \step
+        Define two utility functions as follows:
+
+        \[ \delta^*(q, x) =
+          \begin{cases}
+            q & \text{if } x = \eps \\
+            \delta^*(\delta(q, x_1), x_2 \cdots x_n) & \text{if $x = x_1 x_2 \cdots x_n$ with each $x_i \in \Sigma$}
+          \end{cases}
+        \]
+        \[ \delta_N^*(q, x) =
+          \begin{cases}
+            \delta_N(q, \eps) \cup \set{q} & \text{if } x = \eps \\
+            \delta_N^*(\delta_N(q, x_1), x_2 \cdots x_n) & \text{if $x = x_1 x_2 \cdots x_n$ with each $x_i \in \Sigma$}
+          \end{cases}
+        \]
         \begin{enumroman}
           \item \textbf{Completeness:} $\calL(N) \supseteq \textsc{Cycle}(L)$
+          
+            \step
+            Let $a \in \Sigma_*$ be a string in $\textsc{Cycle}(L)$
+            such that there exists $y, x$ such that $x, y \in \Sigma^*$, $xy \in L$, and $a = yx$.
+            The original DFA $M$ accepts $xy$ (since $xy \in L$).
+            Let $p = p_1, \ldots p_m,p_{m+1}, \ldots, p_{m+n}$ be the computational
+            path of $M$ on $xy$, such that $m+1 = \abs{x}$, $n = \abs{y}$
+            $p_1 = q_0$, each $\delta(p_i, s_i) = p_{i+1}$ for each $i \ge 0$, and $p_{m+n} \in F$.
+            Consider the computation path of $N$ on $yx$.
+            We can make the $\eps$-transition from $s$ to $(p_{m+1}, p_{m+1}, 0)$.
+            If we do, recall that $p_{m+1}, \ldots, p_{m+n}$ is the computational path of $M$ on $y$,
+            and the string $a$ is equivalent to $yx$.
+            Since $\delta_N$ reuses the original transition function, $\delta$, to determine which
+            state to move to on the current input symbol if it is in the alphabet,
+            $\delta^*_N(s, y) = (p_{m+1}, p_{m+n}, 0)$.
+
+            \step
+            However, $p_{m+n}$ was an accepting state in $M$, so $p_{m+n} \in F$.
+            Therefore, $N$ has the option to take the $\eps$-transition from $(p_{m+1}, p_{m+n}, 0)$ to $(p_{m+1}, q_0, 1)$.
+            If we do, then consider then we start reading $x$ while at $(p_{m+1}, q_0, 1)$.
+            Since the computation path of $M$ on $x$ is $p_1, \ldots, p_m$
+            and $\delta_N$ reuses the original transition function, $\delta$, to determine which
+            state to move to on the current branch and phase when input the input symbol is in the alphabet,
+            we have that $\delta^*_N((p_{m+1}, q_0, 1), x) = (p_{m+1}, p_{m+1}, 1)$.
+
+            \step
+            However, $(p_{m+1}, p_{m+1}, 1) \in F_N$, so the string is accepted.
+
+          \newpage
           \item \textbf{Soundness:}  $\calL(N) \subseteq \textsc{Cycle}(L)$
+          
+            \step
+            Let $b$ be a string that is accepted by $N$.
+            This means $ = yx$ for some string $x, y \in \Sigma^*$ such that:
+            \begin{enumerate}
+              \item $\delta_N^*(s, y) = (q_y, q_f, 0)$ such that $q_f \in F$,
+              \item $\delta_N^*((q_y, q_f, 0), \eps) = (q_y, q_0, 1)$ \quad \crim{(since $q_f \in F$)}, and
+              \item $\delta_N^*((q_y, q_0, 1), x) = (q_y, q_y, 1) \in F_N$.
+            \end{enumerate}
+
+            \step
+            In short, $y$ takes the NFA from some state $q_y$ to some state $q_f$ that would have been accepted
+            in $M$, then, since that state is in the set of original accepting states,
+            the NFA does a transition to the start state $q_0$ and then reads $x$.
+            $x$ then takes the NFA from $q_0$ to the exact state where it started, $q_y$.
+            This means that the computation path of the corresponding DFA on $y$
+            \emph{if it started execution at state $q_y$},
+            make a complete path from $q_0$ to $q_f$ in the DFA. Therefore, the string
+            $xy$ is accepted by the original DFA, thus  the string $b = yx$
+            is a member of $\textsc{Cycle(L)}$ since $xy$ is a member of $L$.
         \end{enumroman}
       \end{proof}
     \end{claim}

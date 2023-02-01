@@ -85,6 +85,44 @@
         Therefore, $L_3$ may not be regular.
       \end{Answer}
     \item $L_4 = \set{0^n 1^p : n \le 4 \text{ or $p$ is prime (or both)}}$.
+      \begin{Answer}
+        First, note that non-regular languages are closed under reversal,
+        i.e. if $L$ is not regular, then $L^R$ is also not regular.
+        The intuition is as follows:
+        Given a regular language $L$ with a DFA $M = (Q, \Sigma, \delta, q_0, F)$ that recognizes $L$,
+        we can easily construct an NFA for $L_R$ as follows:
+        \begin{enumroman}
+          \item Reverse all the transitions in $M$.
+          \item Add a new start state $s \notin Q$ with $\eps$-transitions
+          from $s$ to every state $f \in F$.
+          \item Change all the accepting states to non-accepting states.
+          \item Change the old start state to not be a start state, but make it an accepting state.
+        \end{enumroman}
+
+        \step
+        \begin{claim}
+          $L_4^R$ is not regular, therefore $L_4$ is not regular.
+
+          \begin{proof}
+            Note that $L_4^R = \set{1^m0^n : \text{$m$ is prime and $n \ge 4$}}$.
+
+            \step
+            Suppose $p$ is the pumping length for $L_4^R$, pick $s = 1^p0^5$.
+            By the pumping lemma, take $u = 1^a, v = 1^b, w = 1^{p-a-b}0^5$.
+            The pumping lemma stipulates that $uv^kw \in L_4^R$ for all $k \geq 0$.
+            However, note that:
+            \begin{align*}
+              uv^kw &= 1^a1^{kb}1^{p-a-b}0^5 \in L_4^R\\
+              &\implies 1^{p+(k-1)b}0^5 L_4^R\\
+              &\implies p+(k-1)b \text{ is prime.}
+            \end{align*}
+            Set $k = p+1$, then $p+(k-1) = p + pb = p(1+b)$.
+            However, $b > 0$ by the pumping lemma, so $p(1+b)$ cannot be prime.
+            This contradiction implies that $L_4^R$ is not regular.
+            Therefore, $L_4$ cannot be regular.
+          \end{proof}
+        \end{claim}
+      \end{Answer}
     \item The infinite union $\bigcup_{n \geq 1}^\infty A_i$, where each $A_i$
       is a regular language.
       \emph{
@@ -106,7 +144,18 @@
         no matter how the sets $A_i$ are chosen.
       }
       \begin{Answer}
+        No, the language is not guaranteed to be regular.
+        For a counter-example:
+        Let $P' = \set{0, 1, 4, 6, 8, 9, 10, \ldots}$ be the set of all composite numbers.
+        Let $P_i$ refer to the $i$'t element in the sequence.
         
+        \step
+        Define $\Sigma = \set{1}$ and $A_i = 1^* - \set{1^{P_i}}$ for all $i \geq 1$.
+        Then, define the language $L$ as follows:
+        \[ L = \bigcap_{n \geq 1}^\infty A_i = \set{1^p : \text{ $p$ is prime. }} \]
+
+        \step
+        As we proved in class, the language $L$ is not regular.
       \end{Answer}
   \end{enumalph}
 
