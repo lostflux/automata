@@ -1,0 +1,40 @@
+\begin{problem}
+  Draw a PDA that recognizes the language
+  $L = \set{x \in \set{0, 1}^* : N_1(x) \ge 2N_0(x)}$.
+  Give a high-level proof that your that your PDA works
+  correctly.
+\end{problem}
+\begin{Answer}
+  % Draw the PDA
+  \begin{figure}[H]
+    % \resizebox{\columnwidth / 3}{!}{%
+    \begin{tikzpicture}
+      \node[state, initial] (q0) at (0, 0) {$q_0$};
+      \node[state, below of=q0] (q1) {$q_1$};
+      \node[state, right of=q1, accepting] (q3) {$q_3$};
+      \node[state, below of=q3] (q2) {$q_2$};
+      \draw (q0) edge[right] node {$A$} (q1)
+            (q1) edge[loop left] node {$B$} (q1)
+            (q1) edge[loop below] node {$C$} (q1)
+            (q1) edge[bend right, above] node {$D$} (q2)
+            (q2) edge[bend right, below] node {$E$} (q1)
+            (q1) edge[above] node {$F$} (q3);
+    \end{tikzpicture}
+    % }
+
+    % \resizebox{\columnwidth / 2}{!}{%
+    \step
+    \textbf{KEY:}\\
+    \begin{tabular}{l r}
+      Item & Meaning \\
+      \bottomrule
+      $A$ & $\eps, \eps \to \$$ \\
+      $B$ & $1, p \to pp$, $1, m \to \eps$, $1, \$ \to p\$$ \\
+      $C$ & $0, m \to mmm$, $0, \$ \to mm\$$ \\
+      $D$ & $0, p \to \eps$ \\
+      $E$ & $\eps, p \to \eps$, $\eps, \$ \to m\$$ \\
+    \end{tabular}
+    % }
+    \caption{DFA for $L$}
+  \end{figure}
+\end{Answer}

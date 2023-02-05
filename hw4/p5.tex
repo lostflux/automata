@@ -1,0 +1,16 @@
+\begin{problem}
+  Let $\Sigma$ be an alphabet, $L \subseteq \Sigma^*$,
+  and $\# \notin \Sigma$.
+  Define the language
+  \[ 
+    \textsc{Intersperse}(\#, L) := 
+    \set{a_1 \# a_2 \# \ldots \# a_n},
+    \text{ each $a_i \in \Sigma$ and $a_1a_2 \ldots a_n \in L$}.
+  \]
+
+  \step
+  Let $M_1 = (Q, \Sigma, \Gamma, \delta, q_0, F)$ be a PDA
+  that recognizes $L$.
+  Formally describe a PDA that recognizes $\textsc{Intersperse}(\#, L)$.
+  Also give a high-level proof that your PDA works correctly.
+\end{problem}

@@ -1,0 +1,17 @@
+\begin{problem}
+  Consider the following CFG:
+  \[
+    S \to 1S00 \mid 00S1 \mid SS \mid 0S1S0 \mid \eps
+  \]
+  \begin{enumalph}
+    \item Give a simple description of the language it generates
+      using set-builder notation.
+      \begin{Answer}
+        \[
+          L = \set{x \in \set{0, 1}^* : N_1(x) = 2N_0(x)}
+        \]
+      \end{Answer}
+    \item Now for the hard and fun part: prove the correctness
+      of your answer.
+  \end{enumalph}
+\end{problem}

@@ -1,0 +1,22 @@
+\begin{problem}
+  A string $x \in \Sigma^*$ is called a \emph{square}
+  if $x = w^2$ for some $w \in \Sigma^*$.
+  Let $L_{sq} = \set{w^2 : w \in \set{0, 1}^*}$.
+  Consider its complement:
+  \[ \overline{L}_{sq} =
+    \set{x \in \set{0, 1}^* : x
+      \text{
+        is not of the form $w^2$ for any $w \in \set{0, 1}^*$
+      }
+    }.
+  \]
+
+  \step
+  \begin{enumalph}
+    \item Prove that every even-length string is in $\overline{L}_{sq}$
+      can be decomposed as $x = uv$ where the middle symbol of $u$
+      differs from the middle symbol of $v$.
+    \item Using this property, design a context-free grammar that
+      generates $\overline{L}_{sq}$.
+  \end{enumalph}
+\end{problem}
