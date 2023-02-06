@@ -18,5 +18,13 @@
       differs from the middle symbol of $v$.
     \item Using this property, design a context-free grammar that
       generates $\overline{L}_{sq}$.
+      \begin{Answer}
+        \begin{align*}
+          S &\implies AB \mid BA \mid X \\
+          A &\implies 0A0 \mid 0A1 \mid 1A0 \mid 1A1 \mid 0 \\
+          B &\implies 0B0 \mid 0B1 \mid 1B0 \mid 1B1 \mid 1
+          X &\implies 0X0 \mid 0X1 \mid 1X0 \mid 1X1 \mid 0 \mid 1 \\
+        \end{align*}
+      \end{Answer}
   \end{enumalph}
 \end{problem}

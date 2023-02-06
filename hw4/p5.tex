@@ -14,3 +14,30 @@
   Formally describe a PDA that recognizes $\textsc{Intersperse}(\#, L)$.
   Also give a high-level proof that your PDA works correctly.
 \end{problem}
+\begin{Answer}
+  Let $M_2 = (Q \times \set{1, \#, \eps}, \Sigma \cup \set{\#}, \Gamma, \delta_2, (q_0, 1), F_2)$ be a PDA
+  such that:
+  \begin{itemize}
+    \item $F_2 = \set{(q, \eps): q \in F} \cup \set{(q, \#): q \in F}$
+    \item $\delta_2$ is defined as follows:
+    \begin{align*}
+      \delta_2((q, x), a, \gamma) = 
+      \begin{cases}
+        \set{(q, 1)} & \text{ if $x = \eps$, and $a = \gamma = \eps$. } \\
+        \set{(q, 1)} & \text{ if $x = \#$, $a = \#$, and $\gamma = \eps$. } \\
+        \set{\delta(q, a, \gamma), \#} & \text{ if $a \in \Sigma$. } \\
+        \set{\delta(q, a, \gamma), \eps} & \text{ if $a = \eps$. } \\
+      \end{cases}
+    \end{align*}
+  \end{itemize}
+  \begin{claim}
+    $M_2$ recognizes $\textsc{Intersperse}(\#, L)$.
+
+    \step
+    \begin{proof}
+      $M_2$ is a modification of $M$ where at every non-epsilon transition,
+      we require that a $\#$ symbol be read before proceeding to
+      read the next symbol.
+    \end{proof}
+  \end{claim}
+\end{Answer}

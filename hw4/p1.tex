@@ -7,34 +7,82 @@
 \begin{Answer}
   % Draw the PDA
   \begin{figure}[H]
-    % \resizebox{\columnwidth / 3}{!}{%
     \begin{tikzpicture}
       \node[state, initial] (q0) at (0, 0) {$q_0$};
-      \node[state, below of=q0] (q1) {$q_1$};
-      \node[state, right of=q1, accepting] (q3) {$q_3$};
-      \node[state, below of=q3] (q2) {$q_2$};
-      \draw (q0) edge[right] node {$A$} (q1)
-            (q1) edge[loop left] node {$B$} (q1)
-            (q1) edge[loop below] node {$C$} (q1)
-            (q1) edge[bend right, above] node {$D$} (q2)
-            (q2) edge[bend right, below] node {$E$} (q1)
-            (q1) edge[above] node {$F$} (q3);
+      \node[state] at (5, 0) (q1) {$q_1$};
+      \node[state] at (10, 0) (q2) {$q_2$};
+      \node[state, below of=q2, accepting] (q3) {$q_3$};
+      \draw (q0) edge[above, pos=0.3] node {$\eps, \eps \to \$$} (q1)
+            (q1) edge[loop above] node {$
+            \begin{aligned}
+              1, p &\to pp \\
+              1, m &\to \eps\\
+              1, \$ &\to p\$
+            \end{aligned}$ } (q1)
+            (q1) edge[loop below] node {$
+            \begin{aligned}
+              0, m \to mmm\\
+              0, \$ \to mm\$
+            \end{aligned}$ } (q1)
+            (q1) edge[below] node {$0, p \to \eps$} (q2)
+            (q2) edge[bend right, above, pos=0.3] node {$
+            \begin{aligned}
+              \eps, p \to \eps\\
+              \eps, \$ \to m\$
+            \end{aligned}$} (q1)
+            (q1) edge[below, pos=0.7] node {$
+            \begin{aligned}
+              \eps, p \to \eps\\
+              \eps, \$ \to \eps
+            \end{aligned}$} (q3);
     \end{tikzpicture}
-    % }
-
-    % \resizebox{\columnwidth / 2}{!}{%
-    \step
-    \textbf{KEY:}\\
-    \begin{tabular}{l r}
-      Item & Meaning \\
-      \bottomrule
-      $A$ & $\eps, \eps \to \$$ \\
-      $B$ & $1, p \to pp$, $1, m \to \eps$, $1, \$ \to p\$$ \\
-      $C$ & $0, m \to mmm$, $0, \$ \to mm\$$ \\
-      $D$ & $0, p \to \eps$ \\
-      $E$ & $\eps, p \to \eps$, $\eps, \$ \to m\$$ \\
-    \end{tabular}
-    % }
-    \caption{DFA for $L$}
+    \caption{A PDA recognizing $L$}
   \end{figure}
+
+  \newpage
+  \step
+  \textbf{High-Level Idea and Proof of Correctness}
+
+  \step
+  We use have stack variables: $p$, $m$, and $\$$.
+  Using these, we track the value of $N_1(x) - 2N_0(x)$
+  as we read the string. A $p$ corresponds to a `$+1$', an $m$ corresponds
+  to a `$-1$', and $\$$ corresponds to a $0$.
+  This is how the PDA works:
+  \begin{itemize}
+    \item First, we enforce that no stack state can contain both $p$'s and $m$'s
+      at the same time. We do this by only starting to push $p$'s (or $m$'s
+      in the alternate case) if the symbol at the top of the stack is $\$$,
+      symbolizing a $0$.
+    \item We start by pushing a $\$$ onto the stack, signifying a state of $0$.
+    \item Whenever we read a $0$, we decrease the stack state by $2$.
+      This takes three forms:
+      \begin{itemize}
+        \item We can remove two $p$'s from the stack.
+        \item If we only have a single $p$ at the top of the tack, we
+          remove it and push a single $m$.
+        \item If we have an $m$ or the zero marker ($\$$) at the top of the stack,
+          we return it and push two more $m$'s.
+      \end{itemize}
+    \item Whenever we read a $1$, we increase the stack state by $1$.
+      We do this by:
+      \begin{itemize}
+        \item If we have a $p$ or a $\$$ at the top of the stack,
+          return it and push another $p$.
+        \item If we have an $m$ at the top of the stack, remove it.
+      \end{itemize}
+    \item Consequently, when we reach the end of the string:
+      \begin{itemize}
+        \item If we have a $\$$ at the top of the stack,
+          that means we have encountered \emph{exactly} twice as many $1$'s as $0$'s,
+          so we accept the string.
+        \item If we have a $p$ at the top of the stack,
+          that means the number of $0$'s we have encountered is
+          more than twice the number of $1$'s we have encountered,
+          so we accept the string.
+        \item Otherwise, the number of $1$'s was less than twice the number
+          $0$'s in the string, so we do not generate a transition to the
+          accepting state.
+      \end{itemize}
+  \end{itemize}
 \end{Answer}

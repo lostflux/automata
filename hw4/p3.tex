@@ -3,7 +3,36 @@
   to prove that context-free grammars are closed under:
   \begin{enumalph}
     \item union.
+    \begin{Answer}
+      Let $G_1 = (V_1, \Sigma_1, R_1, S_1)$ and $G_2 = (V_2, \Sigma_2, R_2, S_2)$
+      such that $G_1$ and $G_2$ generate $L_1$ and $L_2$, respectively.
+      Define $G = (V, \Sigma, R, S)$ as follows:
+      \begin{itemize}
+        \item $V = V_1 \cup V_2 \cup \set{S}$, where $S \notin V_1 \cup V_2$ and $V_1 \cap V_2 = \emptyset$.
+        \item $\Sigma = \Sigma_1 \cup \Sigma_2$
+        \item $R = R_1 \cup R_2 \cup \set{(S, S_1), (S, S_2)}$
+      \end{itemize}
+    \end{Answer}
     \item concatenation.
+    \begin{Answer}
+      Let $G_1 = (V_1, \Sigma_1, R_1, S_1)$ and $G_2 = (V_2, \Sigma_2, R_2, S_2)$
+      such that $G_1$ and $G_2$ generate $L_1$ and $L_2$, respectively.
+      Define $G = (V, \Sigma, R, S)$ as follows:
+      \begin{itemize}
+        \item $V = V_1 \cup V_2 \cup \set{S}$, where $S \notin V_1 \cup V_2$ and $V_1 \cap V_2 = \emptyset$.
+        \item $\Sigma = \Sigma_1 \cup \Sigma_2$
+        \item $R = R_1 \cup R_2 \cup \set{(S, S_1S_2)}$
+      \end{itemize}
+    \end{Answer}
     \item Kleene star.
+    \begin{Answer}
+      Let $G_1 = (V_1, \Sigma_1, R_1, S_1)$ be a CFG that generates $L$.
+      Define $G = (V, \Sigma, R, S)$ as follows:
+      \begin{itemize}
+        \item $V = V_1 \cup \set{S}$, where $S \notin V_1$.
+        \item $\Sigma = \Sigma_1$
+        \item $R = R_1 \cup \set{(S, S_1S), (S, SS_1)}$
+      \end{itemize}
+    \end{Answer}
   \end{enumalph}
 \end{problem}

@@ -4,6 +4,117 @@
   Give similar constructions for PDAs to prove closure under:
   \begin{enumalph}
     \item concatenation.
+      \begin{Answer}
+        Let $L_1$ and $L_2$ be context-free languages.
+        Take $M_1 = (Q_1, \Sigma_1, \Gamma_1, \delta_1, q_{01}, F_1)$
+        to be a PDA that recognizes $L_1$ and 
+        $M_2 = (Q_2, \Sigma_2, \Gamma_2, \delta_2, q_{02}, F_2)$
+        to be a PDA that recognizes $L_2$.
+
+        \step
+        Construct a new PDA $M = (Q, \Sigma, \Gamma, \delta, q_0, F)$ as follows:
+        \begin{itemize}
+          \item $Q = Q_1 \cup Q_2$ \quad (after enforcing that $Q_1 \cap Q_2 = \emptyset$)
+          \item $\Sigma = \Sigma_1 \cup \Sigma_2$ (we don't particularly care about equality of $\Sigma_1$ and $\Sigma_2$)
+          \item $\Gamma = \Gamma_1 \cup \Gamma_2$ (we don't particularly care about equality of $\Gamma_1$ and $\Gamma_2$)
+          \item $q_{0} = q_{01}$
+          \item $F = F_2$
+          \item $\delta$ is defined as follows:
+            \begin{align*}
+              \delta(q, a, \gamma) = 
+              \begin{cases}
+                \delta_1(q, a, \gamma) \cup \set{q_{02}, \emptyset} & \text{ if $q \in F_1$ and $a = \gamma = \eps$.} \\
+                \delta_1(q, a, \gamma) & \text{ if $q \in Q_1$. } \\
+                \delta_2(q, a, \gamma) & \text{ if $q \in Q_2$. }
+              \end{cases} 
+            \end{align*}
+        \end{itemize}
+        \begin{claim}
+          $M$ recognizes $L_1 \cup L_2$.
+          
+          \begin{proof}
+            Note that the starting state of $M$ is $q_{01}$,
+            while the accepting states of $M$ are in $F_2$.
+            The only transition that takes $M$ from a state formerly in $Q_1$
+            to a state formerly in $Q_2$ is when (1) we are at a state $q \in F_1$
+            (an accepting state of $M_1$), (2) we read no input (epsilon transition),
+            and (3) we clear the stack.
+
+            \step
+            Since $M_1$ recognizes $L_1$, we know that the computational path of
+            $M_1$ on all strings in $L_1$ ends in an accepting state $q_{f1} \in F_1$.
+            Likewise, since $M_2$ recognizes $L_2$, we know that the computational path of
+            $M_2$ on all strings in $L_2$ ends in an accepting state $q_{f2} \in F_2$.
+            
+            \begin{itemize}
+              \item \textbf{Completeness:} If a string $s$ is in $L_1L_2$,
+                then we can write it as $s = xy$ for some $x \in L_1$ and $y \in L_2$.
+                Then, the computational path of $M$ on $x$ mimics that of $M_1$
+                (since it starts at $q_{01}$ and we use $\delta_1$ for all states $q \in Q_1$).
+                Therefore, $M$ has a computational path on $x$ that ends in an accepting state $q_{f1} \in F_1$.
+                Then, $M$ takes the epsilon transition to $q_{02}$.
+                In processing $y$, $M$ starts at $q_{02}$ and uses $\delta_2$ for all states $q \in Q_2$,
+                so it has some computational path from $q_{02}$ to $q_{f2} \in F_2$.
+                Putting these two paths together and the middle epsilon transition,
+                we get a computational path of $M$ from $q_{01}$ to $q_{f2} \in F_2$,
+                which is an accepting state of $M$.
+                Therefore, $M$ accepts the string.
+              \item \textbf{Soundness:} Let $s$ be a string accepted by $M$.
+                Then there must exist some computational path $p_1$ of $M$ on $s$, taking $M$ from
+                $q_{01}$ to a state in $F_1$, followed by the epsilon transition to $q_{02}$,
+                and some computational path $p_2$ of $M$ from $q_{02}$ to a state in $F_2$.
+                By definition of $M$, $p_1$ corresponds to an accepting
+                computational path of $M_1$ and $p_2$ corresponds to an accepting
+                computational path of $M_2$,
+                Meaning that $M_1$ accepts some prefix $x$ of $s$ and $M_2$ accepts some suffix $y$ of $s$,
+                and $x$ and $y$ form the entire string $s$, so $s = xy, x \in L_1, y \in L_2$.
+                Therefore, any such $s$ accepted by $M$ is in $L_1L_2$.
+            \end{itemize}
+          \end{proof}
+        \end{claim}
+      \end{Answer}
     \item Kleene star.
+      \begin{Answer}
+        Let $L$ be a context-free language.
+        Take $M = (Q, \Sigma, \Gamma, \delta, q_0, F)$ to be a PDA that recognizes $L$.
+
+        \step
+        Construct a new PDA $M^2 = (Q \cup q_{start}, \Sigma, \Gamma, \Delta, q_0, F \cup Q_{start})$ where:
+        \begin{itemize}
+          \item $q_{start} \notin Q$
+          \item $\delta$ is defined as follows:
+            \begin{align*}
+              \delta(q, a, \gamma) = 
+              \begin{cases}
+                \delta(q, a, \gamma) \cup \set{(q_{start}, \emptyset)} & \text{ if $q \in F$ and $a = \gamma = \eps$. } \\
+                \set{(q_0, \emptyset)} & \text{ if $q = q_{start}$ and $a = \gamma = \eps$. } \\
+                \delta(q, a, \gamma) & \text{ otherwise. } \\
+              \end{cases} 
+            \end{align*}
+          \end{itemize}
+          \begin{claim}
+            $M_2$ recognizes $L^*$.
+            \begin{proof}
+              Note that:
+
+              \step
+              \textbf{Completeness:}
+                If a string $s$ is in $L^*$, then, either:
+                \begin{enumroman}
+                  \item $s = \eps$. Since $q_{start}$ is an accepting state of $M_2$,
+                    $M_2$ accepts $s$.
+                  \item $s = x_1x_2 \cdots x_n$, with all $x_i \in L$.
+                    Then, there exists some computational path that takes $M$
+                    from $q_0$ to some state $q_i \in F$ for each $x_i$.
+
+                \end{enumroman}
+                Then each $x_i$ takes $M$ from $q_0$ to some state $q_i \in F$,
+                since $q_0$ recognizes $L$.
+                $x_i \in L$.
+                Then, the computational path of $M_2$ on $s$ mimics that of $M$ on $x_1$,
+                then $M$ on $x_2$, then $M$ on $x_3$, and so on.
+            \end{proof}
+          \end{claim}
+      \end{Answer}
   \end{enumalph}
 \end{problem}
