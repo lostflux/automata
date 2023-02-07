@@ -16,15 +16,70 @@
     \item Prove that every even-length string is in $\overline{L}_{sq}$
       can be decomposed as $x = uv$ where the middle symbol of $u$
       differs from the middle symbol of $v$.
+      \begin{Answer}
+        Let $x = uv$ be a string in $\overline{L}_{sq}$
+        such that $\abs{u} = \abs{v}$.
+        Suppose the string $x$ has length $2n$, such that
+        $x = u_1u_2 \cdots u_n v_1v_2 \cdots v_n$.
+        Since $u \ne v$ (by definition of $\overline{L}_{sq}$),
+        it must be the case that $u_i \ne v_i$ for some $1 \le i \le n$
+        (maybe multiple values of $i$, but we only care about one).
+        
+        \step
+        Suppose $k$ is the smallest such $i$ with $u_k \ne v_k$.
+        \begin{enumroman}
+          \item If $k \le \frac{n}{2}$, take
+            $s_1 = u_1, u_2, \ldots, u_{2k-1}, \ldots, u_n$
+            and $s_2 = v_1, v_2, \ldots, v_{2k-1}, \ldots, v_n$.
+            Then $\abs{s_1} = 2k-1$ meaning the middle symbol of $s_1$
+            is $u_{k}$. Likewise, $\abs{s_2} = n + n-(2k - 1) = 2n - 2k + 1$,
+            meaning the middle element is at position $n - k$.
+            Since $s_1$ starts at $2k$, the middle element is at position
+            $2k + n - k = n + k$.
+            This is the element corresponding to $v_k$ and $u_k \ne v_k$
+            so the two strings $s_1$ and $s_2$ have differing middle symbols.
+          \item If $k > \frac{n}{2}$, proceed as above but counting up to the
+            corresponding element in $v$ from the end of the string.
+        \end{enumroman}
+      \end{Answer}
     \item Using this property, design a context-free grammar that
       generates $\overline{L}_{sq}$.
       \begin{Answer}
+        \textbf{Derivations}
         \begin{align*}
-          S &\implies AB \mid BA \mid X \\
-          A &\implies 0A0 \mid 0A1 \mid 1A0 \mid 1A1 \mid 0 \\
-          B &\implies 0B0 \mid 0B1 \mid 1B0 \mid 1B1 \mid 1
-          X &\implies 0X0 \mid 0X1 \mid 1X0 \mid 1X1 \mid 0 \mid 1 \\
+          S &\derives AB \mid BA \mid X \\
+          A &\derives 0A0 \mid 0A1 \mid 1A0 \mid 1A1 \mid 0 \\
+          B &\derives 0B0 \mid 0B1 \mid 1B0 \mid 1B1 \mid 1 \\
+          X &\derives 0X0 \mid 0X1 \mid 1X0 \mid 1X1 \mid 0 \mid 1
         \end{align*}
+        \textbf{CFG}
+        \begin{align*}
+          G &= (V, \Sigma, R, S) \quad \text{ where: } \\
+          V &= \set{S, A, B, X} \\
+          \Sigma &= \set{0, 1} \\
+          R &= R_S \cup R_A \cup R_B \cup R_X \\
+          &R_S = \set{(S, AB), (S, BA), (S, X)} \\
+          &R_A = \set{(A, 0A0), (A, 0A1), (A, 1A0), (A, 1A1), (A, 0)} \\
+          &R_B = \set{(B, 0B0), (B, 0B1), (B, 1B0), (B, 1B1), (B, 1)} \\
+          &R_X = \set{(X, 0X0), (X, 0X1), (X, 1X0), (X, 1X1), (X, 0), (X, 1)}
+        \end{align*}
+
+        \step
+        \textbf{Idea Behind CFG}
+
+        \step
+        First, note that odd-length strings cannot be squares,
+        so they are all in $\overline{L}_{sq}$.
+        To generate these, we add rules to generate strings of odd length,
+        without restriction to the middle symbol (as defined in $R_X$).
+
+        \step
+        To handle strings of even length that are not squares, we use the
+        property that they must be decomposable into two odd-sized strings
+        with differing middle symbols.
+        We add the rules $S \derives AB \mid BA$ to generate such strings,
+        where $A$ generates odd-length strings with a $0$ as a middle symbol
+        while $B$ generates odd-length strings with a $1$ as a middle symbol.
       \end{Answer}
   \end{enumalph}
 \end{problem}

@@ -79,14 +79,14 @@
         Take $M = (Q, \Sigma, \Gamma, \delta, q_0, F)$ to be a PDA that recognizes $L$.
 
         \step
-        Construct a new PDA $M^2 = (Q \cup q_{start}, \Sigma, \Gamma, \Delta, q_0, F \cup Q_{start})$ where:
+        Construct a new PDA $M_2 = (Q \cup q_{start}, \Sigma, \Gamma, \delta_2, q_0, F \cup q_{start})$ where:
         \begin{itemize}
           \item $q_{start} \notin Q$
-          \item $\delta$ is defined as follows:
+          \item $\delta_2$ is defined as follows:
             \begin{align*}
-              \delta(q, a, \gamma) = 
+              \delta_2(q, a, \gamma) = 
               \begin{cases}
-                \delta(q, a, \gamma) \cup \set{(q_{start}, \emptyset)} & \text{ if $q \in F$ and $a = \gamma = \eps$. } \\
+                \delta(q, a, \gamma) \cup \set{(q_0, \emptyset)} & \text{ if $q \in F$ and $a = \gamma = \eps$. } \\
                 \set{(q_0, \emptyset)} & \text{ if $q = q_{start}$ and $a = \gamma = \eps$. } \\
                 \delta(q, a, \gamma) & \text{ otherwise. } \\
               \end{cases} 
@@ -104,15 +104,53 @@
                   \item $s = \eps$. Since $q_{start}$ is an accepting state of $M_2$,
                     $M_2$ accepts $s$.
                   \item $s = x_1x_2 \cdots x_n$, with all $x_i \in L$.
-                    Then, there exists some computational path that takes $M$
-                    from $q_0$ to some state $q_i \in F$ for each $x_i$.
-
+                    Then, for each $x_i$, there exists some computational path that takes $M_2$
+                    from $(q_0, \emptyset)$ to some $(q_f, \Gamma_0)$ where $q_f \in F$
+                    and $\Gamma_0 \in \Gamma^*$.
+                    Since $(q_0, \emptyset)$ is in the set of possible next states for epsilon
+                    transitions on all accepting states (as defined in case $1$ of $\delta_2$),
+                    we have a connecting path from any such $(q_f, \Gamma_0)$ to $(q_0, \emptyset)$
+                    between any $x_i$ and $x_{i+1}$.
+                    Therefore, $M_2$ has some computational path that:
+                    \begin{enumroman}
+                      \item starts at $(q_{start}, \emptyset)$,
+                      \item Advances to some accepting state $(q_f, \Gamma_0)$ after reading $x_1$,
+                      \item Takes an $\eps$-transition back to to $(q_0, \emptyset)$,
+                      \item Advances to some accepting state $(q_{f2}, \Gamma_1)$ after reading $x_2$,
+                      \item Takes an $\eps$-transition back to to $(q_0, \emptyset)$ again,
+                      \item Repeats the process for $x_3, \ldots, x_n$, and
+                      \item Is in some accepting state after finishing reading $x_n$ (but not taking
+                        the$\eps$-transition back to $(q_0, \emptyset)$).
+                    \end{enumroman}
+                    Therefore, $M_2$ has a computational that accepts $s$, so $M_2$ accepts $s$.
                 \end{enumroman}
-                Then each $x_i$ takes $M$ from $q_0$ to some state $q_i \in F$,
-                since $q_0$ recognizes $L$.
-                $x_i \in L$.
-                Then, the computational path of $M_2$ on $s$ mimics that of $M$ on $x_1$,
-                then $M$ on $x_2$, then $M$ on $x_3$, and so on.
+              
+              \step
+              \textbf{Soundness:}
+                If $s$ is accepted by $M_2$, then, either:
+                \begin{enumroman}
+                  \item $s = \eps$, since $q_{start}$ is an accepting state.
+                    Since $\eps \in L^*$ for any language, then $s$ is a valid
+                    string in $L^*$.
+                  \item Otherwise, we claim that $s = x_1x_2 \cdots x_n$,
+                    with all $x_i \in L$.
+
+                    $M_2$ mimics the transitions of $M$, only adding a new start state
+                    and $\eps$-transitions from accepting states to the old start state.
+                    Therefore, if $s$ is accepted by $M_2$, then a suffix $x_1$ of $s$
+                    (which might be the whole string) takes $M_2$ from $(q_0, \emptyset)$
+                    to some accepting state $(q_f, \Gamma_0)$ where $q_f \in F$.
+                    If the suffix is NOT the whole string, write the whole string $s$ as
+                    $s = px_1$, then if we erase the suffix $x_1$ then the prefix $p$
+                    must also end up in some accepting state of $M_2$.
+                    Continuing in the same way, we can extract a suffix $x_2$ of $p$,
+                    and so on up to some $x_n$ where we remain with the empty string.
+                    Therefore, we can write $s = x_nx_{n-1} \cdots x_1$ where all $x_i \in L$.
+                    But this is exactly identical to writing $s = x_1x_2 \cdots x_n$
+                    required for $s$ to be in $L^*$,
+                    only that the numbering of $x$ is reversed.
+                    Therefore, any such accepted string $s$ must be in $L^*$.
+                \end{enumroman}
             \end{proof}
           \end{claim}
       \end{Answer}

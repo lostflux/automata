@@ -25,8 +25,8 @@
       \begin{cases}
         \set{(q, 1)} & \text{ if $x = \eps$, and $a = \gamma = \eps$. } \\
         \set{(q, 1)} & \text{ if $x = \#$, $a = \#$, and $\gamma = \eps$. } \\
-        \set{\delta(q, a, \gamma), \#} & \text{ if $a \in \Sigma$. } \\
-        \set{\delta(q, a, \gamma), \eps} & \text{ if $a = \eps$. } \\
+        \set{(\delta(q, a, \gamma), \#)} & \text{ if $a \in \Sigma$. } \\
+        \set{(\delta(q, a, \gamma), \eps)} & \text{ if $a = \eps$. } \\
       \end{cases}
     \end{align*}
   \end{itemize}
@@ -38,6 +38,21 @@
       $M_2$ is a modification of $M$ where at every non-epsilon transition,
       we require that a $\#$ symbol be read before proceeding to
       read the next symbol.
+        % Draw the PDA
+        \begin{figure}[H]
+          \begin{tikzpicture}
+            \node[state, initial] (q0) at (0, 0) {$a$};
+            \node[state] at (10, 0) (q1) {$b$};
+            \node[state] at (5, 3) (q2) {$b_{\eps}$};
+            \node[state] at (5, -3) (q3) {$b_{\#}$};
+            \draw (q0) edge[above, pos=0.7, dashed] node {$x, y \to z$ (old transition)} (q1)
+                  (q0) edge[below, pos=0.3] node {\crim{$x, y \to z$ if $x \ne \eps$}} (q3)
+                  (q0) edge[above, pos=0.3] node {\crim{$x, y \to z$ if $x = \eps$}} (q2)
+                  (q3) edge[below, pos=0.3] node {\green{$\#, \eps \to \eps$}} (q1)
+                  (q2) edge[above, pos=0.3] node {\green{$\eps, \eps \to \eps$}} (q1);
+          \end{tikzpicture}
+          \caption{Modification of Transitions to Require $\#$ between any two non-epsilon Symbols.}
+        \end{figure}
     \end{proof}
   \end{claim}
 \end{Answer}
