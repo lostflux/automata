@@ -15,44 +15,62 @@
   Also give a high-level proof that your PDA works correctly.
 \end{problem}
 \begin{Answer}
-  Let $M_2 = (Q \times \set{1, \#, \eps}, \Sigma \cup \set{\#}, \Gamma, \delta_2, (q_0, 1), F_2)$ be a PDA
+  Let $M_2 = (\bigcup_{q \in Q} \set{q, q_\#, q_\eps}, \Sigma \cup \set{\#}, \Gamma, \delta_2, q_0, F_2)$ be a PDA
   such that:
   \begin{itemize}
-    \item $F_2 = \set{(q, \eps): q \in F} \cup \set{(q, \#): q \in F}$
+    \item $F_2 = \set{q_\eps: q \in F} \cup \set{q_\#: q \in F}$
     \item $\delta_2$ is defined as follows:
     \begin{align*}
-      \delta_2((q, x), a, \gamma) = 
-      \begin{cases}
-        \set{(q, 1)} & \text{ if $x = \eps$, and $a = \gamma = \eps$. } \\
-        \set{(q, 1)} & \text{ if $x = \#$, $a = \#$, and $\gamma = \eps$. } \\
-        \set{(\delta(q, a, \gamma), \#)} & \text{ if $a \in \Sigma$. } \\
-        \set{(\delta(q, a, \gamma), \eps)} & \text{ if $a = \eps$. } \\
-      \end{cases}
+      \delta_2(q, \eps, \gamma) &= \delta(q, a, \gamma)_\eps \\
+      \delta_2(q, x, \gamma) &= \delta(q, a, \gamma)_\# \text{ if $x \in \Sigma$} \\
+      \delta_2(q_\#, \#, \eps) &= q \\
+      \delta_2(q_\eps, \eps, \eps) &= q \\
     \end{align*}
   \end{itemize}
+  \begin{figure}[H]
+    \begin{tikzpicture}
+      \node[state, initial] (a) at (0, 0) {$a$};
+      \node[state] at (10, 0) (b) {$b$};
+      \node[state] at (5, 3) (be) {$b_{\eps}$};
+      \node[state] at (5, -3) (bh) {$b_{\#}$};
+      \draw (a) edge[above, pos=0.5, dashed] node {$\begin{aligned}\eps, m \to n \\ x, y \to z \end{aligned}$} (b)
+            (a) edge[below, pos=0.3] node {\crim{$x, y \to z$}} (bh)
+            (a) edge[above, pos=0.3] node {\crim{$\eps, m \to n$}} (be)
+            (bh) edge[below, pos=0.3] node {\green{$\#, \eps \to \eps$}} (b)
+            (be) edge[above, pos=0.3] node {\green{$\eps, \eps \to \eps$}} (b);
+    \end{tikzpicture}
+    \caption{Modification of Transitions to Require $\#$ between any two non-epsilon Symbols.}
+  \end{figure}
+
+  \newpage
   \begin{claim}
     $M_2$ recognizes $\textsc{Intersperse}(\#, L)$.
 
     \step
     \begin{proof}
-      $M_2$ is a modification of $M$ where at every non-epsilon transition,
-      we require that a $\#$ symbol be read before proceeding to
-      read the next symbol.
-        % Draw the PDA
-        \begin{figure}[H]
-          \begin{tikzpicture}
-            \node[state, initial] (q0) at (0, 0) {$a$};
-            \node[state] at (10, 0) (q1) {$b$};
-            \node[state] at (5, 3) (q2) {$b_{\eps}$};
-            \node[state] at (5, -3) (q3) {$b_{\#}$};
-            \draw (q0) edge[above, pos=0.7, dashed] node {$x, y \to z$ (old transition)} (q1)
-                  (q0) edge[below, pos=0.3] node {\crim{$x, y \to z$ if $x \ne \eps$}} (q3)
-                  (q0) edge[above, pos=0.3] node {\crim{$x, y \to z$ if $x = \eps$}} (q2)
-                  (q3) edge[below, pos=0.3] node {\green{$\#, \eps \to \eps$}} (q1)
-                  (q2) edge[above, pos=0.3] node {\green{$\eps, \eps \to \eps$}} (q1);
-          \end{tikzpicture}
-          \caption{Modification of Transitions to Require $\#$ between any two non-epsilon Symbols.}
-        \end{figure}
+      In contrast to $M_1$, $M_2$ makes the following modifications:
+      \begin{enumroman}
+        \item Any transition that takes the PDA from a state $a$ to a state $b$,
+          now does one of the following:
+          \begin{itemize}
+            \item Takes the PDA from $a$ to $b_\eps$ if the transition reads an epsilon input.
+              From $b_\eps$, the PDA can choose to take a transition to $b$
+              without reading any input or interfering with the stack, so $b$ is still reachable.
+            \item Takes the PDA from $a$ to $b_\#$ if the transition reads a non-epsilon input.
+              From $b_\#$, the only transition forward reads a $\#$ symbol but does not interfere
+              with the stack, thus ensuring that $b$ is still reachable only if a $\#$ symbol
+              exists between the consecutive letters in the input string.
+          \end{itemize}
+        \item For all accepting states $f \in F_1$,
+          we define the states $f_\#$ and $f_\eps$ to be accepting states in $M_2$,
+          and make $f$ non-accepting in $M_2$.
+          This ensures that:
+          \begin{itemize}
+            \item If $a_1a_2 \ldots a_n$ is accepted in $M_1$, then $a_1 \# a_2 \# \ldots \# a_n$ is accepted in $M_2$.
+            \item We do not accept strings ending with a $\#$ symbol, e.g. $a_1 \# a_2 \# \ldots \# a_n \#$, since
+              the state $f$ itself is non-accepting.
+          \end{itemize}
+      \end{enumroman}
     \end{proof}
   \end{claim}
 \end{Answer}
