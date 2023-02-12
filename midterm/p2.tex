@@ -1,0 +1,52 @@
+\begin{problem}
+  For each CFG $G_i$;
+  \begin{enumroman}
+    \item Describe $\calL(G_i)$ using set notation, as simply as possible.
+    \item Either \emph{draw} an NFA that recognizes $\calL(G_i)$ or
+      \emph{prove} that $\calL(G_i)$ is not regular.
+  \end{enumroman}
+
+  \step
+  \begin{enumalph}
+    \item $G_1$
+      \begin{align*}
+        S &\derives 0T0 \mid 1T1 \\
+        T &\derives 0T0 \mid 1T1 \mid X \\
+        X &\derives AX \mid A \\
+        A &\derives 0 \mid 1
+      \end{align*}
+      \begin{Answer}
+        \begin{enumroman}
+          \item $\calL(G_1) = \set{0^n1^n : n \geq 0}$
+          \item \emph{Draw} an NFA that recognizes $\calL(G_1)$.
+        \end{enumroman}
+      \end{Answer}
+    \item $G_2$
+      \begin{align*}
+        S &\derives 0X \mid 1Y \\
+        X &\derives AXA \mid 0 \\
+        Y &\derives AYA \mid 1 \\
+        A &\derives 0 \mid 1
+      \end{align*}
+      \begin{Answer}
+        \begin{enumroman}
+          \item $\calL(G_2) = \set{0^n1^n : n \geq 0}$
+          \item \emph{Prove} that $\calL(G_2)$ is not regular.
+        \end{enumroman}
+      \end{Answer}
+
+    \item $G_3$
+      \begin{align*}
+        S &\derives AAT \mid BBT \\
+        T &\derives AAT \mid BBT \mid A \mid B \\
+        A &\derives 0 \\
+        B &\derives 1
+      \end{align*}
+      \begin{Answer}
+        \begin{enumroman}
+          \item $\calL(G_3) = \set{0^n1^n : n \geq 0}$
+          \item \emph{Draw} an NFA that recognizes $\calL(G_3)$.
+        \end{enumroman}
+      \end{Answer}
+  \end{enumalph}
+\end{problem}
