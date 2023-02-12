@@ -4,8 +4,6 @@
   A string $x \in D^*$ is said to be stable if,
   for each pair of adjacent digits in $x$,
   those two digits have a numerical difference of at most $1$.
-
-  \step
   For example:
   \begin{align*}
     \text{Stable:} \quad & 433321001012,\; 556677654,\; 7,\;  0000,\; \eps. \\
@@ -16,5 +14,34 @@
   (no formal completeness and soundness proofs are required).
 \end{problem}
 \begin{Answer}
-
+  \begin{align*}
+    M &= (Q, D, \delta, s, F), \text{ where } \\
+    Q &= \set{s, r} \cup \set{q_i : i \in D} \\
+    \delta(q, x) &= \begin{cases}
+      q_x & \text{if $x \in D$ and $q \in \set{s, q_{x-1}, q_x, q_{x+1}}$.} \\
+      r & \text{otherwise.} \\
+    \end{cases} \\
+    F &= \set{ s } \cup \set{ q_i : i \in D } = \crim{Q \setminus \set{ r }}.
+  \end{align*}
+  \textbf{Design Idea:}\\
+  We maintain a start state, a trapping reject state,
+  and one state for each digit.\\
+  Here is how we handle transitions:
+  \begin{itemize}
+    \item If we are in the start state and read a digit,
+      we transition to the corresponding digit state.
+    \item If we are in a digit state $q_x$ (for the digit $x$)
+      and read a digit $y$, then:
+      \begin{itemize}
+        \item if $y = x$, we loop to the same state $q_x$.
+        \item if $y = x \pm 1$, we transition to the corresponding digit state $q_y$.
+        \item if $y \ne x$ and $y \ne x \pm 1$, we transition to the reject state $r$.
+      \end{itemize}
+    \item If we are in the reject state $r$ and read any symbol,
+      we stay in the reject state.
+  \end{itemize}
+  \step
+  Finally, we accept if after processing a string we are still
+  in the start state (meaning the string is empty) or in a digit state
+  (meaning all the adjacent digits had a difference of at most $1$).
 \end{Answer}

@@ -8,12 +8,37 @@
     \quad \text{grow}(\eps) = \eps,
     \quad \text{grow}(11) = 11.
   \]
-  Let $P = (Q, \set{0, 1}, \Gamma, \delta, q_0, F0)$ be a PDA.
+  Let $P = (Q, \set{0, 1}, \Gamma, \delta, q_0, F)$ be a PDA.
   Formally describe a PDA that recognizes $\set{\text{grow}(x) : x \in \calL(P)}$.
   Do not assume anything about the design of $P$. \\
   Give a high-level explanation of your construction
   (no formal completeness and soundness proofs are required).
 \end{problem}
 \begin{Answer}
-  
+  Define a new PDA
+  \[ P_2 = (Q_2, \set{0, 1}, \Gamma, \delta_2, q_0, F) \]
+  where:
+  \begin{align*}
+    Q_2 &= \bigcup_{q \in Q} \set{q, q'} \\
+    \delta_2(q, x, \gamma) &= \begin{cases}
+      \delta(q, x, \gamma) &\text{ if $q \in Q$ and $x \ne 0$} \\
+      r' &\text{ where $r = \delta(q, x, \gamma)$, if $q \in Q$ and $x = 0$} \\
+      r &\text{ if $q = r'$ for some $r \in Q$, and $x = 0$, $\gamma = \eps$}
+    \end{cases}
+  \end{align*}
+  \textbf{Main Idea:}
+  \begin{enumroman}
+    \item We start at the same state. We also maintain the same accepting states.
+    \item We create a duplicate state $q'$ for each state $q \in Q$.
+    \item Whenever there is an incoming transition $q \to r$ with a reading $x = 0$,
+      we instead transition to $r'$. $r'$ then only transitions to $r$ if the next
+      symbol is a $0$.
+      The transition from $q$ to $r'$ pushes to or pops from the stack as
+      it would if transitioning directly from $q$ to $r$ in the original PDA.
+      However, the transition from $r'$ to $r$ does not push or pop anything,
+      making sure the stack remains consistent as it would if only the first
+      transition had occurred.
+    \item All other transitions are handled the same way as in the original PDA.
+  \end{enumroman}
+
 \end{Answer}

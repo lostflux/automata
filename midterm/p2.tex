@@ -1,12 +1,12 @@
 \begin{problem}
   For each CFG $G_i$;
-  \begin{enumroman}
+  \begin{itemize}
     \item Describe $\calL(G_i)$ using set notation, as simply as possible.
     \item Either \emph{draw} an NFA that recognizes $\calL(G_i)$ or
       \emph{prove} that $\calL(G_i)$ is not regular.
-  \end{enumroman}
+  \end{itemize}
 
-  \step
+  % \step
   \begin{enumalph}
     \item $G_1$
       \begin{align*}
@@ -17,10 +17,36 @@
       \end{align*}
       \begin{Answer}
         \begin{enumroman}
-          \item $\calL(G_1) = \set{0^n1^n : n \geq 0}$
+          \item $\calL(G_1) = \set{xwx^R : x, w \in \set{0, 1}^* \text{ and } \abs{x} > 0, \abs{w} > 0}$
           \item \emph{Draw} an NFA that recognizes $\calL(G_1)$.
+          
+          % DRAW NFA HERE
+          \begin{figure}[H]
+            % \center
+            \begin{tikzpicture}
+              \node[state, initial] (s) at (0, 0) {$s$};
+              \node[state] (q0) at (2, 2) {$q_{0_1}$};
+              \node[state, right of=q0] (q00) {$q_{0_2}$};
+
+              \node[state] (q1) at (2, -2) {$q_{1_1}$};
+              \node[state, right of=q1] (q11) {$q_{1_2}$};
+
+              \node[state, accepting] (t) at (7, 0) {$t$};
+
+              \draw (s) edge[bend left, above] node {$0$} (q0)
+                    (s) edge[bend right, below] node {$1$} (q1)
+                    (q0) edge[above] node {$0, 1$} (q00)
+                    (q1) edge[below] node {$0, 1$} (q11)
+                    (q00) edge[loop above, above] node {$0, 1$} (q00)
+                    (q11) edge[loop below, below] node {$0, 1$} (q11)
+                    (q00) edge[bend left, above] node {$0$} (t)
+                    (q11) edge[bend right, below] node {$1$} (t);
+            \end{tikzpicture}
+            \caption{NFA for $\calL(G_1)$}
+          \end{figure}
         \end{enumroman}
       \end{Answer}
+    \newpage
     \item $G_2$
       \begin{align*}
         S &\derives 0X \mid 1Y \\
@@ -30,11 +56,71 @@
       \end{align*}
       \begin{Answer}
         \begin{enumroman}
-          \item $\calL(G_2) = \set{0^n1^n : n \geq 0}$
-          \item \emph{Prove} that $\calL(G_2)$ is not regular.
+          \item $\calL(G_2) = \set{aw : a \in \set{0, 1}, w \in \set{0, 1}^*
+            \text{ and the middle symbol of $w$ is $a$}}$
+          \item \emph{Prove} that $\calL(G_2)$ is not regular or draw an NFA.
+
+            \step
+            \begin{claim}
+              $L_2 = \calL(G_2)$ is not regular.
+
+              \begin{proof}
+                Suppose $L_2$ is regular,
+                and let $p$ be the pumping length for $L_2$.
+                Take $s = 10^p10^p$, then clearly $s \in L_2$.
+                By the pumping lemma, there exists $u, v, w \in \set{0, 1}^*$ such that
+                $s = uvw$ and:
+                \begin{itemize}
+                  \item $\abs{uv} \leq p$
+                  \item $\abs{v} > 0$
+                  
+                    \step
+                    This gives us two possibilities:
+                      \begin{itemize}
+                        \item \crim{
+                          If $u = \eps$, then $v = 10^a$ for some $0 \le a \le p-1$,
+                          and $w = 0^{p-a}10^p$.
+                          }
+                        \item \green{
+                          If $u \ne \eps$, then $u = 10^a$, $v = 0^b$,
+                          and $w = 0^{p-a-b}10^p$, where $a + b \le p-1$.
+                        }
+                      \end{itemize}
+                  \item $uv^kw \in L_2$ for all $k \geq 0$
+                  
+                    \step
+                    \crim{
+                      In the first case, pumping up the string tells us that
+                      $uv^2w = 10^b10^b0^{p-b}10^p \in L_2$.\\
+                      This implies that the middle symbol of $0^b10^p10^p$ is $1$.
+                      \\
+                      For this to happen, either:
+                      \begin{itemize}
+                        \item $b = 2p + 1$. This contradicts the condition that $b = \abs{v} \le p$
+                          (which follows from PL1).
+                        \item $b + p + 1 = p$. This implies that $b = -1$, which contradicts the fact
+                          that we cannot have negative-length strings.
+                      \end{itemize}
+                      Therefore, in the first case $L_2$ must not be regular.
+                    }
+
+                    \step
+                    \green{
+                      In the second case, pumping down the string tells us that
+                      $uw = 10^a0^{p-a-b}10^p \in L_2$.\\
+                      This implies that the middle symbol of $0^{p-b}10^p$ is $1$.\\
+                      For this to happen, we must have that $p-b = p$,
+                      meaning $b = 0$, contradicting rule PL2 which says that $b = \abs{v} > 0$.
+                      \\
+                      Therefore, in the second case $L_2$ must also not be regular.
+                    }
+                \end{itemize}
+              \end{proof}
+            \end{claim}
         \end{enumroman}
       \end{Answer}
 
+    \newpage
     \item $G_3$
       \begin{align*}
         S &\derives AAT \mid BBT \\
@@ -46,6 +132,36 @@
         \begin{enumroman}
           \item $\calL(G_3) = \set{0^n1^n : n \geq 0}$
           \item \emph{Draw} an NFA that recognizes $\calL(G_3)$.
+            % DRAW NFA HERE
+            \begin{figure}[H]
+              % \center
+              \begin{tikzpicture}
+                \node[state, initial] (s) at (0, 0) {$s$};
+                \node[state] (q01) at (2, 2) {$q_{0_1}$};
+                \node[state, right of=q01] (q02) {$q_{0_2}$};
+  
+                \node[state] (q11) at (2, -2) {$q_{1_1}$};
+                \node[state, right of=q11] (q12) {$q_{1_2}$};
+  
+                \node[state, accepting] (t) at (7, 0) {$t$};
+  
+                \draw (s) edge[bend left, above] node {$0$} (q01)
+                      (s) edge[bend right, below] node {$1$} (q11)
+
+                      (q01) edge[bend right, below] node {$0$} (q02)
+                      (q11) edge[bend right, below] node {$1$} (q12)
+
+                      (q02) edge[bend left, above] node {$0, 1$} (t)
+                      (q02) edge[bend right, above] node {$0$} (q01)
+
+                      (q12) edge[bend right, below] node {$0, 1$} (t)
+                      (q12) edge[bend right, above] node {$1$} (q11)
+
+                      (q02) edge[above, pos=0.3] node {$1$} (q11)
+                      (q12) edge[below, pos=0.3] node {$0$} (q01);
+              \end{tikzpicture}
+              \caption{NFA for $\calL(G_3)$}
+            \end{figure}
         \end{enumroman}
       \end{Answer}
   \end{enumalph}
