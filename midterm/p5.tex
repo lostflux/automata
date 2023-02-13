@@ -11,5 +11,64 @@
   Prove your answer.
 \end{problem}
 \begin{Answer}
+  Yes, regular languages are closed under $\uniq$.
+
+  \step
+  For an arbitrary language $L$, let
+  \[ M = (Q, \Sigma, \delta, q_0, F) \]
+  be a DFA that recognizes $L$, and let $L_2 = \uniq(L)$.
+  Construct a new DFA as follows:
+  \begin{align*}
+    M_2 &= (Q_2, \Sigma, \delta_2, (q_0, \emptyset), F_2) \quad \text{ where } \\
+    Q_2 &= \set{(q, Q_0) : q \in Q, Q_0 \in \calP(Q) } \\
+    \delta_2((q, Q_0), x) &= (\delta(q, x), Q_1) \text{ where $Q_1 = \set{\delta(q, \sigma_1) : \sigma_1 \in \Sigma \setminus \set{x}} \cup \set{\delta(q', \sigma_2) : q' \in Q_0, \sigma_2 \in \Sigma}$} \\
+    F_2 &= \set{(q_f, Q_f) : q_f \in F, Q_f \cap F = \emptyset}
+  \end{align*}
+
+  \step
+  \textbf{Main Idea:} \\
+  In $M_2$, we keep track of the computational path of $M$ (the original DFA)
+  on the input string $x$ by stepping through the transitions that $M$
+  would make on $x$.
+  In addition, we also track all other alternative computational paths of the same length
+  as the current one.
+  \step
+  Each state in $M_2$ is a pair $(q, Q_0)$ where $q \in Q$ is the 
+  state $M$ would be in if it were following the current computational path,
+  and $Q_0$ is the set of states $M$ would be in if following computational
+  paths on other strings different from the current one.
   
+  \step
+  This is how we manage transitions:
+  \begin{itemize}
+    \item Initially, there is only a single computational path of length 0
+      so the start state is $(q_0, \emptyset)$.
+    \item When we are at a state $(q_i, Q_i)$ and we read a symbol $x$,
+      we do the following:
+      \begin{itemize}
+        \item Generate computational paths of $M$ that branch from the current one ---
+          that is, $Q_j = \set{\delta(q_i, \sigma_1) : \sigma_1 \in \Sigma \setminus \set{x}}$
+        \item Extend existing alternative computational paths of $M$ of the given length.\\
+          That is, we generate the set 
+          $Q_k = \set{\delta(q_k, \sigma_2) : q_k \in Q_i, \sigma_2 \in \Sigma}$.
+        \item Finally, we extend the computational path of $M$ (original DFA) on the current string to
+          end at $\delta(q_i, x)$.
+      \end{itemize}
+      We therefore transition to $(\delta(q_i, x), Q_j \cup Q_k)$.
+  \end{itemize}
+
+  \step
+  Finally, if a string $s$ is in $L$ then the computational path of $M$ on $s$
+  ends at a state $q_f \in F$. The corresponding state in $M_2$ is $(q_f, Q_f)$
+  where $Q_f$ is the set of all other computational paths of the same length
+  as the computational path that takes $M$ from $q_0$ to $q_f$ on $x$.
+
+  \step
+  In this case, a string $s$ is in $\uniq(L)$ if and only if
+  none of the alternative computational paths of the same length
+  end at an accepting state, i.e. $Q_f \cap F = \emptyset$.
+
+  \step
+  We therefore define our accepting states to be
+  $F_2 = \set{(q_f, Q_f) : q_f \in F, Q_f \cap F = \emptyset}$.
 \end{Answer}

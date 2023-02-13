@@ -28,16 +28,17 @@
   \end{align*}
   \textbf{Main Idea:}
   \begin{enumroman}
-    \item We start at the same state. We also maintain the same accepting states.
-    \item We create a duplicate state $q'$ for each state $q \in Q$.
-    \item Whenever there is an incoming transition $q \to r$ with a reading $x = 0$,
-      we instead transition to $r'$. $r'$ then only transitions to $r$ if the next
+    \item $P_2$ starts at the same state as $P$.
+      $P_2$ also uses the same accepting states as $P$.
+    \item $P_2$ contains a duplicate state $q'$ for each state $q \in Q$.
+    \item Whenever there is an incoming transition $p \to q$ with a reading $x = 0$,
+      $P_2$ instead transition to $q'$. $q'$ then only transitions to $q$ if the next
       symbol is a $0$.
-      The transition from $q$ to $r'$ pushes to or pops from the stack as
-      it would if transitioning directly from $q$ to $r$ in the original PDA.
-      However, the transition from $r'$ to $r$ does not push or pop anything,
-      making sure the stack remains consistent as it would if only the first
-      transition had occurred.
+      The transition from $p$ to $q'$ pushes to or pops from the stack as
+      it would if transitioning directly from $p$ to $q$ in the original PDA.
+      However, the transition from $q'$ to $q$ does not push to or pop from the stack,
+      thus ensuring the stack remains consistent with that of the original
+      PDA on the original string (single $0$ transition).
     \item All other transitions are handled the same way as in the original PDA.
   \end{enumroman}
 

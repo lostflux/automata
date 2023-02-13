@@ -7,7 +7,50 @@
 \end{problem}
 \begin{Answer}
   \begin{align*}
-    S &\to 0S0 \mid 0B1 \mid 1B0 \mid 1S1 \\
-    B &\derives 0B0 \mid 0B1 \mid 1B0 \mid 1B1 \mid \eps
+    \underline{G_3:} \\
+    S &\derives 0S0 \mid 0B1 \mid 1B0 \mid 1S1 \\
+    B &\derives 0B0 \mid 0B1 \mid 1B0 \mid 1B1 \mid 0 \mid 1 \mid \eps
   \end{align*}
+
+  \step
+  \begin{claim}
+    $\calL(G_3) = L_3$.
+
+    \begin{proof}
+      We need to show that $G_3$ is both complete $\calL(G_3) \supseteq L_3$
+      and $\calL(G_3) \subseteq L_3$.
+
+      \step
+      \textbf{Completeness:} \\
+      Let $x \in L_3$, and write $x = x_1, x_2, \ldots, x_n$
+      with each $x_i \in \set{0, 1}$.
+      
+      \step
+      By definition of $L_3$, if $x \in L_3$ then $x \ne x^R$.
+      Therefore, $x_1x_2 \ldots x_n \ne x_nx_{n-1} \ldots x_1$,
+      implying that $x_i \ne x_{n-i+1}$ for some $i \in \set{1, 2, \ldots, \floor{n/2}}$.
+      Therefore, the sequence $x_i, x_i+1, \ldots, x_{n-i}$
+      can be written as either \crim{$0y1$} or \crim{$1y0$}, where $y \in \set{0, 1}^*$.
+
+      \step
+      Back to our CFG, note that the rule
+      \crim{`$B \derives 0B0 \mid 0B1 \mid 1B0 \mid 1B1 \mid 0 \mid 1 \mid \eps$'}
+        can derive \emph{any} string in $\set{0, 1}^*$.
+        Therefore, if we can a string in $L_3$ as either $0B1$ or $1B0$
+        then we can yield it from $B$.
+
+      \step
+      The starting symbol of $G_3$ is $S$,
+      and the rules for $S$ are \crim{$S \derives 0S0 \mid 0B1 \mid 1B0 \mid 1S1$}.
+      $S$ either yields:
+      \begin{itemize}
+        \item $0S0$ or $1S1$ if the two symbols at the ends of the string are the same.
+          However, we may never yield a full string from only yielding a sequence of $S$'s,
+          since $S$ does not have a rule that removes all symbols not in $\set{0, 1}^*$
+          from the string.
+        \item $0B1$ or $1B0$ \emph{only if} the two symbols at the ends of the string
+          are different. By yielding $B$, we can eventually 
+      \end{itemize}
+    \end{proof}
+  \end{claim}
 \end{Answer}
