@@ -18,5 +18,105 @@
   We also define $\beta(\eps) = 0$.
 \end{problem}
 \begin{Answer}
+  $L_6$ is context-free \emph{but not regular}.\\
+  It is not regular because the requirement to track length of the string
+  and check divisibility by $3$ of the first half of the string
+  makes it impossible to reuse states in any DFA recognizing $L_6$.
+  Every string is in its own equivalence class,
+  which is uniquely determined not just by the length of the string
+  but also by the contents of the string.
+  Since $L_6$ is an infinite language, any DFA
+  would need infinite states to recognize $L_6$,
+  yet a DFA must have a finite number of states.
+
+  \step
+  However, with the use of a stack, we can easily track the length of
+  strings by pushing to the stack while checking divisibility by $3$,
+  and afterward pop from the stack while processing the second part of
+  the string.
   
+  \step
+  We can construct a PDA to recognize $L_6$ as follows:
+  \begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+      \green{
+        \node[state, initial] (qs) at (0, 0) {$s$};
+      }
+      \crim{
+        \node[state, right of=qs] (q0) at (0, 0) {$q_0$};
+        \node[state, right of=q0] (q1) {$q_1$};
+        \node[state, right of=q1] (q2) {$q_2$};
+        \draw (q0) edge[loop above, above] node {$0, \eps \to \#$} (q0)
+              (q0) edge[bend left, above] node {$1, \eps \to \#$} (q1)
+              (q1) edge[bend left, above] node {$0, \eps \to \#$} (q2)
+              (q1) edge[bend left, below] node {$1, \eps \to \#$} (q0)
+              (q2) edge[bend left, below] node {$0, \eps \to \#$} (q1)
+              (q2) edge[loop right, right] node {$1, \eps \to \#$} (q2);
+      }
+      \zaff{
+        \node[state, below of=q0] (ql) {$q_{loop}$};
+        \draw (ql) edge[loop left, left] node
+          {$\begin{aligned} 0, \# \to \eps \\ 1, \# \to \eps \end{aligned}$} (ql);
+      }
+      \green{
+        \node[state, right of=ql, accepting] (qf) {$q_{accept}$};
+        \draw (q0) edge[left] node {$\eps, \eps \to \eps$} (ql)
+              (qs) edge[above] node {$\eps, \eps \to \$$} (q0)
+              (ql) edge[below] node {$\eps, \$ \to \eps$} (qf);
+      }
+    \end{tikzpicture}
+    \caption{PDA for $L_6$}
+  \end{figure}
+
+  \step
+  \textbf{Main Idea:}
+
+  \step
+  By definition, all strings $s \in L_6$ can be written as $s = yz$,
+  where $y, z \in \set{0, 1}^*$, $\abs{y} = \abs{z}$, and $\beta(y) \equiv 0 \pmod 3$.
+
+  Our PDA works in two general phases:
+  \begin{itemize}
+    \item Initially, we push a $\$$ symbol to the stack to mark
+      the bottom of the stack. We then take an $\eps$-transition to $q_0$.
+    \item The first phase of the PDA checks if the string processed
+      (so far) is divisible by $3$. However, on every transition we also
+      push a $\#$ symbol to the stack to track the number of symbols
+      processed so far.
+    \item At any time if we are at $q_0$ (indicating that the string processed
+      so far is divisible by $3$), we can take an $\eps$-transition to $q_{loop}$
+      without modifying the stack.
+    \item While in $q_{loop}$, we read symbols from the alphabet and pop
+      a single $\#$ symbol from the stack to loop back to $q_{loop}$.
+      This process repeats until we reach the bottom of the stack,
+      then we can pop the bottom-of-stack marker ($\$$) and transition
+      to $q_{accept}$.
+    \newpage
+    \item We claim that the PDA accepts $L_6$.
+      \begin{itemize}
+        \item To reach $q_{accept}$ from $q_{start}$, we must make the transition
+          from $q_0$ to $q_{loop}$. This means some prefix
+          $x_1 x_2 \ldots x_n$ of the input string
+          has a computational path that ends in $q_0$, meaning
+          $\beta(x_1 x_2 \ldots x_n)$ is divisible y $3$.
+        \item To reach $q_{accept}$ from $q_{loop}$, we must make the transition
+          from $q_{loop}$ to $q_{accept}$ on reading $\eps$
+          and popping $\$$ from the stack.
+          This means that we have to pop all the $\#$'s from the stack
+          at $q_{loop}$. Since the number of $\#$'s on the stack
+          is equal to the length of $x_1 x_2 \ldots x_n$,
+          we must process some string $y_1, y_2, \ldots, y_n$
+          such that $\abs{y_1 y_2 \ldots y_n} = \abs{x_1 x_2 \ldots x_n}$
+
+        \item Furthermore, $q_{accept}$ has no outgoing or looping transitions.
+          For a computational path to end in $q_{accept}$,
+          the last transition must be from $q_{loop}$ to $q_{accept}$,
+          implying that $s = x_1 x_2 \ldots x_n y_1 y_2 \ldots y_n$.
+          This means $s = yz$ for some $y, z \in \set{0, 1}^*$,
+          $\abs{y} = \abs{z}$, and $\beta(y) \equiv 0 \pmod 3$,
+          so $s \in L_6$.
+      \end{itemize}
+  \end{itemize}
+
 \end{Answer}
