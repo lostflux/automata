@@ -1,0 +1,69 @@
+\begin{problem}
+  Formally describe a two-tape deterministic TM that decides the language
+  ${w \in \set{0,1}^* : w = w^R}$.
+  Provide a diagram, plus explanations and comments,
+  so that your grader can understand how your TM works.
+  You may assume that in a particular move one (or both)
+  of the heads is allowed to remain stationary.
+  Thus, the transition function for such a TM would look like
+  \[ \delta : Q \times \Gamma^2 \to Q \times \Gamma^2 \times \set{L, R, S}^2. \]
+
+  \step
+  Indicate $\delta(q, a , b) = (r, c, d, L, S)$ by drawing an arrow from
+  $q$ to $r$ and labeling it
+  ``$(a, b) \to (c, d), (L, S).$''
+  Appreciate the ease of programming with two tapes for this language.
+\end{problem}
+\begin{Answer}
+  \textbf{Strategy:}
+  Let tape $A$ and tape $B$ be the two tapes in the TM.
+  Note that at the start, the input string is on tape $A$
+  (plus infinite blanks on the right end), and tape $B$ is blank.
+
+  \begin{enumroman}
+    \item Shift the input string on tape $A$ to the right by $1$, and insert
+      a $\#$ symbol at the left end of tape $A$ to mark the beginning.
+      We also insert a $\#$ at the left-most position on tape $B$ to mark the beginning.
+
+    \item Move the head on tape $A$ to the right end of the string
+      and the head on tape $B$ to the left second position (just after the $\#$).
+      Traverse backwards on tape $A$ and forwards on tape $B$,
+      copying the string (in reverse) to tape $B$.
+    \item Move both heads to beginning of each tape.
+      Traverse forwards on tape $A$ and tape $B$,
+      comparing the corresponding elements of tape $A$ and tape $B$.
+      If they are not equal, then $w \neq w^R$. Reject the input string.
+      If they are equal, then $w = w^R$. Accept the input string.
+  \end{enumroman}
+
+  \newpage
+  \begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+      \node[state, initial] (q0) at (0, 0) {$q_0$};
+      \node[state] (q1) at (6, 0) {$q_1$};
+      \node[state] (q2) at (12, 0) {$q_2$};
+      \node[state] (q3) at (12, -6) {$q_3$};
+      \node[state] (q4) at (6, -6) {$q_4$};
+      \node[state] (q5) at (6, -12) {$q_5$};
+      \node[state] (q6) at (0, -12) {$q_{reject}$};
+      \node[state, accepting] (q7) at (12, -12) {$q_{accept}$};
+
+      \draw (q0) edge[above] node {$(x, \none) \to (x, \#), (S, R)$} (q1)
+            (q1) edge[loop above, above] node {$(x, \none) \to (\none, x), (R, R)$} (q1)
+            (q1) edge[above] node {$(\none, \none) \to (\none, \none), (R, S)$} (q2)
+            (q2) edge[loop above, above] node {$(\none, x) \to (x, \none), (L, L)$} (q2)
+            (q2) edge[left] node {$(\none, \#) \to (\#, \none), (S, S)$} (q3)
+            (q3) edge[loop below, below] node {$(x, \none) \to (x, \none), (R, S)$} (q3)
+            (q3) edge[above] node {$(\none, \none) \to (\none, \none), (S, S)$} (q4)
+            (q4) edge[loop above, above] node {$(x, \none) \to (x, x), (L, R)$} (q4)
+            (q4) edge[left] node {$(\#, \#) \to (\#, \#), (S, S)$} (q5)
+            (q5) edge[loop below, below] node {$(x, x) \to (x, x), (R, R)$} (q5)
+            (q5) edge[above] node {$(x, y) \to (x, y), (S, S)$} (q6)
+            (q5) edge[above] node {$(\none, \none) \to (\none, \none), (S, S)$} (q7);
+    \end{tikzpicture}
+    \caption{Turing Machine to decide $L = \set{w \in \set{0, 1}^* : w = w^R}$}
+    \label{fig:p3}
+    
+  \end{figure}
+\end{Answer}

@@ -1,0 +1,163 @@
+\begin{problem}
+  For each of the following languages, say whether or not it is a CFL
+  and prove your answer, either by designing an appropriate CFG or PDA
+  or by using closure properties and/or the pumping lemma.
+  If designing a CFG/PDA, please explain your construction in brief
+  so the grader can understand your design.
+
+  \bigskip
+  \begin{blockcolor}
+    \begin{lemma}~\label{lemma:pl} (Pumping Lemma for CFLs)
+
+      \step
+      If a language is a CFL, then the language
+      has a pumping length $p$ such that any string $s$ in the language
+      that has length \emph{at least} $p$ can be written
+      as $s = uvwxy$ where
+      \begin{enumroman}
+        \item $\abs{vwx} \leq p$.
+        \item $\abs{vx} > 0$.
+        \item $uv^kwx^ky \in L_1$ for all $k \geq 0$.
+      \end{enumroman}
+    \end{lemma}
+  \end{blockcolor}
+
+  \begin{enumalph}
+    \newpage
+    \item $L_1 = \set{a^nb^nc^m : n \le m \le 2n}$
+    \begin{Answer}
+      The language is not a CFL.
+
+      \step
+      Suppose it is, then take $p$ to be the pumping length
+      and $s = a^pb^pc^{2p}$, then $s$ is a string in the language.
+      
+      Since $\abs{vwx} \leq p$, $vwx$ must not span three distinct letters.
+      In particular, it must be of one of the following forms:
+      \begin{enumroman}
+        \item $vwx = a^ib^j$ for some $i, j \geq 0$, $1 < i + j \leq p$.
+
+          \step
+          Since $\abs{vx} > 0$, at least one of $v$ and $x$ must be nonempty,
+          so $vx$ contains some number of $a$'s and some number of $b$'s
+          (but no $c$'s).
+          There are two scenarios here.
+          \begin{itemize}
+            \item If $vx$ contains the same number of $a$'s as the number of $b$'s,
+              then pumping down the string does not break the equality of $a$'s
+              and $b$'s, but ir reduces the number of $a$'s and the number of $b$'s
+              by some non-zero $l_1$ and $l_2$, respectively.
+              So $a^{p-l_1}b^{p-l_2}c^2p \in L_1$,
+              suggesting that $2p \leq 2p - (l_1 + l_2)$, which can only happen
+              since $l_1 + l_2 > 0$ (following from $\abs{vx} > 0$).
+            \item If $vx$ contains more $a$'s than $b$'s, then pumping down the string
+              breaks the equality of $a$'s and $b$'s the resulting string cannot
+              be in $L_1$. The same scenario applies for when $vx$ contains more
+              $b$'s than $a$'s.
+          \end{itemize}
+        \item $vwx = b^ic^j$ for some $i, j \geq 0$, $1 < i + j \leq p$.
+        
+        If $i > 0$ (so $vwx$ starts with a sequence of $b$'s).
+        \begin{itemize}
+          \item If $v$ is nonempty, then $v$ contains a number of $b$'s
+            so pumping down the string reduces the number of $b$'s
+            but does not reduce the number of $a$'s,
+            breaking the equality of the number of $a$'s and the number of $b$'s
+            in the string. The resulting string must not be in $L_1$,
+            contradicting the pumping lemma.
+          \item If $v$ is empty, then $x$ must be nonempty (since $\abs{vx} > 0$).
+            In particular, $x$ must contain a number of $c$'s. It may also contain
+            a number of $b$'s.
+            If $x$ contains only $c$'s (say, $x = c^l$ for some $0 < l \leq j$),
+            pumping up the string tells us that $a^pb^pc^{2p+l}$
+            is in $L_1$, but that implies that $2p + l \leq 2p$,
+            so $l = 0$, but if $l = \abs{x} = 0$ and $\abs{v} = 0$
+            then we would have that $\abs{vx} = 0$, contradicting the pumping lemma.
+            If $x$ contains both $c$'s and $b$'s, the pumping up will increase the number
+            of $b$'s in the string, breaking the equality between the number of $b$'s
+            and the number of $a$'s. So the resulting string must not be in $L_1$,
+            contradicting the pumping lemma.
+        \end{itemize}
+
+        \step
+        If $i = 0$, then $j > 0$ and, since $\abs{vx} > 0$, $vx = c^l$ for some
+        $0 < l < j$.
+        Pumping up the string increases the number of $c$'s in the string by some
+        amount $l$. For the string to still be a valid member of $L_1$,
+        then $2p + l \leq 2p$, implying that $l = 0$ so $\abs{vx} = 0$,
+        contradicting the pumping lemma.
+        
+      \end{enumroman}
+
+    \end{Answer}
+    \item $\set{a^n b^{n^2} : n \ge 0}$
+    \begin{Answer}
+      The language is not a CFL.
+
+      Suppose it is, then, following the pumping lemma~(\ref{lemma:pl}),
+      take $p$ to be the pumping length and $s = a^pb^{p^2}$
+      to be a string in the language.
+
+      Write $s = uvwxy$, the pumping lemma tells us that $\abs{vwx} \leq 0$,
+      $\abs{vx} > 0$, and $uv^kwx^ky \in L_1$ for all $k \geq 0$.
+
+      There are two scenarios;
+      \begin{enumroman}
+        \item $vwx = a^i$ for some $0 < i \leq p$.
+          Since $\abs{vx} > 0$, $vx$ $vx = a^l$ for some $0 < l < i$.
+          Pumping down tells us that $a^{p-l}b^{p^2} \in L_1$,
+          so $p^1 = (p - l)^2$, which implies that $l = 0$,
+          but that contradicts the pumping lemma's condition that
+          $\abs{vx} > 0$.
+        \item $vwx = a^ib^j$ for some $0 < i$, $0 < j$, and $i + j \leq p$.
+          Since $\abs{vx} > 0$, $vx = a^{l_1}b^{l_2}$ with the condition
+          that $0 < l_1 + l_2 < i + j$
+          
+          \begin{itemize}
+            \item If $l_1 = 0$, then pumping up the string increases the number of $b$'s
+              but does not change the number of $a$'s, breaking the condition
+              that the number of $b$'s equal to the square of the number of $a$'s.
+            \item If $l_1 > 0$ and $l_2 = 0$, then pumping up the string
+              increases the number of $a$'s but does not change the number of $b$'s,
+              breaking the condition that the number of $b$'s equal to the square
+              of the number of $a$'s.
+            \item If $l_1 > 0$ and $l_2 > 0$, then pumping up the string tells us that
+              $a^{p+l_1}b^{p^2+l_2} \in L_1$, so \\ $p^2 + l_2 = (p + l_1)^2$.
+    
+              \step
+              By expanding the equation, we see that:
+              \begin{align*}
+                p^2 + l_2 &= (p + l_1)^2 \\
+                          &= p^2 + 2pl_1 + l_1^2 \\
+                \Therefore l_2 &= 2pl_1 + l_1^2 \\
+                \Therefore l_2 &> p \quad & \quad \green{\text{since $l_1$ (string length) must be positive!}} \\
+                \Therefore l_1 + l_2 &= \abs{vx} > p &\crim{\text{(contradiction)}}
+              \end{align*}
+          \end{itemize}
+          % If $l_1 = 0$, then pumping up the string increases the number of $b$'s
+          % but does not change the number of $a$'s, breaking the condition
+          % that the number of $b$'s equal to the square of the number of $a$'s.
+
+          % \step
+          % If $l_1 > 0$ and $l_2 = 0$, then pumping up the string
+          % increases the number of $a$'s but does not change the number of $b$'s,
+          % breaking the condition that the number of $b$'s equal to the square
+          % of the number of $a$'s.
+
+          % \step
+          % If $l_1 > 0$ and $l_2 > 0$, then pumping up the string tells us that
+          % $a^{p+l_1}b^{p^2+l_2} \in L_1$, so $p^2 + l_2 = (p + l_1)^2$.
+
+          % \step
+          % By expanding the equation, we see that:
+          % \begin{align*}
+          %   p^2 + l_2 &= (p + l_1)^2 \\
+          %             &= p^2 + 2pl_1 + l_1^2 \\
+          %   \Therefore l_2 &= 2pl_1 + l_1^2 \\
+          %   \Therefore l_2 &> p \quad & \quad \green{\text{since $l_1$ (string length) must be positive!}} \\
+          %   \Therefore l_1 + l_2 &= \abs{vx} > p &\crim{\text{(contradiction)}}
+          % \end{align*}
+      \end{enumroman}
+    \end{Answer}
+  \end{enumalph}
+\end{problem}
