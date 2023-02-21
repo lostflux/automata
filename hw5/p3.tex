@@ -36,16 +36,32 @@
       If they are equal, then $w = w^R$. Accept the input string.
   \end{enumroman}
 
+  % \step
   \newpage
+  \emph{
+    Note: In the turing machine diagram,
+    when we read two defined symbols $(x, y)$ during a transition,
+    we specifically mean that $x \neq y$
+    (otherwise, we denote the reading as $(x, x)$
+    to specify that the readings from the two tapes are equivalent).
+    When we read $(*, *)$ during a transition,
+    we mean the two readings may be be equal or unequal,
+    or any of the readings may be undefined (presumably, the transition
+    is agnostic to the readings). However, if we do write the symbol
+    back to the tape, it's the exact symbol that we read from the tape.
+  }
+
+  \bigskip
+    
   \begin{figure}[H]
     \centering
     \begin{tikzpicture}
-      \node[state, initial] (q0) at (0, 0) {$q_0$};
-      \node[state] (q1) at (6, 0) {$q_1$};
-      \node[state] (q2) at (12, 0) {$q_2$};
-      \node[state] (q3) at (12, -6) {$q_3$};
-      \node[state] (q4) at (6, -6) {$q_4$};
-      \node[state] (q5) at (6, -12) {$q_5$};
+      \node[state, initial] (q0) at (0, 0) {$q_{start}$};
+      \node[state] (q1) at (6, 0) {$q_{shift_1}$};
+      \node[state] (q2) at (12, 0) {$q_{shift_2}$};
+      \node[state] (q3) at (12, -6) {$q_{advance}$};
+      \node[state] (q4) at (6, -6) {$q_{rev-copy}$};
+      \node[state] (q5) at (6, -12) {$q_{compare}$};
       \node[state] (q6) at (0, -12) {$q_{reject}$};
       \node[state, accepting] (q7) at (12, -12) {$q_{accept}$};
 
@@ -53,14 +69,16 @@
             (q1) edge[loop above, above] node {$(x, \none) \to (\none, x), (R, R)$} (q1)
             (q1) edge[above] node {$(\none, \none) \to (\none, \none), (R, S)$} (q2)
             (q2) edge[loop above, above] node {$(\none, x) \to (x, \none), (L, L)$} (q2)
-            (q2) edge[left] node {$(\none, \#) \to (\#, \none), (S, S)$} (q3)
+            (q2) edge[left] node {$(\none, \#) \to (\#, \#), (S, S)$} (q3)
             (q3) edge[loop below, below] node {$(x, \none) \to (x, \none), (R, S)$} (q3)
             (q3) edge[above] node {$(\none, \none) \to (\none, \none), (S, S)$} (q4)
             (q4) edge[loop above, above] node {$(x, \none) \to (x, x), (L, R)$} (q4)
             (q4) edge[left] node {$(\#, \#) \to (\#, \#), (S, S)$} (q5)
             (q5) edge[loop below, below] node {$(x, x) \to (x, x), (R, R)$} (q5)
             (q5) edge[above] node {$(x, y) \to (x, y), (S, S)$} (q6)
-            (q5) edge[above] node {$(\none, \none) \to (\none, \none), (S, S)$} (q7);
+            (q5) edge[above] node {$(\none, \none) \to (\none, \none), (S, S)$} (q7)
+            (q6) edge[loop below, below] node {$(\ast, \ast) \to (\ast, \ast), (S, S) $} (q6)
+            (q7) edge[loop below, below] node {$(\ast, \ast) \to (\ast, \ast), (S, S) $} (q7);
     \end{tikzpicture}
     \caption{Turing Machine to decide $L = \set{w \in \set{0, 1}^* : w = w^R}$}
     \label{fig:p3}
