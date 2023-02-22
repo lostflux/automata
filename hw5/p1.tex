@@ -17,14 +17,14 @@
       \begin{enumroman}
         \item $\abs{vwx} \leq p$.
         \item $\abs{vx} > 0$.
-        \item $uv^kwx^ky \in L_1$ for all $k \geq 0$.
+        \item $uv^kwx^ky \in L$ for all $k \geq 0$.
       \end{enumroman}
     \end{lemma}
   \end{blockcolor}
 
   \begin{enumalph}
     \newpage
-    \item $L_1 = \set{a^nb^nc^m : n \le m \le 2n}$
+    \item $L = \set{a^nb^nc^m : n \le m \le 2n}$
     \begin{Answer}
       The language is not a CFL.
 
@@ -47,12 +47,12 @@
               then pumping down the string does not break the equality of $a$'s
               and $b$'s, but ir reduces the number of $a$'s and the number of $b$'s
               by some non-zero $l_1$ and $l_2$, respectively.
-              So $a^{p-l_1}b^{p-l_2}c^2p \in L_1$,
+              So $a^{p-l_1}b^{p-l_2}c^2p \in L$,
               suggesting that $2p \leq 2p - (l_1 + l_2)$, which can only happen
               since $l_1 + l_2 > 0$ (following from $\abs{vx} > 0$).
             \item If $vx$ contains more $a$'s than $b$'s, then pumping down the string
               breaks the equality of $a$'s and $b$'s the resulting string cannot
-              be in $L_1$. The same scenario applies for when $vx$ contains more
+              be in $L$. The same scenario applies for when $vx$ contains more
               $b$'s than $a$'s.
           \end{itemize}
         \item $vwx = b^ic^j$ for some $i, j \geq 0$, $1 < i + j \leq p$.
@@ -63,19 +63,19 @@
             so pumping down the string reduces the number of $b$'s
             but does not reduce the number of $a$'s,
             breaking the equality of the number of $a$'s and the number of $b$'s
-            in the string. The resulting string must not be in $L_1$,
+            in the string. The resulting string must not be in $L$,
             contradicting the pumping lemma.
           \item If $v$ is empty, then $x$ must be nonempty (since $\abs{vx} > 0$).
             In particular, $x$ must contain a number of $c$'s. It may also contain
             a number of $b$'s.
             If $x$ contains only $c$'s (say, $x = c^l$ for some $0 < l \leq j$),
             pumping up the string tells us that $a^pb^pc^{2p+l}$
-            is in $L_1$, but that implies that $2p + l \leq 2p$,
+            is in $L$, but that implies that $2p + l \leq 2p$,
             so $l = 0$, but if $l = \abs{x} = 0$ and $\abs{v} = 0$
             then we would have that $\abs{vx} = 0$, contradicting the pumping lemma.
             If $x$ contains both $c$'s and $b$'s, the pumping up will increase the number
             of $b$'s in the string, breaking the equality between the number of $b$'s
-            and the number of $a$'s. So the resulting string must not be in $L_1$,
+            and the number of $a$'s. So the resulting string must not be in $L$,
             contradicting the pumping lemma.
         \end{itemize}
 
@@ -83,13 +83,17 @@
         If $i = 0$, then $j > 0$ and, since $\abs{vx} > 0$, $vx = c^l$ for some
         $0 < l < j$.
         Pumping up the string increases the number of $c$'s in the string by some
-        amount $l$. For the string to still be a valid member of $L_1$,
+        amount $l$. For the string to still be a valid member of $L$,
         then $2p + l \leq 2p$, implying that $l = 0$ so $\abs{vx} = 0$,
         contradicting the pumping lemma.
-        
       \end{enumroman}
 
+      \step
+      Therefore, $L$ must not be context-free since the pumping lemma
+      is not satisfied for some strings in $L$ of length greater than $p$.
     \end{Answer}
+    
+    \newpage
     \item $\set{a^n b^{n^2} : n \ge 0}$
     \begin{Answer}
       The language is not a CFL.
@@ -99,13 +103,13 @@
       to be a string in the language.
 
       Write $s = uvwxy$, the pumping lemma tells us that $\abs{vwx} \leq 0$,
-      $\abs{vx} > 0$, and $uv^kwx^ky \in L_1$ for all $k \geq 0$.
+      $\abs{vx} > 0$, and $uv^kwx^ky \in L$ for all $k \geq 0$.
 
       There are two scenarios;
       \begin{enumroman}
         \item $vwx = a^i$ for some $0 < i \leq p$.
           Since $\abs{vx} > 0$, $vx$ $vx = a^l$ for some $0 < l < i$.
-          Pumping down tells us that $a^{p-l}b^{p^2} \in L_1$,
+          Pumping down tells us that $a^{p-l}b^{p^2} \in L$,
           so $p^1 = (p - l)^2$, which implies that $l = 0$,
           but that contradicts the pumping lemma's condition that
           $\abs{vx} > 0$.
@@ -122,7 +126,7 @@
               breaking the condition that the number of $b$'s equal to the square
               of the number of $a$'s.
             \item If $l_1 > 0$ and $l_2 > 0$, then pumping up the string tells us that
-              $a^{p+l_1}b^{p^2+l_2} \in L_1$, so \\ $p^2 + l_2 = (p + l_1)^2$.
+              $a^{p+l_1}b^{p^2+l_2} \in L$, so \\ $p^2 + l_2 = (p + l_1)^2$.
     
               \step
               By expanding the equation, we see that:
@@ -134,30 +138,11 @@
                 \Therefore l_1 + l_2 &= \abs{vx} > p &\crim{\text{(contradiction)}}
               \end{align*}
           \end{itemize}
-          % If $l_1 = 0$, then pumping up the string increases the number of $b$'s
-          % but does not change the number of $a$'s, breaking the condition
-          % that the number of $b$'s equal to the square of the number of $a$'s.
-
-          % \step
-          % If $l_1 > 0$ and $l_2 = 0$, then pumping up the string
-          % increases the number of $a$'s but does not change the number of $b$'s,
-          % breaking the condition that the number of $b$'s equal to the square
-          % of the number of $a$'s.
-
-          % \step
-          % If $l_1 > 0$ and $l_2 > 0$, then pumping up the string tells us that
-          % $a^{p+l_1}b^{p^2+l_2} \in L_1$, so $p^2 + l_2 = (p + l_1)^2$.
-
-          % \step
-          % By expanding the equation, we see that:
-          % \begin{align*}
-          %   p^2 + l_2 &= (p + l_1)^2 \\
-          %             &= p^2 + 2pl_1 + l_1^2 \\
-          %   \Therefore l_2 &= 2pl_1 + l_1^2 \\
-          %   \Therefore l_2 &> p \quad & \quad \green{\text{since $l_1$ (string length) must be positive!}} \\
-          %   \Therefore l_1 + l_2 &= \abs{vx} > p &\crim{\text{(contradiction)}}
-          % \end{align*}
       \end{enumroman}
+
+      \step
+      Therefore, $L$ must not be context-free since the pumping lemma
+      is not satisfied for some strings in $L$ of length greater than $p$.
     \end{Answer}
   \end{enumalph}
 \end{problem}

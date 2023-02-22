@@ -30,23 +30,22 @@
       of the string on tape $A$, and successfully reaches the end of the string.
   \end{enumroman}
 
-  % \step
-  \newpage
+  \step
   \emph{
     Note: In the turing machine diagram,
-    when we read two defined symbols $(x, y)$ during a transition,
-    we specifically mean that $x \neq y$
-    (otherwise, we denote the reading as $(x, x)$
-    to specify that the readings from the two tapes are equivalent).
-    When we read $(*, *)$ during a transition,
-    we mean the two readings may be be equal or unequal,
-    or any of the readings may be undefined (presumably, the transition
-    is agnostic to the readings). However, if we do write the symbol
-    back to the tape, it's the exact symbol that we read from the tape.
+    when we denote $(x, y)$ to as readings from the two tapes
+    such that $x, y \in \set{0, 1}$ and $x \neq y$
+    (otherwise, we denote the reading as $(x, x)$ to specify equality).
+    We denote $\none$ when the reading from the tape is blank.
   }
-
-  \bigskip
+    
   
+  \newpage
+  \bigskip
+  \step
+  Note: similar to NFAs, I allowed the NDTM to crash on unexpected inputs
+  rather than explicitly handling them / rejecting.
+    
   \begin{figure}[H]
     \centering
     \begin{tikzpicture}
@@ -54,10 +53,10 @@
       \node[state] (q1) at (6, 0) {$q_{copy}$};
       \node[state] (q2) at (6, -6) {$q_{rewind-B}$};
       \node[state] (q3) at (6, -12) {$q_{compare}$};
-      \node[state, accepting] (q4) at (12, -12) {$q_{accept}$};
-      \node[state] (q5) at (0, -12) {$q_{reject}$};
+      \node[state, accepting] (q4) at (0, -12) {$q_{accept}$};
+      % \node[state] (q5) at (12, -12) {$q_{reject}$};
 
-      \draw (q0) edge[above] node {$(\ast, \none) \to (\ast, \#), (S, R)$} (q1)
+      \draw (q0) edge[above] node {$(x, \none) \to (x, \#), (S, R)$} (q1)
             (q1) edge[loop right, right] node {$(x, \none) \to (x, x), (R, R)$} (q1)
             (q1) edge[left] node {$(x, \none) \to (x, \none), (S, S)$} (q2)
             (q2) edge[loop right, right] node {$
@@ -68,14 +67,15 @@
             $} (q2)
             (q2) edge[left, pos=0.3] node {$(x, \#) \to (x, \#), (S, R)$} (q3)
             (q3) edge[loop below, below] node {$(x, x) \to (x, x), (R, R)$} (q3)
-            (q3) edge[above] node {$
-              \begin{aligned}
-                (x, y) \to (x, y), (S, S) \\
-                (x, \none) \to (x, \none), (S, S) \\
-                (\none, x) \to (\none, x), (S, S)
-              \end{aligned}    
-            $} (q5)
-            (q3) edge[above] node {$(\none, \none) \to (\none, \none), (S, S)$} (q4);
+            % (q3) edge[above] node {$
+            %   \begin{aligned}
+            %     (x, y) \to (x, y), (S, S) \\
+            %     (x, \none) \to (x, \none), (S, S) \\
+            %     (\none, x) \to (\none, x), (S, S)
+            %   \end{aligned}    
+            % $} (q5)
+            (q3) edge[above] node {$(\none, \none) \to (\none, \none), (S, S)$} (q4)
+            (q0) edge[right] node {$(\none, \none) \to (\none, \none), (S, S)$} (q4);
     \end{tikzpicture}
     \caption{Turing Machine to decide $L = \set{ww : w \in \set{0, 1}^*}$}
     \label{fig:p4}

@@ -6,3 +6,72 @@
   The big-O notation may hide a constant that depends on $k$.
   You may assume that $t \geq \abs{x}$, where $x$ is the input to $M$.
 \end{problem}
+
+\begin{Answer}
+  Let $M$ be a k-tape TM over some alphabet $\Sigma$.
+
+  \step
+  A single-tape TM $M'$ can simulate $M$ as follows:
+  \begin{enumroman}
+    \item $M'$ copies the contains of all the tapes of $M$ onto its single
+      tape, with a separator between the contents of each tape.
+      For instance, if the contents of the $k$ tapes of $M$
+      are \begin{align*}
+        t_1 &= \sigma_{(1, 1)}, \sigma_{(1, 2)} \ldots \sigma_{(1, n_1)} \\
+        t_2 &= \sigma_{(2, 1)}, \sigma_{(2, 2)} \ldots \sigma_{(2, n_2)} \\
+        \vdots \\
+        t_k &= \sigma_{(k, 1)}, \sigma_{(k, 2)}, \ldots, \sigma_{(k, n_k)}
+      \end{align*}
+      with each $\sigma_{(i, j)} \in \Sigma$,
+      then the corresponding configuration of $M'$ is
+      \[ 
+        \#, \sigma_{(1, 1)}, \sigma_{(1, 2)} \ldots \sigma_{(1, n)},
+        \#, \sigma_{(2, 1)}, \sigma_{(2, 2)} \ldots \sigma_{(2, n)},
+        \#, \ldots, 
+        \#, \sigma_{(k, 1)}, \sigma_{(k, 2)}, \ldots, \sigma_{(k, n_k)} \#
+      \]
+      where $\#$ is a special symbol that is not in the alphabet of $M$.
+    \item $M'$ tracks multiple head positions (within each sub-tape)
+      for each of the $k$ tapes of $M$.
+      For instance, in the above example, if the heads of $M$ are at
+      the beginning of each tape, then the configuration n $M'$
+      (using $H_i$ to denote the head position on tape $i$)
+      would be:
+      \[
+        \#, H_1, \sigma_{(1, 1)}, \sigma_{(1, 2)} \ldots \sigma_{(1, n)},
+        \#, H_2, \sigma_{(2, 1)}, \sigma_{(2, 2)} \ldots \sigma_{(2, n)},
+        \#, \ldots, 
+        \#, H_k, \sigma_{(k, 1)}, \sigma_{(k, 2)}, \ldots, \sigma_{(k, n_k)} \#
+      \]
+
+    \item On each transition, $M$ reads some $k$-tuple of inputs from the $k$ tapes.
+      transitions to some new state $q$, and write some $k$-tuple of updates
+      to the $k$ tapes.
+      in turn, $M'$ simulates a sequence of transitions that updates
+      each of the $k$ positions representing the head $k$ head positions
+      on its single tape.
+  \end{enumroman}
+
+  \newpage
+  \step
+  For a computation that runs in $t$ steps on $M$;
+  \begin{itemize}
+    \item $M'$ copies the contents of the $k$ tapes of $M$
+      onto its single tape and sets the head positions to the beginning
+      of each sub-tape in $k\cdot\abs{x}$ steps.
+    \item For each of the subsequent $k-1$ steps of $M$, $M'$
+      simulates a computation that updates each sub-tape.
+      In the worst case, this requires traversing traversing
+      the entire tape of $M'$, which which takes $k\cdot\abs{x}$ steps.
+      This is repeated $t-1$ times for a total of
+      $(t-1)\cdot k\cdot\abs{x}$ steps.
+    \item In total, $M'$ takes $k\cdot\abs{x} + (t-1)\cdot (k\cdot\abs{x})
+      = t \cdot k\cdot\abs{x}$
+      steps to simulate the computation of $M$.\\
+      Assuming $t \geq \abs{x}$, the simulation runs in time $t' \leq kt^2$ steps,
+      which is $O(t^2)$. 
+      
+  \end{itemize}
+
+
+\end{Answer}

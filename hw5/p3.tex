@@ -36,23 +36,19 @@
       If they are equal, then $w = w^R$. Accept the input string.
   \end{enumroman}
 
-  % \step
-  \newpage
+  \step
   \emph{
     Note: In the turing machine diagram,
-    when we read two defined symbols $(x, y)$ during a transition,
-    we specifically mean that $x \neq y$
-    (otherwise, we denote the reading as $(x, x)$
-    to specify that the readings from the two tapes are equivalent).
-    When we read $(*, *)$ during a transition,
-    we mean the two readings may be be equal or unequal,
-    or any of the readings may be undefined (presumably, the transition
-    is agnostic to the readings). However, if we do write the symbol
-    back to the tape, it's the exact symbol that we read from the tape.
-  }
-
-  \bigskip
+    when we denote $(x, y)$ to as readings from the two tapes
+    such that $x, y \in \set{0, 1}$ and $x \neq y$
+    (otherwise, we denote the reading as $(x, x)$ to specify equality).
+    We denote $\none$ when the reading from the tape is blank.
+    }
     
+    \bigskip
+    
+  \newpage
+  \bigskip
   \begin{figure}[H]
     \centering
     \begin{tikzpicture}
@@ -75,10 +71,10 @@
             (q4) edge[loop above, above] node {$(x, \none) \to (x, x), (L, R)$} (q4)
             (q4) edge[left] node {$(\#, \#) \to (\#, \#), (S, S)$} (q5)
             (q5) edge[loop below, below] node {$(x, x) \to (x, x), (R, R)$} (q5)
-            (q5) edge[above] node {$(x, y) \to (x, y), (S, S)$} (q6)
+            (q5) edge[above] node {$(x, y) \to (\none, \none), (S, S)$} (q6)
             (q5) edge[above] node {$(\none, \none) \to (\none, \none), (S, S)$} (q7)
-            (q6) edge[loop below, below] node {$(\ast, \ast) \to (\ast, \ast), (S, S) $} (q6)
-            (q7) edge[loop below, below] node {$(\ast, \ast) \to (\ast, \ast), (S, S) $} (q7);
+            (q6) edge[loop below, below] node {$(\none, \none) \to (\none, \none), (S, S) $} (q6)
+            (q7) edge[loop below, below] node {$(\none, \none) \to (\none, \none), (S, S) $} (q7);
     \end{tikzpicture}
     \caption{Turing Machine to decide $L = \set{w \in \set{0, 1}^* : w = w^R}$}
     \label{fig:p3}

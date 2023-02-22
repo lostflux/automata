@@ -1,8 +1,70 @@
 \begin{problem}
   Do the same for each of the following languages:
   \begin{enumalph}
-    \item $\set{b_i \# b_{i+1} : i \geq 1}$, where $b$ is the binary
+    \item $L = \set{b_i \# b_{i+1} : i \geq 1}$, where $b$ is the binary
       representation of $i$ with no leading $0$'s.
-    \item $(a \cup b)^* - \set{(a^n b^n)^n : n \geq 1}$
+      \begin{Answer}
+        The language is not context-free. Suppose it was and $p$ as the pumping length.
+        Take $s = 10^p1^p\#10^{p-1}10^p$. Since $10^p1^p + 1 = 10^{p-1}10^p$
+        for all $p$, the string is guaranteed to be in the language.
+
+        Write $s = uvwxy$ where, per the pumping lemma (\ref{lemma:pl}),
+        $\abs{vwx} \leq p$, $\abs{vx} > 0$, and $uv^kwx^ky \in L$ for all $k \geq 0$.
+
+        There are three possibilities:
+        \begin{enumroman}
+          \item If $vwx$ is a substring to the left of the $\#$ symbol in $s$,
+            then, since $\abs{vx} > 0$, pumping down the string changes the left
+            part of the string (previously equivalent to $b_i$)
+            by removing \emph{at least} one symbol. Therefore, the resulting
+            string cannot be equivalent to $b_i$. Since the right side of the string
+            ($b_{i+1}$) remains unaltered, the new string is of the form
+            $s' = b_j\#b_{i+1}$ for some $j \neq i$, so it is not in $L$,
+            contradicting the pumping lemma.
+          \item Similarly, if $vwx$ is a substring to the right of the $\#$ symbol,
+            then pumping down the string changes the right part of the string
+            (previously equivalent to $b_{i+1}$)
+            by removing \emph{at least} one symbol. Therefore, the resulting
+            string cannot be equivalent to $b_{i+1}$. Since the left side of the string
+            ($b_i$) remains unaltered, the new string is of the form
+            $s' = b_i\#b_j$ for some $j \neq i+1$, so it is not in $L$,
+            contradicting the pumping lemma.
+          \item If $vwx$ is a substring in the middle of the string, then:
+            \begin{itemize}
+              \item If $\#$ is contained in $\abs{vx}$, pumping down
+                results in a string without a $\#$ symbol, so it is not in $L$.
+              \item If $\#$ is contained in $\abs{w}$, then:
+                \begin{itemize}
+                  \item If the $1$ immediately after the $\#$ is not in $w$,
+                    then it must be in $x$ so pumping down removes it
+                    (but does not remove all the other $0$'s) resulting in a string
+                    to the left that has leading $0$'s, hence cannot be equivalent
+                    to $b_i$.
+                  \newpage
+                  \item If the $1$ immediately after the $\#$ in the original string
+                    is in $w$, then $vx$ reads $1^a0^b$ for some $0 < a + b < p-2$.
+                    Pumping down the string suggests that
+                    $10^p1^{p-a}\#10^{p-1-b}10^p$ is in $L$, so
+                    \begin{align*}
+                      10^p1^{p-a} + 1 &= 10^{p-1-b}10^p \\
+                      \Therefore 10^{\zaff{p-1}}10^{\crim{p - a}} &= 10^{\zaff{p-1-b}}10^{\crim{p}}\\
+                      \Therefore p - a &= p &\Longrightarrow \quad a = 0 \\
+                      \Therefore p - 1 - b &= p - 1 &\Longrightarrow  \quad b = 0
+                    \end{align*}
+                    But if $\abs{v} = a = 0$ and $\abs{x} = b = 0$, then
+                    $\abs{vx} = 0$, which contradicts the pumping lemma.
+                \end{itemize}
+            \end{itemize}
+
+            \step
+            Therefore, $L$ must not be context-free since the pumping lemma is not 
+            satisfied for some strings in $L$ of length greater than $p$.
+        \end{enumroman}
+
+      \end{Answer}
+    \item $L = (a \cup b)^* - \set{(a^n b^n)^n : n \geq 1}$
+    \begin{Answer}
+      I got stuck on this problem.
+    \end{Answer}
   \end{enumalph}
 \end{problem}
