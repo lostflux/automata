@@ -1,0 +1,63 @@
+\begin{problem}
+  Prove that every infinite recognizable language has an infinite
+  decidable subset.
+  (If $L$ is an infinite recognizable subset, then there exists
+  an infinite decidable language $L' \subseteq L$).\\
+  \grey{Hint:
+    Think of enumerator TMs and the results
+    we proved in class about them.
+  }
+\end{problem}
+\begin{Answer}
+  Let $M$ be a TM recognizing a language $L$ over alphabet $\Sigma$. \\
+  \crim{
+    Note: I use the fact that  $\Sigma^*$ is decidable thus enumerable
+    in lexicographic order to enumerate members of $\Sigma^*$ without
+    going into the full details of the TM for this operation
+    since we covered that in class.
+  } \\
+  First, construct an enumerator TM $E$ for a subset of the language $L$ as follows:
+
+  \step
+  $E$ = ``On input $\vector{M}$:
+    \begin{enumarabic}
+      \item $len \gets 0$.
+      \item For $i \gets 1, 2, 3, \ldots$
+        \begin{enumarabic*}
+          \item Define $s_i$ to be the next string in the \crim{enumeration of $\Sigma^*$}.
+          \item Define $S = \set{s \in \set{s_1, s_2, \ldots s_i} : \abs{s} > len}$.
+          \item Simulate $M$ for $i$ steps on each $s \in S$.
+          \item If $M$ accepts some $s_k \in S$
+          \begin{enumarabic*}
+            \item \List $s_k$
+            \item $len \gets \abs{s_k}$''
+          \end{enumarabic*}
+        \end{enumarabic*}
+    \end{enumarabic}
+
+  \begin{claim}
+    There exists a language $L' \subseteq L$ such that $L'$ is infinite and decidable.
+    
+    \begin{proof}
+      Let $L' = \set{w \in L : w \text{ is listed by } E}$.
+
+      \step
+      First, note that $L$ is infinite, so $L'$ also has to be infinite since,
+      for any length $l$, $E$ can always list another string $s \in \Sigma^*$
+      of length greater than $l$.
+      Additionally, $\Sigma^*$ is enumerated in lexicographic order,
+      so the sequence of strings listed by $E$ does not change
+      across different runs of $E$.
+      Thus, $L'$ is decidable by the following TM:
+
+      \step
+      $T$ = ``On input $w$:
+        \begin{enumarabic}
+          \item Simulate $E$ on input $\vector{M}$. \quad \crim{(where $M$ is the original TM for $L$)}
+          \item If $E$ lists $w$, \Accept.
+          \item The moment $E$ lists a string $w'$ such that $\abs{w'} \geq \abs{w}$, \Reject.
+        \end{enumarabic}
+        $T$ will always terminate with either \Accept or \Reject.
+    \end{proof}
+  \end{claim}
+\end{Answer}

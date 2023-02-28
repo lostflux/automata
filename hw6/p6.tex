@@ -1,0 +1,18 @@
+\begin{problem}
+  All of the automata models we have studied in this course allow 
+  ``useless'' states, i.e., states which are never entered in any run.
+  It would be nice to have an algorithm that could detect and prune
+  such useless states in an automaton, but this is not always possible!
+  Define the languages
+  \begin{align*}
+    \Udfa = \set{\vector{M} :
+      \text{$M$ is a DFA and $M$ has at least one useless state}}, \\
+    \Upda = \set{\vector{M} :
+      \text{$M$ is a PDA and $M$ has at least one useless state}}, \\
+    \Utm = \set{\vector{M} :
+      \text{$M$ is a TM and $M$ has at least one useless state}}.
+  \end{align*}
+  
+  \step
+  Prove that $\Utm$ is undecidable.
+\end{problem}

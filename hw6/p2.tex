@@ -1,0 +1,106 @@
+\def \half {\textsc{Half }}
+\begin{problem}
+  Furthermore, recognizable languages are closed under (a) union,
+  (b) intersection, (c) concatenation, (d) Kleene star, and
+  (e) the \half operation. Prove the following:
+  \begin{enumalph}
+    \item union
+    \begin{Answer}
+      Let $T_1$ and $T_2$ be TMs recognizing $L_1$ and $L_2$ respectively.
+      Construct a $2$-tape TM $T$ as follows:
+
+      \step
+      $T$ = ``On input $w$:
+        \begin{enumarabic}
+          \item Copy $w$ onto the second tape.
+          \item Simulate $T_1$ on input $w$ on tape $1$
+            and concurrently simulate $T_2$ on input $w$ on the second tape.
+          \item If $T_1$ halts and accepts, \Accept.
+          \item If $T_2$ halts and accepts, \Accept.
+          \item Otherwise, keep running $T_1$ and $T_2$.''
+        \end{enumarabic}
+
+        \step
+        If $w \in L_1 \cup L_2$, then either $T_1$ will eventually halt
+        and accept or $T_2$ will eventually halt and accept,
+        so $T$ will eventually halt and accept.
+        However, if $w \notin L_1 \cup L_2$, then $T_1$ and $t_2$ may
+        never halt, so $T$ may also never halt.
+        Therefore, $T$ recognizes, but does not decide, $L_1 \cup L_2$.  \qed
+    \end{Answer}
+
+    \newpage
+    \setcounter{enumi}{2}
+    \item concatenation
+    \begin{Answer}
+      Let $T_1$ and $T_2$ be TMs recognizing $L_1$ and $L_2$ respectively.
+      Construct an NDTM $T$ as follows:
+
+      \step
+      $T$ = ``On input $w$:
+        \begin{enumarabic}
+          \item Insert a new symbol $\# \notin \Sigma$ before the first
+            symbol of $w$.
+          \item Non-deterministically do one of the following:~\label{step:2.1.2}
+            \begin{enumarabic*}
+              \item Simulate $T_1$ on the contents of $w$ before the $\#$
+                symbol and simulate $T_2$ on the contents of $w$ after
+                the $\#$ symbol. If both accept, \Accept.
+              \item Shift the $\#$ symbol to the right by $1$ and restart
+                step~\ref{step:2.1.2}''
+            \end{enumarabic*}
+        \end{enumarabic}
+
+        \step
+        If $T$ accepts a string $w$, then there must exist some prefix of $w$
+        accepted by $T_1$ such that the remainder of $w$ is accepted by $T_2$.
+        Therefore, $w \in L_1 L_2$.
+        Similarly, if $w \in L_1 L_2$, then it can be split into two strings
+        $w_1$ and $w_2$ such that $w_1 \in L_1$ and $w_2 \in L_2$,
+        so $T$ will accept $w$.
+
+        However, since $T_1$ and $T_2$ may not halt on inputs not in $L_1$
+        and $L_2$ respectively, $T$ may not halt on inputs not in $L_1 L_2$,
+        so it does not decide $L_1 L_2$.  \qed
+    \end{Answer}
+
+    \newpage
+    \setcounter{enumi}{4}
+    \item \half
+    \begin{Answer}
+      Let $L$ be a language over an alphabet $\Sigma$,
+      and let $T$ be a TM recognizing $L$.
+
+      \step
+      First, construct an enumerator TM
+      $N$ that enumerates members of $\Sigma$ of a specific length.
+
+      \step
+      $N$ = ``On input $n$:
+        \begin{enumarabic}
+          \item $l \gets 0$.
+          \item while $l <= n$:
+            \begin{enumarabic*}
+              \item Determine the next member $x \in \Sigma^*$ (in lexicographic ordering).
+              \item If $\abs{x} = n$, \List $x$.
+              \item $l \gets \abs{x}$.''
+            \end{enumarabic*}
+        \end{enumarabic}
+
+      \step
+      To recognize $\half(L)$, we construct a TM $T'$ as follows:
+
+      \step
+      $T'$ = ``On input $w$:
+        \begin{enumarabic}
+          \item $n \gets \abs{w}$.
+          \item Simulate $N$ on input $n$.
+          \item For each $x \in \Sigma^*$ enumerated by $N$:
+            \begin{enumarabic*}
+              \item Simulate $T$ on $wx$.
+              \item If $T$ accepts, \Accept.
+            \end{enumarabic*}
+        \end{enumarabic}
+    \end{Answer}
+  \end{enumalph}
+\end{problem}

@@ -1,0 +1,25 @@
+\def \Udfa { \textsf{U}_{\textsf{DFA}} }
+\def \Upda { \textsf{U}_{\textsf{PDA}} }
+\def \Utm  { \textsf{U}_{\textsf{TM}}  }
+
+\begin{problem}
+  All of the automata models we have studied in this course allow 
+  ``useless'' states, i.e., states which are never entered in any run.
+  It would be nice to have an algorithm that could detect and prune
+  such useless states in an automaton, but this is not always possible!
+  Define the languages
+  \begin{align*}
+    \Udfa = \set{\vector{M} :
+      \text{$M$ is a DFA and $M$ has at least one useless state}}, \\
+    \Upda = \set{\vector{M} :
+      \text{$M$ is a PDA and $M$ has at least one useless state}}, \\
+    \Utm = \set{\vector{M} :
+      \text{$M$ is a TM and $M$ has at least one useless state}}.
+  \end{align*}
+  
+  \begin{enumalph}
+    \item Prove that $\Udfa$ is decidable.
+    
+    \item Prove that $\Upda$ is decidable.
+  \end{enumalph}
+\end{problem}
