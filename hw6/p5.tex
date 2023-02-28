@@ -17,9 +17,87 @@
       \text{$M$ is a TM and $M$ has at least one useless state}}.
   \end{align*}
   
-  \begin{enumalph}
-    \item Prove that $\Udfa$ is decidable.
-    
-    \item Prove that $\Upda$ is decidable.
-  \end{enumalph}
+  \step
+  Prove that $\Udfa$ and $\Upda$ are decidable.
 \end{problem}
+\begin{Answer}
+  Given a DFA or PDA $M$, we can determine if $M$ does not accept any string
+  in $\Sigma$ by doing a simple Graph search from the starting state
+  $q_0$. If $\cL(M) = \emptyset$ then there is no computational path
+  (sequence of transitions) starting from the start state, that
+  leads to an accepting state.
+
+  % Define a TM $E_{\textsf{DFA}}$ that decides the set
+  % \[ \set{\vector{M} : \text{$M$ is a DFA or a PDA and  $\cL(M) = \emptyset$}} \]
+  % as follows:
+
+  \step
+  \begin{multicols*}{2}
+
+    \step
+    $E_{\textsf{DFA}}$ = ``On input $\vector{M}$:
+      \begin{enumarabic}
+        \item If $q_0 \in F$, \Reject.
+        \item $queue \gets [q_0]$.
+        \item $V \gets \emptyset$.
+        \item While $\abs{queue} \neq 0$
+          \begin{enumarabic*}
+            \item $q \gets$ first item removed from $queue$.
+            \item $V \gets V \cup \set{q}$.
+            \item For each $a \in \Sigma$
+              \begin{enumarabic*}
+                \item $q' \gets \delta(q, a)$.
+                \item If $q' \in F$, \Reject.
+                \item If $q' \notin V$; Add $q'$ to $queue$.
+              \end{enumarabic*}
+          \end{enumarabic*}
+        \item If no accepting state reached, \Accept.''
+      \end{enumarabic}
+      
+  
+      \step
+      $E_{\textsf{PDA}}$ = ``On input $\vector{M}$:
+        \begin{enumarabic}
+          \item If $q_0 \in F$, \Reject.
+          \item $queue \gets [q_0]$.
+          \item $V \gets \emptyset$.
+          \item While $\abs{queue} \neq 0$
+            \begin{enumarabic*}
+              \item $q \gets queue[0]$.
+              \item $queue \gets queue[1:]$.
+              \item $V \gets V \cup \set{q}$.
+              \item $Q' \gets \set{\delta(q, \sigma, \gamma) : \sigma \in \Sigma, \gamma \in \Gamma}$.
+              \item If $Q' \cap F \neq \emptyset$, \Reject.
+              \item $queue \gets queue \cup \set{q \in Q' : q \notin V}$.
+            \end{enumarabic*}
+          \item If no accepting state reached, \Accept.''
+        \end{enumarabic}
+  \end{multicols*}
+  
+  Since any given DFA or PDA has a finite number of states,
+  a finite language alphabet, and, in the case of a PDA, a finite
+  stack alphabet, both $E_{\textsf{DFA}}$ and $E_{\textsf{PDA}}$
+  eventually halt with either \Accept or \Reject.
+
+  \step
+  We can define a TM that decides $\Udfa$ and $\Upda$ as follows:
+
+  \step
+  $E_{\textsf{U}}$ = ``On input $\vector{M}$:
+    \begin{enumarabic}
+      \item Mark all the accepting states of $M$ as non-accepting.
+      \item For each state $q \in Q$ where $Q$ is the set of states
+        in $M$ in $M$:
+        \begin{enumarabic*}
+          \item Mark $q$ as accepting.
+          \item If $M$ is a DFA, run $E_{\textsf{DFA}}$ on $\vector{M}$.
+          \item If $M$ is a PDA, run $E_{\textsf{PDA}}$ on $\vector{M}$.
+          \item If $E_{\textsf{DFA}}$ or $E_{\textsf{PDA}}$ accepts $M$,
+            then $q$ is a useless state. \Accept.
+          \item If $E_{\textsf{DFA}}$ or $E_{\textsf{PDA}}$ rejects $M$,
+            then $q$ is not a useless state.
+            Un-mark $q$ as accepting and repeat for the next state.
+        \end{enumarabic*}
+      \item If no state is found to be useless, \Reject.''
+    \end{enumarabic}
+\end{Answer}

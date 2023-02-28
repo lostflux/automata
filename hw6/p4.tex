@@ -5,16 +5,89 @@
   (b) recognizable, but not decidable;
   (c) decidable.
   \begin{enumalph}
-    \item $L = \set{\vector{M} :
-      \text{$M$ is a TM and $M$ at least two strings.}}$
+    \item $L_1 = \set{\vector{M} :
+      \text{$M$ is a TM and $M$ accepts at least two strings.}}$
       \begin{Answer}
-        $L$ is recognizable but not decidable.
+        \begin{claim}
+          $L$ is recognizable but not decidable.
 
+          \begin{proof}
+            Since $\Sigma^*$ is decidable, it is also lexicographically enumerable.
+            Let $E$ be an lexicographic enumerator TM for $\Sigma^*$.\\
+            Construct a new TM $M'$ as follows:
 
+            \step
+            $M'$ = ``On input $\vector{M}$:
+              \begin{enumarabic}
+                \item Define $A = \emptyset$.
+                \item For $i \gets 1, 2, 3, \ldots$
+                  \begin{enumarabic*}
+                    \item Define $s_i$ to be the next string in the enumeration of $\Sigma^*$.
+                    \item Define $S = \set{s \in \set{s_1, s_2, \ldots s_i} : s \notin A}$.
+                    \item Simulate $M$ for $i$ steps on each $s \in S$.
+                    \item If $M$ accepts some $s_k \in S$
+                    \begin{enumarabic*}
+                      \item $A \gets A \cup \set{s_k}$
+                      \item If $\abs{A} \geq 2$, \Accept.''
+                    \end{enumarabic*}
+                  \end{enumarabic*}
+              \end{enumarabic}
+
+            \step
+            Given a TM $M$ in $L$, then $M'$ will always eventually halt
+            after $M$ accepts at least two strings.
+            However, given a TM not in $L$ -- that is, a TM $M$ that accepts
+            less than $2$ strings -- $M'$ will never halt.
+            There is no work-around for this problem, since at any given
+            instant there is yet another string in $\Sigma^*$ that has not yet been
+            tested by $M'$ to determine whether $M$ accepts it.
+          \end{proof}
+        \end{claim}
       \end{Answer}
 
+    \newpage
     \item $L = \set{\vector{M} :
       \text{$M$ is a TM and $M$ accepts exactly two strings.}}$
+      \begin{Answer}
+        Note that this is a subset of the set in part (a).
+        \begin{claim}
+          $L$ is unrecognizable.
+  
+          \begin{proof}
+            Suppose $L$ were recognizable, then there exists a TM $M'$ that,
+            given a turing machine $M$, returns \Accept if $M$ accepts
+            exactly two strings.
+
+            \step
+            For instance, take $M_1$, a TM defined over $\Sigma = \set{0, 1}$
+            as follows:
+
+            \step
+            $M_1$ = ``On input $w$:
+              \begin{enumarabic}
+                \item If $w = \eps$ or $w = 11$, \Accept.
+                \item Otherwise, \Reject.''
+              \end{enumarabic}
+
+            \step
+            Clearly, $M_1$ is a decider that accepts exactly two strings:
+            $\eps$ and $11$. So $M'$ should accept $M_1$.
+            However, given only the definition of $M_1$,
+            even when $M'$ has determined that $M_1$ accepts
+            $\eps$ and $11$, $M'$ has not yet determined if
+            $M_1$ rejects all remaining strings in $\Sigma^*$
+            --- and to determine that it needs to enumerate all the members of
+            $\Sigma^*$ and confirm that each is rejected by $M_1$.
+            $\Sigma^*$ is an infinite set, so $M'$ will always have another 
+            string to test, and will never halt and return \Accept.
+
+            \step
+            So, ironically, $M'$, a TM recognizing TMs that accept exactly
+            two strings, never determines enough information to conclusively
+            accept a TM that does accept exactly two strings.
+          \end{proof}
+        \end{claim}
+      \end{Answer}
 
     \item $L = \set{\vector{M_1, M_2} :
       \text{$M_1$ and $M_2$ are TMs over the input alphabet $\set{0, 1}$
