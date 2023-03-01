@@ -1,6 +1,7 @@
 \def \Udfa { \textsf{U}_{\textsf{DFA}} }
 \def \Upda { \textsf{U}_{\textsf{PDA}} }
 \def \Utm  { \textsf{U}_{\textsf{TM}}  }
+\def \Etm  { \textsf{E}_{\textsf{TM}}  }
 
 \begin{problem}
   All of the automata models we have studied in this course allow 
@@ -61,7 +62,7 @@
           \item If $q_0 \in F$, \Reject.
           \item $queue \gets [q_0]$.
           \item $V \gets \emptyset$.
-          \item While $\abs{queue} \neq 0$
+          \item While $\abs{queue} > 0$
             \begin{enumarabic*}
               \item $q \gets queue[0]$.
               \item $queue \gets queue[1:]$.
@@ -79,11 +80,11 @@
   stack alphabet, both $E_{\textsf{DFA}}$ and $E_{\textsf{PDA}}$
   eventually halt with either \Accept or \Reject.
 
-  \step
+  \newpage
   We can define a TM that decides $\Udfa$ and $\Upda$ as follows:
 
   \step
-  $E_{\textsf{U}}$ = ``On input $\vector{M}$:
+  $M'$ = ``On input $\vector{M}$ where M is a PDA or a DFA:
     \begin{enumarabic}
       \item Mark all the accepting states of $M$ as non-accepting.
       \item For each state $q \in Q$ where $Q$ is the set of states
@@ -91,7 +92,7 @@
         \begin{enumarabic*}
           \item Mark $q$ as accepting.
           \item If $M$ is a DFA, run $E_{\textsf{DFA}}$ on $\vector{M}$.
-          \item If $M$ is a PDA, run $E_{\textsf{PDA}}$ on $\vector{M}$.
+            If $M$ is a PDA, run $E_{\textsf{PDA}}$ on $\vector{M}$.
           \item If $E_{\textsf{DFA}}$ or $E_{\textsf{PDA}}$ accepts $M$,
             then $q$ is a useless state. \Accept.
           \item If $E_{\textsf{DFA}}$ or $E_{\textsf{PDA}}$ rejects $M$,
