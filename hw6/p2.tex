@@ -95,11 +95,9 @@
         \begin{enumarabic}
           \item $n \gets \abs{w}$.
           \item Simulate $N$ on input $n$.
-          \item For each $x \in \Sigma^*$ enumerated by $N$:
-            \begin{enumarabic*}
-              \item Simulate $T$ on $wx$.
-              \item If $T$ accepts, \Accept.
-            \end{enumarabic*}
+          \item Non-deterministically simulate $T$ on elements in the set
+            $\set{wx : \text{$x$ is listed by $N$}}$.
+            If any branch accepts, \Accept, otherwise \Reject.
         \end{enumarabic}
     \end{Answer}
   \end{enumalph}

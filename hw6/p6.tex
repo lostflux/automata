@@ -17,7 +17,7 @@
   Prove that $\Utm$ is undecidable.
 \end{problem}
 \begin{Answer}
-  \newpage
+  % \newpage
   \begin{claim}
     \label{claim:tm-undecidable}
     $\Utm$ is undecidable.
@@ -29,7 +29,7 @@
       $M$ has a useless state.
 
       \step
-      Construct a TM $M_1$ deciding $\overline{\Utm}$ as follows:
+      Construct a TM $M_1$ deciding the complement of $\Utm$ as follows:
 
       \step
       $M_1$ = ``On input $\vector{M}$ where $M$ is a TM:
@@ -40,15 +40,15 @@
         \end{enumarabic}
 
       \step
-      $M_1$ accepts a TM $M$ if and only if $M_0$ rejects it and vice versa.
-      That is, $M_1$ accepts $M$ if $M$ has no useless states.
+      $M_1$'s decision always differs with $M_0$'s decision, so if $M_0$ decides $\Utm$,
+      then $M_1$ the set of all TMs without a useless state.
 
       \step
       Since turing machines always have an accepting state,
       then every turing machine with an empty language always has \emph{at least}
       one useless state (the accepting state).
       
-      \step
+      \newpage
       $M_2$ = ``On input $\vector{M}$ where $M$ is a TM:
         \begin{enumarabic}
           \item Run $M_1$ on $\vector{M}$.
@@ -59,39 +59,28 @@
             \begin{enumarabic*}
               \item Suppose $Q$ is the set of states of $M$,
                 and $q_f$ the accepting state in $M$.
-              \item For every possible subset $S \subseteq Q \setminus \set{q_f}$
-                of states in $M$:
+              \item For every possible subset $S \subseteq Q \setminus \set{q_f}$:
               \begin{enumarabic*}
                 \item Delete $S$ from $M$ to create a new turing machine $M'$.
                 \item Run $M_1$ on $\vector{M'}$.
-                \item If $M_1$ accepts $M'$, continue to the next subset $S$.
-                \item If $M_1$ rejects $M'$, then 
-              \end{enumarabic*} to create a new turing machine $M'$.
-                and run $M_1$ on $\vector{M'}$.
-              \item \green{If $M_1$ every such machine is $M_1$  $M'$,
-                then every such possible deletion still results in a TM with a useless state,
-                hence the useless state must be $q_f$. \Reject.}~\footnote{
-                  Suppose $q_f$ was not a useless state, then some other subset
-                  $\set{q_1, \ldots, q_n}$ for some $n > 0$ would contain all the useless
-                  states of $M$. Therefore, deleting this subset would result in a TM
-                  without a useless state, which would be rejected by $M_1$ given $M_1$
-                  decides $\Utm$.
-                }
-              \item If $M_1$ accepts $M'$, then some deletion resulted in a TM without a useless
-                state, meaning that $q_f$ is not useless. \Accept.''
+                \item If $M_1$ accepts $M'$, \Accept.
+                \item If $M_1$ rejects $M'$, then continue to the next subset
+              \end{enumarabic*}
+              \item If $M_1$ rejects every such $M'$, then none of the subsets of
+              \item $2^{Q \setminus \set{q_f}}$ contained all the useless states in
+                $M$, meaning $q_f$ must be a useless state. \Reject.''
             \end{enumarabic*}
         \end{enumarabic}
 
-        \step
-        Clearly, $M_2$ only accepts a turing machine $M$ if the accepting state
-        in $M$ is not a useless state. Therefore, Given $M_1$ decides $\Utm$,
-        then $M_2$ decides $\Etm$.
-
-        \step
-        But we know that $\Etm$ is undecidable, so $\Utm$ must also be undecidable.
-
         \bigskip
-    \end{proof}
-
-  \end{claim}
+        $M_2$ only accepts input $\vector{M}$ if the accepting state
+        in $M$ is not a useless state. Therefore, $M_2$ decides the complement of
+        $\textsf{E}_{\textsf{TM}}$.
+        This implies that the complement of $\textsf{E}_{\textsf{TM}}$ is decidable,
+        hence $\textsf{E}_{\textsf{TM}}$ is decidable.
+        But we proved that $\Etm$ is, in fact undecidable, so this result creates
+        a contradiction, meaning the initial assumption that $\Utm$
+        is decidable must be wrong and $\Utm$ is undecidable.
+      \end{proof}
+    \end{claim}
 \end{Answer}

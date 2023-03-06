@@ -28,10 +28,6 @@
   (sequence of transitions) starting from the start state, that
   leads to an accepting state.
 
-  % Define a TM $E_{\textsf{DFA}}$ that decides the set
-  % \[ \set{\vector{M} : \text{$M$ is a DFA or a PDA and  $\cL(M) = \emptyset$}} \]
-  % as follows:
-
   \step
   \begin{multicols*}{2}
 
@@ -101,4 +97,9 @@
         \end{enumarabic*}
       \item If no state is found to be useless, \Reject.''
     \end{enumarabic}
+
+  \bigskip
+  If $M'$ accepts input $\vector{M}$ where $M$ is a DFA or PDA,
+  then some state in $M'$ is unreachable from the start state,
+  hence $M$ has a useless state and $M$ is in $\Udfa$ or $\Upda$.
 \end{Answer}

@@ -53,11 +53,17 @@
       \step
       $T$ = ``On input $w$:
         \begin{enumarabic}
-          \item Simulate $E$ on input $\vector{M}$. \quad \crim{(where $M$ is the original TM for $L$)}
+          \item Simulate $E$ on $\vector{M}$. \quad \crim{(where $M$ is the original TM for $L$)}
           \item If $E$ lists $w$, \Accept.
           \item The moment $E$ lists a string $w'$ such that $\abs{w'} \geq \abs{w}$, \Reject.
         \end{enumarabic}
-        $T$ will always terminate with either \Accept or \Reject.
+
+      \bigskip
+      \step
+      Since any specific string has finite length,
+      $T$ will always terminate with either \Accept or \Reject,
+      so $T$ decides the language $L'$ containing all the strings
+      listed by $E$.
     \end{proof}
   \end{claim}
 \end{Answer}

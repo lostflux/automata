@@ -89,8 +89,56 @@
         \end{claim}
       \end{Answer}
 
+    \newpage
+    \def \ALLtm { \textsf{ALL}_{\textsf{TM}} }
+    \def \Etm { \textsf{E}_{\textsf{TM}} }
+    
     \item $L = \set{\vector{M_1, M_2} :
       \text{$M_1$ and $M_2$ are TMs over the input alphabet $\set{0, 1}$
       and $\cL(M_1) = \set{0, 1}^* - \cL(M_2)$.}}$
+      \begin{Answer}
+        \begin{claim}
+          $L$ is not recognizable.
+
+          \begin{proof}
+            Suppose $L$ were recognizable; that is, there exists some TM
+            $M$ that, given two TMs $M_1$ and $M_2$, returns \Accept
+            if $\cL(M_1) = \set{0, 1}^* - \cL(M_2)$.
+
+            \step
+            We show that this cannot happen.
+            First, define a TM $M_2$ recognizing
+            the set
+            \[ \ALLtm = 
+                \set{\vector{M} : \text{$M$ is a TM and $M$ accepts all strings in $\set{0, 1}^*$}}. \]
+
+            \step
+            $M_2$ = ``On input $w$:
+              \begin{enumarabic}
+                \item If input is in $\set{0, 1}^*$, \Accept, otherwise \Reject.''
+              \end{enumarabic}
+
+            \step
+            Clearly, $\cL(M_2) = \set{0, 1}^*$. Consider the problem of deciding
+            $\Etm = \set{\vector{M} : \text{$M$ is a TM and $\cL(M) = \emptyset$}}$.
+            $\Etm$ is the complement of $\ALLtm$ over the alphabet $\set{0, 1}$.
+            Therefore, we can recognize $\Etm$ as follows:
+
+            \step
+            $M_3$ = ``On input $\vector{M}$, where $M$ is a TM:
+              \begin{enumarabic}
+                \item Simulate $M_1$ on input $\vector{M, M_2}$.
+                \item If $M_1$ accepts, \Accept.
+                \item If $M_1$ rejects, \Reject.''
+              \end{enumarabic}
+
+            \step
+            $M_3$ therefore decides $\Etm$.
+            But we know $\Etm$ is undecidable, so the initial assumption that
+            $M_1$ recognizes $L$ must be wrong to begin with, and $L$ must
+            not be recognizable.
+          \end{proof}
+        \end{claim}
+      \end{Answer}
   \end{enumalph}
 \end{problem}
