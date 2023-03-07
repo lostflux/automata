@@ -1,0 +1,107 @@
+\begin{problem}
+  Recall that the theory of time complexity was developed using
+  worst case cost: for a particular length $n$, we used the maximum
+  of all time costs for inputs of length up to $n$.
+  Why not the average?
+  This exercise will show you one good reason why not:
+  the natural notion of ``average'' fails to properly capture
+  the hardness of a computational problem.
+  
+  Let $M$ be a decider TM with input alphabet $\Sigma$.
+  Recall that we defined $\TCost(x)$, for $x \in \Sigma^*$,
+  to be the number of steps $M$ takes on input $x$ until it halts.
+  Let us now define the function $\AvgTCost : \N \to \N$ as follows:
+  \[
+    \AvgTCost(n) = \frac{1}{\abs{\Sigma}^n} \sum_{x \in \Sigma \,:\, \abs{x} = n} \TCost(x).
+  \]
+  The corresponding class of algorithms that run in
+  ``polynomial time on average'' would be
+  \[
+    \AvgP = \set{ L \subseteq \Sigma^* :
+    \text{$\exists$ decider $M$ and integer $k$
+    such that $\cL(M) = L$ and $\AvgTCost(n) = O(n^k)$} }.
+  \]
+  Construct a language $L$ such that on the one hand $L$ is $NP$-complete,
+  (strongly suggesting that it is hard) and, on the other hand,
+  $L \in \AvgP$ (misleadingly suggesting that it is easy).
+  
+  \step
+  \grey{
+    Hint: Suitably modify the langauge \SAT.
+  }
+\end{problem}
+
+\begin{Answer}
+  Consider the language
+  \[ \WSAT = \set{ x 0^{\abs{x}} : x \in \SAT }. \]
+
+  \bigskip
+  To see that \WSAT is NP-complete, consider the following
+  reduction of \SAT to \WSAT, that takes well-formed strings
+  in \WSAT and returns the corresponding prefix (that is required to be in \SAT):
+
+  \step
+  $T_0$ = ``On input $\vector{w0^{\abs{w}}}$:
+    \begin{enumarabic}
+      \item \Return $\vector{w}$.''
+    \end{enumarabic}
+  
+  \step
+  Clearly, $w \in \SAT \Iff w0^{\abs{w}} \in \WSAT$.
+  Since \SAT is NP-complete, \WSAT must also be NP-complete
+  since if we could efficiently solve \WSAT we could use the algorithm
+  to derive efficient solutions to \SAT.
+
+  \bigskip
+  Now, consider the average-case runtime costs of any recognizer $M$ for \WSAT
+  on inputs $x$ in \WSAT.
+  We know \SAT is NP-complete, let $T_{\SAT}$ be an NDTM that solves \SAT.
+
+  \step
+  $T_1$ = ``on input $\vector{w}$:
+    \begin{enumarabic}
+      \item Determine if $w$ is of the form $x0^{\abs{x}}$ for some $x \in \Sigma^*$.
+        If not, \Reject.
+      \item If yes, write $w$ as$x0^{\abs{x}}$, and run $T_{\SAT}$ on input $\vector{x}$.
+      \item If $T_{\SAT}$ accepts, \Accept, otherwise \Reject.''
+    \end{enumarabic}
+
+  \step
+  Now let's consider the running time of $T_1$.
+  Let $n$ be the size of input strings.
+  Step one determines if the string can be broken down into two equal parts,
+  with the second part being all zeros.
+  This can be done in $O(n)$ time as it only requires scanning the string
+  a constant number of times.
+  Step $2$ then tests if the prefix $x$ is in \SAT.
+  This requires testing all possible assignments to the variables in $x$,
+  since \SAT is NP-complete. Thus, this takes
+  $2^{\abs{x}} = 2^{n/2} = O(2^n)$ time.
+
+  \step
+  Now, let's consider the average-case running time of $T_1$
+  on strings of fixed lengths $n$.
+  \begin{enumroman}
+    \item $n$ is odd:
+      Clearly, a string with odd length cannot be written as two strings of equal length.
+      Therefore, $T_1$ only needs to run the checker for step $1$, which
+      takes $O(n)$ time.
+    \item $n$ is even:
+      If a string of length $n$ is in \WSAT
+      then its second half must be of the form $0^{n/2}$.
+      Given an alphabet of size $m$, there are a total of $m^{n}$ strings of length $n$,
+      and only $m^{n/2}$ strings are plausible members of \WSAT
+      (contingent on checking that the prefix is in \SAT).
+      Thus, the running time will be $O(2^{n/2}) = O(2^n)$ for \emph{each} of the $m^{n/2}$ strings,
+      and $O(n)$ for the remaining $m^n - m^{n/2}$ strings.
+      Thus;
+      \begin{align*}
+        \AvgTCost(n) &= \frac{1}{\abs{\Sigma}^n} \sum_{x \in \Sigma \,:\, \abs{x} = n} \TCost(x) \\
+        &= \frac{(m^n - m^{n/2}) n + m^{n/2} 2^{n/2}}{m^n}  \\
+        &= \frac{(m^n - m^{n/2})}{m^n} n + \frac{m^{n/2}}{m^n} 2^{n/2} \\ 
+        &= n - \frac{m^{n/2}}{m^n} n + \frac{m^{n/2}}{m^n} 2^{n/2} \\
+        &= O(n) + \parens{\frac{2}{m}}^n \\
+        m \ge 2 &\Rightarrow \AvgTCost(n) = O(n)
+      \end{align*}
+  \end{enumroman}
+\end{Answer}

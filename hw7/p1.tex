@@ -1,0 +1,77 @@
+\begin{problem}
+  Show that one of the languages $\EqCFG$ and $\EqCFGcomp$
+  is recognizable, whereas the other is unrecognizable.
+  You may assume that $\AllCFG$ is unrecognizable.
+\end{problem}
+\begin{Answer}
+  Let's fix our alphabet to $\Sigma = \set{0, 1}$.
+  \begin{enumerate}
+    \item $\EqCFG$ is unrecognizable.
+      We know that $\AllCFG$ is unrecognizable.
+      Consider the following reduction of $\AllCFG$ to $\EqCFG$:
+
+      \step
+      $T$ = ``On input $\vector{M}$, where $M$ is a CFG:
+        \begin{enumarabic}
+          \item Construct PDA $P$ as follows:
+
+            $P$ = ``On input $\vector{w}$:
+              \begin{enumarabic}
+                \item If $w \in \Sigma^*$, \Accept.
+                \item Otherwise, \Reject.''
+              \end{enumarabic}
+          
+          \item Construct CFG $G$ equivalent to $P$,
+            such that $\cL(G) = \cL(P) = \Sigma^*$.
+          \item \Return $\vector{M, G}$. ''
+        \end{enumarabic}
+      \begin{align*}
+        M \in \AllCFG &\Iff M \text{ accepts all strings in the input alphabet.} \\
+                      &\Iff \cL(M) = \Sigma^* \\ 
+                      &\Iff \vector{M, G} \in \EqCFG
+      \end{align*}
+      Since $\AllCFG$ is unrecognizable, $\EqCFG$ must also be unrecognizable.
+    \newpage
+    \item $\EqCFGcomp$ is recognizable.
+    
+      \step
+      Let $G_1$ and $G_2$ be two CFGs defined over the same alphabet
+      $\Sigma$ and $M_1$ and $M_2$ be the equivalent PDAs
+      such that $\vector{G_1, G_2} \in \EqCFGcomp$.
+      This means $\cL(M_1)\neq \cL(M_2)$, so there exists \emph{at least}
+      one string in $x \in \Sigma^*$ such that $x \in \cL(M_1)$
+      or $x \in \cL(M_2)$, but not both
+      (equivalently, $x \in \cL(M_1) \cup \cL(M_2)$
+      and $x \notin \cL(M_1) \cap \cL(M_2)$).
+
+      \step
+      Since $\Sigma^*$ is decidable, we can construct a TM $E$ to
+      list members of $\Sigma^*$. in lexicographic order.
+      
+      We can then recognize $\EqCFGcomp$ by the following TM $T$:
+
+      \step
+      $T$ = ``On input $\vector{M_1, M_2}$:
+        \begin{enumarabic}
+          \item Run $E$ to enumerate members of $\Sigma^*$.
+          \item As each string is listed:
+            \begin{enumarabic*}
+              \item Simulate $M_1$ on $x$ and $M_2$ on $x$.
+              \item If $M_1$ accepts $x$ and $M_2$ rejects $x$
+                or $M_1$ rejects $x$ and $M_2$ accepts $x$,
+                \Accept.
+              \item Otherwise, continue enumerating strings and testing them.''
+            \end{enumarabic*}
+        \end{enumarabic}
+  \end{enumerate}
+
+  \step
+  If an input $\vector{M_1, M_2}$ is in $\EqCFGcomp$,
+  then $T$ will eventually halt and accept the input
+  when it encounters a string not accepted by both $M_1$ and $M_2$
+   r rejected by both $M_1$ and $M_2$.
+
+  \step
+  However, if an input $\vector{M_1, M_2}$ is not in $\EqCFGcomp$,
+  then $T$ will never halt since $\Sigma^*$ is infinite.
+\end{Answer}

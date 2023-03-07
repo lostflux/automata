@@ -1,0 +1,28 @@
+\begin{problem}
+  Sloppy Q. Thinker and Fawlty J. Logician are two computer science
+  amateurs who have not taken a rigorous course in the Theory of Computation,
+  such as Dartmouth’s CS 39.
+  They have come up with the following fallacious ``proofs.''
+
+  Criticize each of these fallacious ``proofs'' thoroughly.
+  How would you convince Sloppy and Fawlty that not only are they wrong,
+  but ideas along these lines simply cannot work for proving what they are claiming?
+
+  \begin{enumalph}
+    \item Sloppy has this ``proof'' that $P \neq NP$.
+      Consider an algorithm for \SAT:
+      ``On input $\phi$, try all possible assignments to the variables.
+      Accept if any satisfy $\phi$.''
+      This algorithm clearly requires exponential time.
+      Thus, \SAT has exponential time complexity.
+      Therefore \SAT is not in $P$.
+      Because \SAT is in $NP$, it must be the case that $P \neq NP$.
+    \item Fawlty instead has a ``proof'' that $P = NP$.
+      Take an arbitrary language $l \in NP$.
+      Let $N$ be a polynomial-time NDTM decider for $L$.
+      Since NDTMs are equivalent to TMs, there is a deterministic TM, $M$,
+      that also decides $L$.
+      This shows that $L \in P$. Therefore $NP \subseteq P$.
+      Since we clearly have $P \subseteq NP$, it follows that $P = NP$.
+  \end{enumalph}
+\end{problem}

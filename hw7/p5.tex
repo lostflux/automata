@@ -1,0 +1,37 @@
+\begin{problem}
+  Prove that if $P$ were equal to $NP$, then there would exist
+  an efficient (i.e. deterministic polynomial-time) algorithm
+  to break the RSA cryptosystem.
+
+  \step
+  \grey{
+    Hint: You can solve this problem even if you haven’t studied
+    the RSA cryptosystem before. Here is all you need to know about RSA.
+    The RSA scheme involves a modulus of the form $N = pq$
+    where $p$ and $q$ are $n$-bit prime numbers, for some large $n$.
+    The value of $N$ is known to the world, but the factorization into
+    $p$ and $q$ is secret. If an adversary figures out the factorization,
+    they can decrypt any messages that were encrypted with the modulus $N$.
+  }
+\end{problem}
+
+\begin{Answer}
+  Given an integer $N$ that is guaranteed to be the product of two primes $p$ and $q$,
+  the problem of finding $p$ and $q$ is in the class NP as it can be solved
+  non-deterministically with the following NDTM:
+
+  \step
+  $T$ = ``On input $N$, where $N = pq$ for some (unknown) primes $p$ and $q$:
+    \begin{enumarabic}
+      \item Non-deterministically guess two integers $p \in (1, N)$ and $q \in (1, N)$.
+      \item If $p \cdot q = N$, \Return $\vector{p, q}$.''
+    \end{enumarabic}
+
+  \step
+  Thus, $T$ \emph{non-deterministically} finds the factorization of $N$ in polynomial time.
+  If $P = NP$, then there exists some \emph{deterministic} turing machine that can also
+  find $p$ and $q$ in polynomial time, hence determine the factorization for any
+  RSA number $N$ and, using the factorization, decrypt any RSA-encrypted message
+  encrypted with the modulus $N$.
+
+\end{Answer}

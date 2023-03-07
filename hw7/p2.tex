@@ -1,0 +1,64 @@
+\begin{problem}
+  Thanks to the Cooke-Levin theorem, we know that
+  \TColor can be polynomial-time reduced to \TSAT.
+  However, for this problem, pretend that you did not know that theorem.
+  Give a direct polynomial-time reduction from \TColor to \TSAT.
+\end{problem}
+\begin{Answer}
+  Let $G = (V, E)$ be the graph in question.
+  Let $R, G, B$ be predicates saying a given vertex is colored red, green,
+  or blue, respectively, e.g. $Rx$ means ``vertex $x$ is colored red''.
+  To model \TColor as a \TSAT instance, we first need to define axioms
+  for the conditions that need to be satisfied in \TColor,
+  ensuring that each clause has at most $3$ literals.
+
+  \begin{enumroman}
+    \item Each vertex $v \in V$ must be assigned a color:
+      \[
+        \Sigma_1 = \set{ (Rv \lor Gv \lor Bv) : v \in V }
+      \]
+
+    \item Each vertex may not be assigned more than one color
+      (equivalently, each vertex \emph{must} not be assigned
+      $2$ of the $3$ possible colors):
+      \begin{align*}
+        \Sigma_{2.1} &= \set{ (\neg Rv \lor \neg Gv \lor \neg Gv) : v \in V } \\
+        \Sigma_{2.2} &= \set{ (\neg Rv \lor \neg Bv \lor \neg Bv) : v \in V } \\
+        \Sigma_{2.3} &= \set{ (\neg Gv \lor \neg Bv \lor \neg Bv) : v \in V } \\
+        \Sigma_2 &= \Sigma_{2.1} \cup \Sigma_{2.2} \cup \Sigma_{2.3}
+      \end{align*}
+    \item Adjacent vertices are not colored the same color:
+      \begin{align*}
+        \Sigma_{3.1} &= \set{ (\neg Rv \lor \neg Ru \lor \neg Ru) : (u, v) \in E } \\
+        \Sigma_{3.2} &= \set{ (\neg Gv \lor \neg Gu \lor \neg Gu) : (u, v) \in E } \\
+        \Sigma_{3.3} &= \set{ (\neg Bv \lor \neg Bu \lor \neg Bu) : (u, v) \in E } \\
+        \Sigma_3 &= \Sigma_{3.1} \cup \Sigma_{3.2} \cup \Sigma_{3.3}
+      \end{align*}
+  \end{enumroman}
+
+  Finally, let $\Sigma = \Sigma_1 \cup \Sigma_2 \cup \Sigma_3$,
+  and define the formula
+  \[
+    \psi = \bigwedge_{\sigma \in \Sigma} \sigma
+  \]
+
+  \newpage
+  We can thus define a reduction from \TColor to \TSAT as follows:
+
+  \step
+  $T$ = ``On input $G = (V, E)$, where $G$ is a Graph:
+  \begin{enumarabic}
+    \item Construct the formula $\psi$ as described above.
+    \item Output $\psi$.''
+  \end{enumarabic}
+
+  \step
+  \begin{align*}
+    G \in \TColor &\Iff \exists \text{ a valid $3$-coloring of $G$ } \\
+    &\Iff \exists \text{ a coloring of $G$ satisfying $\psi$ } \\
+    &\Iff \psi \text{ is satisfiable } \\
+    &\Iff \psi \in \TSAT
+  \end{align*}
+
+
+\end{Answer}
