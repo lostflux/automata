@@ -84,7 +84,7 @@
   \begin{enumroman}
     \item $n$ is odd:
       Clearly, a string with odd length cannot be written as two strings of equal length.
-      Therefore, $T_1$ only needs to run the checker for step $1$, which
+      Therefore, $T_1$ only needs to run step $1$, which
       takes $O(n)$ time.
     \item $n$ is even:
       If a string of length $n$ is in \WSAT
@@ -99,7 +99,7 @@
         \AvgTCost(n) &= \frac{1}{\abs{\Sigma}^n} \sum_{x \in \Sigma \,:\, \abs{x} = n} \TCost(x) \\
         &= \frac{(m^n - m^{n/2}) n + m^{n/2} 2^{n/2}}{m^n}  \\
         &= \frac{(m^n - m^{n/2})}{m^n} n + \frac{m^{n/2}}{m^n} 2^{n/2} \\ 
-        &= n - \frac{m^{n/2}}{m^n} n + \frac{m^{n/2}}{m^n} 2^{n/2} \\
+        &= O(n) + \frac{(2m)^{n/2}}{m^n} \\
         &= O(n) + \parens{\frac{2}{m}}^n \\
         m \ge 2 &\Rightarrow \AvgTCost(n) = O(n)
       \end{align*}

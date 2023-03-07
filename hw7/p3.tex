@@ -17,12 +17,35 @@
       Thus, \SAT has exponential time complexity.
       Therefore \SAT is not in $P$.
       Because \SAT is in $NP$, it must be the case that $P \neq NP$.
+      \begin{Answer}
+        Sloppy's solution overlooks the fact that $P \subseteq NP$.
+        Many (perhaps all?) problems that can be solved in polynomial time
+        by some clever algorithm can also be solved in exponential time by
+        a brute-force algorithm.
+        For instance, finding the minimum value in a \emph{sorted} array can be
+        solved efficiently in $O(1)$ time by using the fact that the minimum value
+        is the first element, yet the same problem can also be solved very inefficiently
+        in $O(n^n)$ time by non-deterministically guessing a possible minimum value's index
+        and comparing the value at that index to every other value in the array.
+        Sloppy needs to take the necessary step of showing that \SAT cannot, in fact,
+        be solved in polynomial time, such as by reducing a problem that has been
+        proven to be NP-complete to \SAT hence showing that \SAT must not be
+        in $P$ (hence, $P \neq NP$).
+
+      \end{Answer}
     \item Fawlty instead has a ``proof'' that $P = NP$.
-      Take an arbitrary language $l \in NP$.
+      Take an arbitrary language $L \in NP$.
       Let $N$ be a polynomial-time NDTM decider for $L$.
       Since NDTMs are equivalent to TMs, there is a deterministic TM, $M$,
       that also decides $L$.
       This shows that $L \in P$. Therefore $NP \subseteq P$.
       Since we clearly have $P \subseteq NP$, it follows that $P = NP$.
+      \begin{Answer}
+        Fawlty assumes that the equivalent deterministic TM $M$ also runs in
+        polynomial-time.
+        This is not necessarily the case --- in fact, the direct equivalent
+        would run in exponential time. If indeed $L \in P$, Fawlty needs to directly
+        prove the existence of a polynomial-time \emph{deterministic} TM that decides $L$.
+      \end{Answer}
   \end{enumalph}
 \end{problem}

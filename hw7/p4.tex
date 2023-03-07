@@ -3,5 +3,43 @@
   Prove that $\DSAT$ is NP-complete.
 \end{problem}
 \begin{Answer}
+  \step
+  $\DSAT$ is in NP:
+    Given a cnf $\phi$, we can check if $\phi$ is in \DSAT
+    using a non-deterministic TM $T$ as follows:
 
+    \step
+    $T_1$ = ``On input $\vector{\phi}$, where $\phi$ is a cnf:
+      \begin{enumarabic}
+        \item Guess two assignments $A_1$ and $A_2$ to the variables in $\phi$.
+        \item If $A_1 \neq A_2$ and both $A_1$ and $A_2$ satisfy $\phi$, \Accept.''
+      \end{enumarabic}
+
+  \bigskip
+  $\DSAT$ is NP-complete.
+    Consider the following reduction of \SAT to \DSAT:
+
+    \step
+    $T_2$ = ``On input $\vector{\phi}$, where $\phi$ is a cnf:
+      \begin{enumarabic}
+        \item Define a new variable $\gamma$ that does not occur in $\phi$.
+        \item  Construct a new cnf $\phi' = \phi \land (\gamma \lor \lnot \gamma)$.
+        \item \Return $\vector{\phi'}$.''
+      \end{enumarabic}
+
+    \step
+    \begin{align*}
+      \phi \in \SAT &\Iff \exists \text{ at least one assignment that satisfies $\phi$
+                          (let $A$ be one such assignment)}. \\
+                    &\Iff \exists \text{ at least two assignments that satisfy $\phi'$,
+                          $B = A \cup \set{\gamma = T}$, and 
+                          $C = A \cup \set{\gamma = F}$}.\\
+                    &\Iff \phi' \in \DSAT
+    \end{align*}
+
+    \step
+    $\SAT$ is NP-complete, and so must $\DSAT$ be.
+    If it were not, then clearly having an efficient algorithm for \DSAT
+    would give a plausible and efficient way to derive solutions to \SAT,
+    contradicting the fact that \SAT is proven to be NP-complete.
 \end{Answer}

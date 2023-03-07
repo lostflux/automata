@@ -18,6 +18,9 @@
         \Sigma_1 = \set{ (Rv \lor Gv \lor Bv) : v \in V }
       \]
 
+      \step
+      This construction of $\Sigma_1$ can be done in $O(|V|)$ time.
+
     \item Each vertex may not be assigned more than one color
       (equivalently, each vertex \emph{must} not be assigned
       $2$ of the $3$ possible colors):
@@ -27,6 +30,9 @@
         \Sigma_{2.3} &= \set{ (\neg Gv \lor \neg Bv \lor \neg Bv) : v \in V } \\
         \Sigma_2 &= \Sigma_{2.1} \cup \Sigma_{2.2} \cup \Sigma_{2.3}
       \end{align*}
+
+      \step
+      This construction of $\Sigma_2$ can be done in $O(|V|)$ time.
     \item Adjacent vertices are not colored the same color:
       \begin{align*}
         \Sigma_{3.1} &= \set{ (\neg Rv \lor \neg Ru \lor \neg Ru) : (u, v) \in E } \\
@@ -34,21 +40,27 @@
         \Sigma_{3.3} &= \set{ (\neg Bv \lor \neg Bu \lor \neg Bu) : (u, v) \in E } \\
         \Sigma_3 &= \Sigma_{3.1} \cup \Sigma_{3.2} \cup \Sigma_{3.3}
       \end{align*}
+
+      \step
+      This construction of $\Sigma_3$ can be done in $O(|E|)$ time.
   \end{enumroman}
 
+  \step
   Finally, let $\Sigma = \Sigma_1 \cup \Sigma_2 \cup \Sigma_3$,
   and define the formula
   \[
     \psi = \bigwedge_{\sigma \in \Sigma} \sigma
   \]
-
-  \newpage
-  We can thus define a reduction from \TColor to \TSAT as follows:
+  This construction of $\phi$ can be done in $O(|V| + |E|)$ time.
 
   \step
-  $T$ = ``On input $G = (V, E)$, where $G$ is a Graph:
+  We can thus define a reduction from \TColor to \TSAT in
+    $O(\abs{V} + \abs{E})$ time as follows:
+
+  \step
+  ``On input $G = (V, E)$, where $G$ is a graph:
   \begin{enumarabic}
-    \item Construct the formula $\psi$ as described above.
+    \item Construct the formula $\psi$ from $G$ as described above.
     \item Output $\psi$.''
   \end{enumarabic}
 
