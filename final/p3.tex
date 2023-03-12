@@ -1,0 +1,26 @@
+
+\def \Sym { \textsf{SYM}_{\textsf{CFG}} }
+\begin{problem}
+  A language $L$ over an alphabet $\Sigma$ is \emph{symmetric} if $L = L^R$.
+  Define the language
+  \[ \Sym : \set{ \vector{G} : \text{$G$ is a CFG and $\cL(G)$ is symmetric } }. \]
+  Determine, with proof, whether $\Sym$ is decidable and whether it is recognizable.
+\end{problem}
+\begin{Answer}
+  
+$T_0$ = ``On input $\vector{G}$, where $G$ is a CFG over $\Sigma$:
+  \begin{enumarabic}
+    \item Construct a PDA $P$ such that $\cL(P) = \cL(G)$.
+    \item Construct a TM $T$ such that $P$ recognizes the computation
+      tableau of $T$.
+    \item Output $\vector{T}$.''
+  \end{enumarabic}
+
+  \begin{align*}
+    T \in E_{TM} &\Iff \text{$T$ does not accept any string }\\
+    &\Iff \text{ a rejecting state is reached before any accepting state is reached }
+                &\Iff \text{ every string in $\cL(G)$ is symmetric } \\
+                &\Iff C_0\#C_1\#C_2\#\ldots \#C_n \text{ is symmetric } \\
+                &\Iff G \in \Sym
+  \end{align*}
+\end{Answer}

@@ -1,0 +1,68 @@
+\documentclass[11pt, reqno]{amsart}
+
+% Include the macros file from `../common'
+\input{~/latex-common/macros.tex}
+\usepackage{sansmath}
+\usepackage{algorithm2e}
+
+\renewcommand{\theenumi}{\alph{enumi}}
+
+\begin{document}
+\setlength{\headheight}{13.0pt}
+\setlength{\footskip}{13.0pt}
+
+
+\input{cover}
+\bigskip
+
+\def \EqCFG { \mathsf{EQ}_{\mathsf{CFG}} }
+\def \EqCFGcomp { \overline{\mathsf{EQ}_{\mathsf{CFG}}} }
+\def \AllCFG {\textsf{ALL}_{\textsf{CFG}}}
+\def \Accept { \textsc{Accept} }
+\def \Reject { \textsc{Reject} }
+\def \Return { \textsc{Return} }
+\def \List { \textsc{List} }
+\def \TColor { \textsc{3Color} }
+\def \TSAT { \textsc{3SAT} }
+\def \SAT { \textsc{SAT} }
+\def \DSAT { \textsc{DoubleSAT} }
+\def \WSAT { \textsc{WeirdSAT} }
+\def \TCost { \textsc{TimeCost}_{M} }
+\def \AvgTCost { \textsc{AvgTimeCost}_{M} }
+\def \AvgP { \textsf{AvgP} }
+
+% PROBLEM 1
+\input{p1}
+
+\newpage
+
+% PROBLEM 2
+\input{p2}
+
+\newpage
+
+% PROBLEM 3
+\input{p3}
+
+\newpage
+
+% PROBLEM 4
+\input{p4}
+
+\newpage
+
+% PROBLEM 5
+\input{p5}
+
+\newpage
+\input{p6}
+
+\newpage
+\input{p7}
+
+\newpage
+\input{p8}
+
+\vfill
+
+\end{document}

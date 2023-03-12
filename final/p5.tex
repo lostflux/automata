@@ -1,0 +1,78 @@
+
+\def \Edfa { \textsc{E}_{\textsc{DFA}}}
+\begin{problem}
+  We showed in class that the language $\EqDFA$ is decidable.
+  In this problem, for concreteness’ sake, assume that $\EqDFA$ only concerns
+  DFAs over the alphabet $\set{0, 1}$ and that DFAs are encoded in such a way
+  that $\EqDFA \subseteq \set{0, 1}^*$. \\
+  Alice asserts that $\EqDFA \in \sfP$, while Bob asserts that
+  $\EqDFA$ is $\sfNP$-complete.
+  Which of them is right? Prove your answer.
+\end{problem}
+\begin{Answer}
+  Alice is right that $\EqDFA \in \sfP$.
+
+  Note that
+  \[ \Edfa := \set{\vector{M} : \text{$M$ is a DFA and $\cL(M) = \emptyset$}} \]
+  can be decided as follows:
+
+  \step
+  $T_1$ = ``On input $\vector{M}$, where $M = (Q, \Sigma, \delta, q_0, F)$ is a DFA:
+  \begin{enumarabic}
+    \item Simulate a graph search from $q_0$,
+      taking every possible transition and ignoring loops until every possible
+      path dies.
+      \item If any state $q_f \in F$ is reachable, then there exists some
+      accepting computational path for some string in the DFA's language,
+      so $\vector{M} \not \in \Edfa$. \Reject.
+      \item If no state $q_f \in F$ is reachable, then is no accepting path
+      of $M$ on any string in its alphabet, hence $\cL(M) = \emptyset$.
+      \Accept.''
+  \end{enumarabic}
+  Note that since $T_1$ does not revisit states it runs in $O(n + m)$
+  where $n = \abs{Q}$ and $m$ is the number of transitions in $M$.
+
+  \step
+  We can decide $\EqDFA$ as follows:
+
+  \step
+  $T_2$ = ``On input $\vector{M_1, M_2}$, where $M_1$ and $M_2$ are DFAs:
+    \begin{enumalph}
+      \item Construct a new DFA $M$ such that 
+      $\cL(M) = (\cL(M_1) \setminus \cL(M_2)) \cup (\cL(M_2) \setminus \cL(M_1))$.
+      \item Simulate the decider for $\Edfa$, $T_1$, on $\vector{M}$.
+      \item If $T_1$ accepts $\vector{M}$, then $\cL(M_1) = \cL(M_2)$. \Accept.
+      \item If $T_1$ rejects $\vector{M}$, then $\cL(M_1) \neq \cL(M_2)$. \Reject.''
+    \end{enumalph}
+
+    \newpage
+  \begin{claim}
+    $T_2$ runs in polynomial time.
+
+    \begin{proof}
+      First, we show that the construction of $M$ runs in polynomial time.
+      Given $M_1 = (Q_1, \Sigma_1, \delta_1, q_{01}, F_1)$ and
+      $M_2 = (Q_2, \Sigma_2, \delta_2, q_{02}, F_2)$, we construct $M$ as follows:
+      \begin{enumroman}
+        \item Define $M = \set{ (q_i, q_j) : q_i \in Q_1, q_j \in Q_2}$.
+        \item Define $q_0 = (q_{01}, q_{02})$.
+        \item Define $\delta((q_i, q_j), a) = (\delta_1(q_i, a), \delta_2(q_j, a))$.
+        \item Define $F = \set{(q_i, q_j) : q_i \in F_1 \text{ and } q_j \not \in F_2
+          \text{ or } q_i \not \in F_1 \text{ and } q_j \in F_2}$.
+      \end{enumroman}
+
+      \step
+      If $M_1$ has $n_1$ states and $m_1$ transitions, and $M_2$ has $n_2$ stats
+      and $m_2$ transitions, then $M$ has $n_1 \cdot n_2$ states
+      and $m_1 \cdot m_2$ transitions. Thus, this operation runs in polynomial time
+      (since its runtime is just the sum of all the states and transitions being created).
+
+      $T_2$ then simulates $T_1$ on $M$. Since $T_1$ just performs a breadth-first
+      graph search, it runs in linear time in the sum of the number of states
+      and the number of transitions in $M$, which we showed above to be polynomial.
+      Since, $T_1$ runs in polynomial time, $\EqDFA \in \sfP$.
+    \end{proof}
+  \end{claim}
+\end{Answer}
+
+

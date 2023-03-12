@@ -1,0 +1,102 @@
+\begin{problem}
+  Define the \emph{reversal} of a language $L$ to be the language
+  $L^R := \set{x^R : x \in L}$.
+  \begin{enumalph}
+    \item Let $M = \parens(Q, \Sigma, \delta, q_0, F)$ be a DFA.
+      Give a formal description of an NFA that recognizes $\cL(M)^R$.
+      Give brief proofs that your construction is complete and sound.
+    \begin{Answer}
+      $N = (Q \cup \set{ s}, \Sigma, \delta_2, s, F_2)$ where $s \notin Q$, and:
+      \begin{align*}
+        \delta_2(s, \eps) = F \\
+        \delta_2(q, a) = \set{q' : \delta(q', a) = q'} \\
+        F_2 = \set{ q_0 }
+      \end{align*}
+
+      \step
+      Completeness:
+
+      Let $w \in \cL(M)$ be a string recognized by $M$. Let $n = \abs{x}$, then there
+      exists a computational path $x_1, x_2, \ldots x_n$ of $M$ on $w$ such that
+      $x_1 = q_0$, $\delta(x_j, w_j) = x_{j+1}$ for all $j < n$, and $x_n \in F$.
+      By the construction of $N$ from $M$, there exists an $\eps$-transition from
+      $s$ to $x_n$ and there exists a computation path of $N$ on $w$ that takes
+      $N$ from $x_n$ to $x_1$. Consequently, there exists a computation path of $N$
+      on $w^R$ that takes $N$ from $s$ to $q_0$, which is an accepting state of $N$,
+      so $N$ accepts $w^R$.
+
+      \step
+      Soundness:
+
+      Suppose $w = w_1 w_2 \ldots w_n$ is a string accepted by $N$.
+      Then there exists some computation path $x_1, x_2, \ldots x_k$ of $N$ on $w$
+      such that $x_1 = s$, $x_2 \in F$ (where $F$ is the set of accepting states
+      in the original DFA), $\delta_2(x_j, w_j) = x_{j+1}$ for all $j < k$, and
+      $x_k \in F_2$. Ignoring the epsilon transition from $s$ to $x_2$,
+      we have that $\delta(x_{j+1}, w_j) = x_j$ for all $j < k$,
+      where $\delta$ is the original transition function of $M$.
+      Since $x_k = q_0$, this means there is some computation path of $M$ on $w$
+      that starts at $q_0$ and ends at $x_2$, which happens to be an accepting state
+      in $M$. Therefore, $M$ accepts $w^R$.
+    \end{Answer}
+
+    \newpage
+    \item Let $k \geq 3$ be an integer. Prove that there exists a $k$-state
+      DFA $M_k$ over the alphabet $\set{0, 1}$ such that every DFA that
+      recognizes $\cL(M_k)^R$ requires at least $2^{k-2}$ states.
+
+      \step
+      \grey{
+        Hint: Look to the languages we considered very early in the course
+        for inspiration: you’re looking for a language that admits a small DFA
+        whose reversal requires an exponentially larger DFA.
+        For the proof of the $2^{k-2}$ lower bound, use the techniques and results
+        you learnt in Homework 3.
+        If you can’t quite prove the lower bound as stated, you can still earn
+        almost full credit for proving a $2^{\Omega(k)}$ bound.
+      }
+      \begin{Answer}
+        Let $L = (0 \cup 1)^{k-2}1(0 \cup 1)^*$.
+        Then $L$ is the language of strings in which the $k-2$th character is a $1$.
+        This is easily recognizable by a DFA with only $k$ states:
+        \begin{align*}
+          M = (Q, \set{0, 1}, \delta, q_0, F) \text{ where}\\
+          Q = \set{q_i : 0 \leq i < k-2} \cup \set{ q_{accept}, q_{reject}},\\
+          F = \set{q_{accept}},\\
+          \delta(q, x) = \begin{cases}
+            q_{accept} & \text{if } x = 1 \text{ and } q = q_{k-3} \\
+            q_{accept} & \text{if } q = q_{accept} \text{ and } x \in \set{0, 1} \\ \\
+            q_{reject} & \text{if } x = 0 \text{ and } q = q_{k-3} \\
+            q_{reject} & \text{if } q = q_{reject} \\ \\
+            q_{i+1} & \text{if } x \in \set{0, 1} \text{ and } q = q_i \text{ and } i < k-2 \\
+            q_{reject} & \text{otherwise (in case of invalid strings!)}
+          \end{cases}
+        \end{align*}
+
+        The idea is to use states to count the number of characters read in from the input.
+        We make $k-2$ transitions from state $q_0$ to state $q_{k-3}$.
+        We then check whether the letter $k-1$ is a $0$ or a $1$ and accept or reject accordingly.
+        Both $q_{accept}$ and $q_{reject}$ are trap states; the remainder of the string
+        is only checked to make sure it is a valid string in the language.
+
+        \newpage
+        Now, consider the reversal of $M$.
+        That is, the DFA recognizing the language \[ \cL(M)^R = (0 \cup 1)^*1(0 \cup 1)^{k-2}. \]
+        Let $M^R$ be a DFA recognizing $\cL(M)^R$.
+        Since the length of the input string is not known ahead of time,
+        $M^R$ must track the previous $k-2$ characters read in from the input
+        at any given point. For instance, if $k-1 = 4$ (i.e. we want the $4$-th last character
+        to be a $1$), then each of $\set{000, 001, 010, 011, 100, 101, 110, 111}$ is in a
+        unique equivalence class and must be tracked separately since reading some sequence
+        in each case, reading some sequence of characters results in a unique sequence
+        of transitions.
+
+        In total, the last $k-2$ characters characters must be tracked in order to determine
+        the letter at position $k-1$ from the end after any sequence of transitions,
+        and there are a 2 possibilities for each of the $k-2$ positions in the string that
+        are being tracked, so $M^R$ must have at least $2^{k-2}$ states.
+
+      
+      \end{Answer}
+  \end{enumalph}
+\end{problem}

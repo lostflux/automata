@@ -1,0 +1,79 @@
+
+\def \diverse { \textsc{Diverse} }
+\def \indset { \textsc{IndSet} }
+\begin{problem}
+  You are in charge of analyzing a large social media network modeled as an
+  undirected graph $G = (V, E)$: each vertex is a user and each edge
+  represents a mutual ``friendship'' relation between two users.
+  A \emph{diverse sample} is a set of users such that no two o them are friends
+  and, furthermore, no two of them have a friend in common. Formally, a set
+  $S \subseteq V$ is a diverse sample if
+  \[ 
+    \forall x, y \in S : \set{x, y} \notin E \land \nexists w \in V
+    ( \set{w, x} \in E \land \set{w, y} \in E).
+  \]
+  As part of your analysis process, you have been asked to determine the largest
+  diverse sample in the social network. After failing to find an efficient algorithm
+  for this, you begin to suspect that this might be impossible.
+  Prove, assuming that $\sfP \neq \sfNP$, there is indeed no polynomial-time
+  algorithm for this optimization problem.
+\end{problem}
+\begin{Answer}
+  First, let us define the language
+  \[
+    \diverse :=
+    \set{ \vector{G, k} : \text{$G$ is a graph and $G$ has a diverse
+      sample of size $k$}}.
+  \]
+  If $\diverse$ were decidable, then the problem of finding the largest possible
+  diverse sample could be solved in polynomial time as follows:
+
+  \step
+  $T_0$ = ``On input $\vector{G}$, where $G$ is a graph:
+  \begin{enumarabic}
+    \item $S \gets \emptyset$.
+    \item for $i \gets 1 \ldots \abs{V}$
+      \begin{enumarabic*}
+        \item if $\vector{G, k} \in \diverse$:
+        \item $S \gets$ diverse sample of size $i$.
+      \end{enumarabic*}
+    \item \Return $S$.
+  \end{enumarabic}
+
+  \step
+  Thus, we show that $\diverse$ is \sfNP-complete.
+
+  \diverse can be solved in \sfNP by guessing a subset $S \subset 2^V$ and
+  checking if the subset is diverse.
+
+  We proved in class that the set
+  \[ \indset := \set{\vector{G, k} : G \text{ has an independent set of size } k} \]
+  is \sfNP-complete. We can reduce \indset to \diverse as follows:
+  
+  \newpage
+  $T_1$ = ``On input $\vector{G, k}$, where $G$ is a graph and $k$ is an integer:
+  \begin{enumarabic}
+    \item Define the set
+      $E' = E \setminus \set{ \set{u, w}, \set{v, w} : u, v, w \in V, \set{u, v} \not \in E,
+      \set{\set{u, w}, \set{v, w}} \subseteq E}$.
+    \item Define the graph $G' = (V, E')$.
+    \item Output $\vector{G', k}$.''
+  \end{enumarabic}
+
+  \step
+  \begin{align*}
+    \vector{G, k} \in \indset
+      &\Iff \exists S \subseteq V, \abs{S} = k \text{ and } \set{u, v} \not \in E
+        \text{ for all } u, v \in S \\
+      &\Iff \set{u, v} \notin E' \text{ and } \nexists w \in V
+      ( \set{w, x} \in E' \land \set{w, y} \in E') \\
+      &\Iff \vector{G', k} \in \diverse
+  \end{align*}
+
+  Since $\indset$ is \sfNP-complete, \diverse must also be \sfNP-complete.
+  However, if $\diverse \in \sfNP$ and $\sfP \neq \sfNP$, then
+  $\diverse \not \in \sfP$ and there cannot exist a polynomial time algorithm
+  for finding the largest diverse sample.
+\end{Answer}
+
+

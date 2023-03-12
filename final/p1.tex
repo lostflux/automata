@@ -1,0 +1,44 @@
+\begin{problem}
+  For a string $w \in \set{0, 1}^*$, let $\beta(w)$ denote the integer
+  obtained by interpreting $w$ as a binary number.  For example,
+  $\beta(0011) = 3$. We also define $\beta(\eps) = 0$.
+  Define the following language over the alphabet $\set{0, 1, \#}$:
+  \[ L_1 := \set{x\#y : x, y \in \set{0, 1}^* \text{ and } \beta(x) < \beta(y)}. \]
+  Determine, with proof, whether or not $L_1$ is context-free.
+\end{problem}
+\begin{Answer}
+  $L_1$ is not context-free.
+
+  \step
+  Suppose it is, then by the pumping lemma for context-free grammars,
+  there exists some minimum pumping length $p$ such that for all strings
+  $w \in L_1$ with $\abs{w} \geq p$, there exists a decomposition
+  $w = uvxyz$ such that;
+  \begin{enumroman}
+    \item $\abs{vxy} \leq p$
+    \item $\abs{vy} > 0$
+    \item $uv^kwy^kz \in L_1$ for all $k \geq 0$
+  \end{enumroman}
+
+  \step
+  Pick $s = 10^p\#0^p110^p$. Clearly, $s \in L_1$ since $\beta(10^p) < \beta(0^p110^p)$.
+  Write $s = uvwyz$. There are three possibilities for $wyz$:
+  \begin{enumroman}
+    \item If $vwy$ is to the left of the $\#$ symbol, then pumping up the string
+      disproportionately increases the value of the string to the left, and breaks
+      the condition that.
+    \item If $vwy$ is to the right of the $\#$ symbol, then pumping down the string
+      decreases the value of the string to the right, and breaks the condition.
+    \item If $vwy$ is at the boundary (i.e. $vwy$ contains the $\#$ symbol), then there
+      are two possibilities:
+      \begin{enumroman}
+        \item If $\#$ occurs in $w$, then if $\abs{v} > 0$, pumping up the string
+          increases the value of the string to the left, and breaks the condition.
+        
+        \item If $\#$ does not occur in $w$, then pumping down the string removes the
+          $\#$ symbol, hence the result cannot be in $L_1$.
+      \end{enumroman}
+  \end{enumroman}
+
+
+\end{Answer}

@@ -1,0 +1,43 @@
+
+\def \bsat { \textsc{bal-sat}}
+\begin{problem}
+  A \emph{balanced assignment} to the boolean variable $x_1 \ldots x_{2n}$
+  is one where exactly $n$ of the variables are assigned \True and
+  the rest are assigned \False.
+  Define the language
+  \[ 
+    \bsat := \set{ \vector{\phi} : \phi(x_1 \ldots x_{2n}) \text{ is a cnf formula
+    and $\exists$ a balanced assignment that satisfies $\phi$}}.
+  \]
+  Prove that $\bsat$ is \sfNP-complete.
+\end{problem}
+\begin{Answer}
+  That $\bsat$ can be solved in \sfNP: guess an assignment
+  and check if it satisfies the formula and is balanced.
+
+  \step
+  Reduction of \SAT to \bsat:
+
+  \step
+  $T$ = ``On input $\vector{\phi}$, where $\phi(x_1, x_2, \ldots, x_n)$
+    is a cnf formula:
+    \begin{enumarabic}
+      \item Initialize a new formula $\psi$
+        with all the logical expressions in $\phi$.
+      \item For $i = 1, 2, \ldots, n$:
+        \begin{enumarabic*}
+          \item Define a new variable $x_{i+n}$.
+          \item Add the clause $(x_{n+i} \lor \neg x_{n+i})$ to $\psi$.
+        \end{enumarabic*}
+        \item Return $\vector{\psi}$.''
+    \end{enumarabic}
+
+  \begin{align*}
+    \vector{\phi} \in \SAT &\Iff \exists \text{ an assignment to $x_1, x_2, \ldots, x_n$ that satisfies $\phi$} \\
+      &\Iff \exists \text{ an assignment to $\phi$ with $k \leq n$ variables assigned \True, that satisfies $\phi$} \\
+      &\Iff \exists \text{ an assignment to $\psi$ with $k$ variables from $\phi$ assigned \True that satisfies $\psi$} \\
+      &\Iff \exists \text{an assignment to $\psi$ with $n$ original variables from
+      $\phi$ assigned \True and $n-k$ new variables assigned \True}. \\
+      &\Iff \vector{\psi} \in \bsat
+  \end{align*}
+  \end{Answer}

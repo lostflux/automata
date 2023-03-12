@@ -1,0 +1,89 @@
+
+\def \Atm {\textsc{A}_{\textsc{TM}}}
+\begin{problem}
+  Let $L_4 = \set{ \vector{D} : \text{$D$ is a DFA over
+    $\set{0, 1}^*$ and $\exists x \in \cL(D)$ with $N_0(x) > N_1(x)$}}.$
+    Recall that $N_a(x)$ denotes the number of occurrences of $a$ in $x$.
+    Determine, with proof, whether or not $L_4$ is decidable and whether
+    it is recognizable.
+\end{problem}
+\begin{Answer}
+  $L_4$ is recognizable but not decidable.
+
+  % Suppose $L_4$ were decidable, and $T$ was a TM that decides $L_4$.
+  % We can reduce $\Atm$ to $L_4$ as follows.
+
+  % \step
+  % ``On input $\vector{D}$, where $D$ is a TM over $\set{0, 1}^*$
+  %   and $x \in \set{0, 1}^*$:
+  %   \begin{enumarabic}
+  %     \item Define a new TM $M'$ with the same alphabet, states, transitions,
+  %       and accepting states as $M$.
+  %     \item Let $n := \abs{x}$. For each $i \leq n$, add a new state
+  %       new $q'_{i}$ to $M'$.
+  %     \item Add a new transition from $q_f$ to $q'_{1}$ upon reading
+  %       a $0$ from the tape.
+  %     \item Add new transitions from each $q'_{i}$ to $q'_{i+1}$ upon reading
+  %       a $0$ from the tape.
+  %     \item Add a new transition from $q'_{n}$ to $q_f$ upon reading
+  %       a $0$ from the tape.''
+  %     \item Output $\vector{M', x0^{n+1}}$.
+  %   \end{enumarabic}
+
+  \step
+  Consider the following $3$-tape deterministic turing machine $T_1$
+  which scans an input string $x$ and copies all the $0$'s to tape $1$
+  and all the $1$'s to tape $2$ then scans the number of $0$'s and $1$'s,
+  accepting if $N_0(x) > N_1(x)$ and rejecting otherwise:
+
+  \begin{figure}[H]
+
+    \centering
+    \begin{tikzpicture}
+      \node[state, initial] (q0) at (0, 0) {$q_0$};
+      \node[state         ] (q1) at (0, -3) {$q_1$};
+      \node[state         ] (q2) at (7, -3) {$q_2$};
+      \node[state         ] (qr) at (7, 0) {$q_r$};
+      \node[state, accepting] (qa) at (7, -6) {$q_a$};
+
+      \draw (q0) edge [right] node {$(x, \none, \none) \to (x, \$, \$), (S, R, R)$} (q1)
+            (q1) edge [loop below, below] node 
+              {$\begin{aligned}
+                (0, \none, \none) &\to (\none, 0, \none), (R, R, S) \\
+                (1, \none, \none) &\to (\none, \none, 1), (R, S, R)
+              \end{aligned}$} (q1)
+            (q1) edge [above] node {$(\none, \none, \none) \to (\none, \none, \none), (S, L, L)$} (q2)
+            (q2) edge [loop right, right] node {$(\none, 0, 1) \to (\none, \none, \none), (S, L, L)$} (q2)
+            (q2) edge [right, pos=0.7] node
+              {$\begin{aligned}
+                (\none, \$, 1) &\to (\none, \none, \none), (S, S, S) \\
+                (\none, \$, \$) &\to (\none, \none, \none), (S, S, S)
+              \end{aligned}$} (qr)
+            (q2) edge [right] node {$(\none, 0, \$) \to (\none, \none, \none), (S, S, S)$} (qa);
+
+    \end{tikzpicture}
+  \end{figure}
+
+  Since the set of all strings, $\Sigma^*$, is decidable, let $E$ be a
+  lexicographic enumerator for $\Sigma^*$. We can recognize $L_4$
+  as follows:
+
+  $T$ = ``On input $\vector{D}$, where $D$ is a DFA;
+    \begin{enumarabic}
+      \item Simulate $E$ to start enumerating strings in $\Sigma^*$.
+      \item For each step $i = 1, 2, 3, \ldots$:
+      \begin{enumarabic*}
+        \item Let $\sigma_i$ be the $i$'th string listed by $E$.
+        \item Simulate $T_1$ on input $\vector{\sigma_i}$.
+        \item If $T_1$ rejects, proceed to step $i+1$.
+        \item If $T_1$ accepts $\vector{w_i}$, simulate $D$ on $w_i$,
+          If $D$ accepts, \Accept. If $D$ rejects, proceed to step $i+1$.''
+      \end{enumarabic*}
+    \end{enumarabic}
+
+  \step
+  If the input DFA is in $L_4$, then the TM eventually halts and accepts.
+  However, if the input DFA is not in $L_4$, the TM will never halt
+  and will keep testing strings enumerated from $\Sigma^*$.
+  Therefore, $L_4$ is not decidable but it is recognizable.
+\end{Answer}
